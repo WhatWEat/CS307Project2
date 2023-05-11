@@ -11,8 +11,3 @@ import org.apache.ibatis.annotations.Select;
 public interface UserMapper extends BaseMapper<User> {
 
 }
-//    @Select("select * from users")
-//    public List<User> find();
-//    @Insert("INSERT INTO users (username, password, phone, registration) VALUES (#{username}, #{password}, #{phone}, #{registration})")
-//    int add(User user);
-//}

@@ -25,6 +25,16 @@ public class User {
     //exist注解表示该字段在仅在类中存在，在数据库中不存在
     @TableField(exist = false)
     private ArrayList<User> follow = new ArrayList<>();
+
+    public User(Integer id, String username, String password, String phone,
+        Timestamp registration) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.phone = phone;
+        this.registration = registration;
+    }
+
     public User(String phone, String username, String password) {
         this.phone = phone;
         this.username = username;
