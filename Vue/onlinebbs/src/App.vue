@@ -1,31 +1,32 @@
 <template>
   <div id="app">
-    <router-link to="/main">论坛</router-link>
-    <router-link to="/person">个人主页</router-link>
-    <router-view></router-view>
+    <div class="menu-container">
+      <MainMenu></MainMenu>
+    </div>
+    <div class="router-container">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script>
+import MainMenu from "@/components/MainMenu.vue";
 import axios from "axios";
-import LoginReg from "@/components/LoginReg.vue";
-
 export default {
   name: 'App',
   components: {
-    LoginReg
+    MainMenu
   },
   created() {
-    axios.get('/user').then(function (response) {
-      console.log(response.data);
-    }).catch(function (error) {
-      console.log(error);
-    });
+    axios.get('/user/query').then(function (res){
+      console.log(res.data);
+    }).catch(err => {
+      console.log(err);
+    })
   }
 
 }
 </script>
-
 <style>
 #app {
   display: flex;
@@ -34,5 +35,15 @@ export default {
   justify-content: center;
   height: 80vh;
 }
-</style>
 
+.menu-container {
+  align-self: flex-end;
+}
+
+.router-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+</style>
