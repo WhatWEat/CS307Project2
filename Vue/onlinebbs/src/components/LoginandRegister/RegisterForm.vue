@@ -3,8 +3,10 @@
   <div class="form-container">
     <h2>注册</h2>
     <form @submit.prevent="submit">
-      <el-input type="email" v-model="email"
-                placeholder="输入你的邮箱"/>
+      <el-input type="phone" v-model="phone"
+                placeholder="输入你的手机号"/>
+      <el-input v-model="username"
+                placeholder="输入用户名"/>
       <el-input type="password" show-password v-model="password"
                 placeholder="输入密码"/>
       <div class="form-container1">
@@ -18,10 +20,12 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
-      email: '',
+      phone: '',
+      username: '',
       password: ''
     }
   },
