@@ -1,5 +1,5 @@
 {
-  "name": "bbs",
+  "name": "onlinebbs",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,27 +7,20 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "@element-plus/icons-vue": "^2.1.0",
     "axios": "^1.4.0",
     "core-js": "^3.8.3",
-    "element-plus": "^2.3.4",
-    "vue": "^3.2.13",
-    "vue-router": "^4.2.0",
-    "vuex": "^4.1.0"
+    "element-ui": "^2.15.13",
+    "vue": "^2.6.14",
+    "vue-router": "^3.6.5"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
-    "ts-loader": "^9.4.2",
-    "typescript": "^5.0.4",
-    "vue-loader": "^17.1.1",
-    "vue-template-compiler": "^2.7.14",
-    "webpack-cli": "^5.1.1"
+    "vue-template-compiler": "^2.6.14"
   },
   "browserslist": [
     "> 1%",
     "last 2 versions",
-    "not dead",
-    "not ie 11"
+    "not dead"
   ]
 }
