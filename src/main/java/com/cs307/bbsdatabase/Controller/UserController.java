@@ -15,8 +15,7 @@ public class UserController {
     private UserMapper userMapper;
     @GetMapping("/user")
     public List<User> query(){
-        List<User> users = userMapper.selectList(null);
-        return users;
+        return userMapper.selectList(null);
     }
     @PostMapping("/user")
     public String save(User user){
