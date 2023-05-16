@@ -5,11 +5,12 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.beans.Transient;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
 @TableName("Users")
-public class User {
+public class User implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
     /*

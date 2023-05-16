@@ -1,15 +1,15 @@
 <template>
   <div>
     <h1>BBS</h1>
-    <PersonCenter></PersonCenter>
+    <post-list></post-list>
   </div>
 </template>
 
 <script>
-import PersonCenter from "@/components/PersonCenter.vue";
+import PostList from "@/components/PostContent/PostList.vue";
 export default {
   components: {
-    PersonCenter
+    PostList,
   },
   name: "MainBBS"
 }
