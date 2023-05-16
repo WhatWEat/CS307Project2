@@ -11,18 +11,12 @@
 
 <script>
 import MainMenu from "@/components/MainMenu.vue";
-import axios from "axios";
 export default {
   name: 'App',
   components: {
     MainMenu
   },
   created() {
-    axios.get('/user/query').then(function (res){
-      console.log(res.data);
-    }).catch(err => {
-      console.log(err);
-    })
   }
 
 }
@@ -32,7 +26,6 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   height: 80vh;
 }
 
@@ -42,8 +35,7 @@ export default {
 
 .router-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   height: 100%;
 }
 </style>

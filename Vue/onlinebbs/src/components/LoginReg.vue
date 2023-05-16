@@ -36,13 +36,9 @@ export default {
 }
 </script>
 <style scoped>
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 
 .box-card {
+  align-self: center;
   width: 420px;
 }
 </style>
