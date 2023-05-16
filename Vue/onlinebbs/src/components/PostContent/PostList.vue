@@ -6,13 +6,14 @@
     <div class="posts" v-else>
       <ul>
         <li v-for="post in posts">
-          <router-link :to="{ name: 'user_info', params: { name: post.author.loginname }}" :title="post.author_id">
-            <img :src="post.author.avatar_url" :title="post.author.loginname"/>
-          </router-link>
+<!--          <router-link :to="{ name: 'user_info', params: { name: post.author.loginname }}" :title="post.author_id">-->
+<!--            <img :src="post.author.avatar_url" :title="post.author.loginname"/>-->
+<!--          </router-link>-->
           <span>
-						{{ post.reply_count }}/{{ post.visit_count }}
+<!--						{{ post.reply_count }}/{{ post.visit_count }}-->
+            {{read}}
 					</span>
-          <router-link :to="{ name: 'post_content', params: { id: post.id,name:post.author.loginname }}" :title="post.title">
+          <router-link :to="{ name: 'post-list', params: { id: post.id}}" :title="post.title">
             {{ post.title }}
           </router-link>
           <span class="last_reply">
@@ -33,6 +34,7 @@ export default {
       posts:{
       },
       loading:false,
+      read: 10000,
     }
   },
   filters: {
