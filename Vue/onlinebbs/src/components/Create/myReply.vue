@@ -6,12 +6,7 @@
     >
       <el-table-column
           prop="date"
-          label="发表时间"
-          width="180"
-      ></el-table-column>
-      <el-table-column
-          prop="name"
-          label="作者"
+          label="回复时间"
           width="180"
       ></el-table-column>
       <el-table-column
@@ -21,13 +16,20 @@
           align="center"
           :formatter="row => row.title.length > 11 ? row.title.substr(0,11) + '...' : row.title"
       ></el-table-column>
+      <el-table-column
+          prop="content"
+          label="回复内容"
+          width="300"
+          align="center"
+          :formatter="row => row.content.length > 20 ? row.content.substr(0,20) + '...' : row.content"
+      ></el-table-column>
     </el-table>
     <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-size="50"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="sizes, prev, pager, next, jumper"
     >
     </el-pagination>
   </div>
@@ -35,29 +37,29 @@
 
 <script>
 export default {
-  name: "Share",
+  name: "myReply",
   data() {
     return {
       tableData: [
         {
           date: '2016-05-02',
-          name: '王小虎',
-          title: '帖子标题帖子标题帖子标题帖子标题'
+          title: '帖子标题',
+          content: '王小虎'
         },
         {
           date: '2016-05-04',
-          name: '王小虎',
-          title: '帖子标题'
+          title: '帖子标题',
+          content: '王小虎',
         },
         {
           date: '2016-05-01',
-          name: '王小虎',
-          title: '帖子标题'
+          title: '帖子标题',
+          content: '王小虎',
         },
         {
           date: '2016-05-03',
-          name: '王小虎',
-          title: '帖子标题'
+          title: '帖子标题',
+          content: '王小虎',
         }
       ], //你需要把这里替换成你的帖子数据
       currentPage: 1

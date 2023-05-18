@@ -3,6 +3,7 @@
            @select="handleSelect">
     <el-menu-item index="/main">BBS</el-menu-item>
     <el-menu-item index="/person">个人中心</el-menu-item>
+    <el-menu-item index="/create">创作中心</el-menu-item>
     <el-menu-item >
       <span style="color: #008cff; cursor: pointer" @click="logout">退出登录</span>
     </el-menu-item>

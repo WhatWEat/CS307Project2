@@ -17,6 +17,8 @@
       <el-table-column
           prop="title"
           label="帖子标题"
+          width="180"
+          :formatter="row => row.title.length > 20 ? row.title.substr(0,20) + '...' : row.title"
       ></el-table-column>
     </el-table>
     <el-pagination
@@ -39,22 +41,22 @@ export default {
         {
           date: '2016-05-02',
           name: '王小虎',
-          title: '帖子标题'
+          title: '帖子标题',
         },
         {
           date: '2016-05-04',
           name: '王小虎',
-          title: '帖子标题'
+          title: '帖子标题',
         },
         {
           date: '2016-05-01',
           name: '王小虎',
-          title: '帖子标题'
+          title: '帖子标题',
         },
         {
           date: '2016-05-03',
           name: '王小虎',
-          title: '帖子标题'
+          title: '帖子标题',
         }
       ], //你需要把这里替换成你的帖子数据
       currentPage: 1
