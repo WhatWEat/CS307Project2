@@ -1,9 +1,7 @@
 package com.cs307.bbsdatabase.Controller;
 
 import com.cs307.bbsdatabase.Entity.Post;
-import com.cs307.bbsdatabase.Entity.Reply;
 import java.util.ArrayList;
-import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
