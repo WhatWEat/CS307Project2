@@ -54,8 +54,12 @@ public class UserController {
                 Cookie cookie = new Cookie("session_id", username);
                 cookie.setPath("/");
                 response.addCookie(cookie);
+                System.out.println("登录成功");
                 return true;
-            }else return false;
+            }else {
+                System.out.println("登录失败");
+                return false;
+            }
         }
     }
     @GetMapping("/findByID/{id}")
