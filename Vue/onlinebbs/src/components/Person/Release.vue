@@ -10,13 +10,9 @@
           width="180"
       ></el-table-column>
       <el-table-column
-          prop="name"
-          label="作者"
-          width="180"
-      ></el-table-column>
-      <el-table-column
           prop="title"
           label="帖子标题"
+          width="180"
       ></el-table-column>
     </el-table>
     <el-pagination
@@ -24,7 +20,7 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-size="50"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="sizes, prev, pager, next, jumper"
     >
     </el-pagination>
   </div>
@@ -32,7 +28,7 @@
 
 <script>
 export default {
-  name: "Like",
+  name: "Release",
   data() {
     return {
       tableData: [
@@ -83,4 +79,3 @@ export default {
 <style scoped>
 
 </style>
-}

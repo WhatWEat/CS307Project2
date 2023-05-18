@@ -36,6 +36,7 @@ public class UserController {
     @GetMapping("/findByID")
     //通过用户id查找用户，返回用户信息
     public User findID(@PathVariable String id){
+        System.out.println("方法被调用");
         return null;
     }
     @GetMapping("/findByName")
