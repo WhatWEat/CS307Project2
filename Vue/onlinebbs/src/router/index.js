@@ -71,37 +71,38 @@ export const router = new VueRouter({
     }
 )
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    // 这个路由需要认证，检查是否已经登录
-    // 你需要实现 `isUserLoggedIn` 函数来检查登录状态
-    if (!isUserLoggedIn()) {
-      Message({
-        message: '请先登录',
-        type: 'waring',
-        duration: 5 * 1000,
-        offset: 250
-      })
+  try {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+      if (!isUserLoggedIn()) {
+        Message({
+          message: '请先登录',
+          type: 'waring',
+          duration: 5 * 1000,
+          offset: 250
+        })
+        next({
+          path: '/login',
+        })
+      } else {
+        next()
+      }
+    } else if (to.path === '/login' && isUserLoggedIn()) {
       next({
-        path: '/login',
-        query: { redirect: to.fullPath }
+        path: '/person/share',
       })
     } else {
       next()
     }
-  } else if (to.path === '/login' && isUserLoggedIn()) {
-    next({
-      path: '/person',
-    })
-  } else {
-    next()
+  } catch (e) {
+    console.log(e)
   }
 })
 
 // 你需要实现这个函数，检查 cookie 中是否存在 session_id
 function isUserLoggedIn() {
   let cookieArray = document.cookie.split(';');
-  for(let cookie of cookieArray) {
-    if(cookie.includes("session_id")) {
+  for (let cookie of cookieArray) {
+    if (cookie.includes("session_id")) {
       return true;
     }
   }
