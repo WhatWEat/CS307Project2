@@ -31,8 +31,34 @@ export default {
   },
   methods: {
     submit() {
-      // 请添加注册逻辑
-      console.log(this.email, this.password);
+      if(this.phone === '' || this.username === '' || this.password === ''){
+        this.$message({
+          message: '请填写完整信息',
+          type: 'warning',
+          offset:280
+        });
+      } else {
+        axios.post(`/user/reg/${this.phone}/${this.username}/${this.password}`,null,{
+          withCredentials: true
+        }).then(res => {
+          if(res.data === true){
+            this.$message({
+              message: '注册成功',
+              type: 'success',
+              offset:280
+            });
+            this.$router.push('/main');
+          } else {
+            this.$message({
+              message: '注册失败',
+              type: 'warning',
+              offset:280
+            });
+          }
+        }).catch(err => {
+          console.log(err);
+        })
+      }
     }
   }
 }

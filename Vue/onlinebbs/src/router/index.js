@@ -70,6 +70,10 @@ router.beforeEach((to, from, next) => {
     } else {
       next()
     }
+  } else if (to.path === '/login' && isUserLoggedIn()) {
+    next({
+      path: '/person',
+    })
   } else {
     next()
   }
