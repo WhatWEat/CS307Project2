@@ -24,31 +24,38 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/reg")
+    @PostMapping("/reg/{phone}/{username}/{password}")
     //实现注册的方法,返回注册成功与否
     //此处若返回false则用户名已被占用，若未被占用则创建用户返回true
-    public boolean register(@RequestBody User user, HttpServletResponse response){
-        if (findUserName(user.getUsername())!=null){
-            System.out.println("用户已被注册");
+    public boolean register(@PathVariable String phone, @PathVariable String username, @PathVariable String password,
+                        HttpServletResponse response){
+        if (findUserName(username)!=null){
+            System.out.println("用户名已被占用");
             return false;
         }else{
-            userService.createUser(user.getUsername(), user.getPhone(), user.getPassword());
-            Cookie cookie = new Cookie("session_id", user.getUsername());
+            System.out.println("注册成功");
+            userService.createUser(username, phone, password);
+            Cookie cookie = new Cookie("session_id", username);
+            cookie.setPath("/");
             response.addCookie(cookie);
         }
 
         return true;
     }
-    @GetMapping("/login")
+    @GetMapping("/login/{username}/{password}")
     //实现登录的方法，返回登录成功与否
     //此处返回1则用户不存在，返回2则密码错误，返回0则登录成功
-    public int login(@RequestBody String username,String password){
+    public boolean login(@PathVariable String username, @PathVariable String password,
+        HttpServletResponse response){
         if (findUserName(username) == null){
-            return 1;
+            return false;
         }else {
             if (userService.checkPassword(username,password)){
-                return 0;
-            }else return 2;
+                Cookie cookie = new Cookie("session_id", username);
+                cookie.setPath("/");
+                response.addCookie(cookie);
+                return true;
+            }else return false;
         }
     }
     @GetMapping("/findByID/{id}")
