@@ -7,6 +7,7 @@ import com.cs307.bbsdatabase.Mapper.PostMapper;
 import com.cs307.bbsdatabase.Mapper.UserMapper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class UserService extends ServiceImpl<UserMapper, User> {
     @Autowired
     private UserMapper userMapper ;
+    @Autowired
     private PostMapper postMapper;
 //    public List<User> getFollow(User user){
 //        QueryWrapper<User> a = new QueryWrapper<>();
@@ -41,6 +43,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         userMapper.createUser(user.getId(),username,password,phone_number,user.getRegistration());
     }
     public ArrayList<Post> findPostByUser(String username){
+        System.out.println(username);
         return postMapper.findByUser(username);
     }
 
