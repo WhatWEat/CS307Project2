@@ -1,17 +1,13 @@
 package com.cs307.bbsdatabase.Controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cs307.bbsdatabase.Entity.Post;
 import com.cs307.bbsdatabase.Entity.User;
-import com.cs307.bbsdatabase.Mapper.UserMapper;
 import com.cs307.bbsdatabase.Service.UserService;
-import java.sql.Timestamp;
 
 import java.util.ArrayList;
-import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +26,7 @@ public class UserController {
     //此处若返回false则用户名已被占用，若未被占用则创建用户返回true
     public boolean register(@RequestBody User user){
         if (findUserName(user.getUsername())!=null){
+            System.out.println("用户已被注册");
             return false;
         }else
             userService.createUser(user.getUsername(), user.getPhone(), user.getPassword());
@@ -50,17 +47,17 @@ public class UserController {
     @GetMapping("/findByID/{id}")
     //通过用户id查找用户，返回用户信息
     public User findById(@PathVariable String id){
-        return userService.findById(id);
+        return userService.findUserById(id);
     }
     @GetMapping("/findByName/{name}")
     //通过用户名来查找
     public User findUserName(@PathVariable String name){
-        return userService.findByUsername(name);
+        return userService.findUserByUsername(name);
     }
     @GetMapping("/findPostList/{name}")
     //查返回该用户发的所有贴子
     public ArrayList<Post> findPostList(@PathVariable String name){
-
-        return null;
+        System.out.println(name);
+        return userService.findPostByUser(name);
     }
 }
