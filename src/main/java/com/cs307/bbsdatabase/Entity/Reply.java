@@ -12,6 +12,7 @@ public class Reply implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
     private Integer postID;
+    @TableField("parent_id")
     private Integer parentReplyID;
     private Integer userID;
     private String content;
