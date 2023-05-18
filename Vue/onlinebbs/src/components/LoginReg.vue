@@ -5,7 +5,7 @@
       <i class="el-icon-user"></i>
     </div>
     <div class="text item">
-      <LoginForm v-if="showLoginForm" @register="showLoginForm = false" @login="handleLogin"/>
+      <LoginForm v-if="showLoginForm" @register="showLoginForm = false"/>
       <RegisterForm v-else @login="showLoginForm = true"/>
     </div>
   </el-card>
