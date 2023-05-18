@@ -1,17 +1,15 @@
 package com.cs307.bbsdatabase.Controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cs307.bbsdatabase.Entity.Post;
 import com.cs307.bbsdatabase.Entity.User;
-import com.cs307.bbsdatabase.Mapper.UserMapper;
 import com.cs307.bbsdatabase.Service.UserService;
 import java.sql.Timestamp;
 
 import java.util.ArrayList;
-import java.util.List;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,11 +26,15 @@ public class UserController {
     @PostMapping("/reg")
     //实现注册的方法,返回注册成功与否
     //此处若返回false则用户名已被占用，若未被占用则创建用户返回true
-    public boolean register(@RequestBody User user){
+    public boolean register(@RequestBody User user, HttpServletResponse response){
         if (findUserName(user.getUsername())!=null){
             return false;
-        }else
+        }else{
             userService.createUser(user.getUsername(), user.getPhone(), user.getPassword());
+            Cookie cookie = new Cookie("session_id", user.getUsername());
+            response.addCookie(cookie);
+        }
+
         return true;
     }
     @GetMapping("/login")
