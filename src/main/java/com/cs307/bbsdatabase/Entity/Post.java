@@ -20,14 +20,21 @@ public class Post {
     private String content;
     private final Timestamp posting_time;
     @TableField(exist = false)
-    private final Integer User_id;
+    private Integer User_id;
     @TableField(exist = false)
     private ArrayList<Category> categories;
     @TableField(exist = false)
-    private final City postCity;
+    private  City postCity;
+
+    public Post(Integer post_id, String title, String content, Timestamp posting_time) {
+        this.post_id = post_id;
+        this.title = title;
+        this.content = content;
+        this.posting_time = posting_time;
+    }
 
     public Post(Integer post_id, String title, String content, Timestamp posting_time,
-                Integer user_id, ArrayList<Category> categories, City postCity) {
+        Integer user_id, ArrayList<Category> categories, City postCity) {
         this.post_id = post_id;
         this.title = title;
         this.content = content;
