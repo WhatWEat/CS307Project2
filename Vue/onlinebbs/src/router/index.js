@@ -5,17 +5,20 @@ import MainBBS from "@/components/MainBBS.vue";
 import PersonCenter from "@/components/PersonCenter.vue";
 import LoginReg from "@/components/LoginReg.vue";
 import PostContent from "@/components/PostContent/PostContent.vue";
-import Test from "@/components/Test/test.vue";
 import Marked from "@/components/Person/Marked.vue";
 import Like from "@/components/Person/Like.vue";
-import Release from "@/components/Person/Release.vue";
+import Release from "@/components/Create/Release.vue";
 import Share from "@/components/Person/Share.vue";
+import myReply from "@/components/Create/myReply.vue";
+import PersonCreate from "@/components/PersonCreate.vue";
+import Subscribe from "@/components/Person/Subscribe.vue";
 
 Vue.use(VueRouter)
 export const router = new VueRouter({
       routes: [
         {path: '/', redirect: '/login'},
-        {path: '/person', redirect: '/person/release'},
+        {path: '/person', redirect: '/person/share'},
+        {path: '/create', redirect: '/create/my-reply'},
         {path: '/login', component: LoginReg},
         {
           path: '/main', component: MainBBS, meta: {requiresAuth: true},
@@ -33,21 +36,36 @@ export const router = new VueRouter({
               path: 'like',
               component: Like
             }, {
-              path: 'release',
-              component: Release
-            }, {
               path: 'share',
               component: Share
+            }, {
+              path: 'subscribe',
+              component: Subscribe
             }]
         },
+        {
+          path: '/create',
+          component: PersonCreate,
+          meta: {requiresAuth: true},
+          children: [
+            {
+              path: 'my-post',
+              component: Release
+            },
+            {
+              path: 'my-reply',
+              component: myReply
+            },
+          ]
+        },
         {path: '/comment', component: Comment},
-        {path: '/test', component: Marked},
         {
           meta: {requiresAuth: true},
           path: '/post-list/:id',
           name: 'post-list',
           component: PostContent
-        }
+        },
+        {path: '/test', component: Marked},
       ],
       mode: 'history'
     }

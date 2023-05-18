@@ -17,6 +17,14 @@
       <el-table-column
           prop="title"
           label="帖子标题"
+          width="220"
+          align="center"
+          :formatter="row => row.title.length > 11 ? row.title.substr(0,11) + '...' : row.title"
+      ></el-table-column>
+      <el-table-column
+          prop="count"
+          label="点赞总数"
+          width="180"
       ></el-table-column>
     </el-table>
     <el-pagination
@@ -39,22 +47,26 @@ export default {
         {
           date: '2016-05-02',
           name: '王小虎',
-          title: '帖子标题'
+          title: '帖子标题',
+          count: 100
         },
         {
           date: '2016-05-04',
           name: '王小虎',
-          title: '帖子标题'
+          title: '帖子标题',
+          count: 100
         },
         {
           date: '2016-05-01',
           name: '王小虎',
-          title: '帖子标题'
+          title: '帖子标题',
+          count: 100
         },
         {
           date: '2016-05-03',
           name: '王小虎',
-          title: '帖子标题'
+          title: '帖子标题',
+          count: 100
         }
       ], //你需要把这里替换成你的帖子数据
       currentPage: 1

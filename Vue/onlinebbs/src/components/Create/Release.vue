@@ -12,7 +12,9 @@
       <el-table-column
           prop="title"
           label="帖子标题"
-          width="180"
+          width="220"
+          align="center"
+          :formatter="row => row.title.length > 11 ? row.title.substr(0,11) + '...' : row.title"
       ></el-table-column>
     </el-table>
     <el-pagination
