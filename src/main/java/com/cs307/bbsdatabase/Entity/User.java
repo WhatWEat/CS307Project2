@@ -2,6 +2,8 @@ package com.cs307.bbsdatabase.Entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -10,21 +12,26 @@ import java.util.ArrayList;
 @TableName("Users")
 public class User implements Serializable {
 
-    @TableField("user_id")
-    private String id;
+
     /*
     如果数据库表中属性名与类中属性名不对应，可以使用注解
     @TableField("xxx")
     来进行指向，xxx为数据库中属性名
     * */
     private final String username;
-    private String password;
+    @TableField("registration_time")
+    private final Timestamp registration;
 
     @TableField("phone_number")
     private String phone;
 
-    @TableField("registration_time")
-    private final Timestamp registration;
+    @TableField("user_id")
+    private String id;
+    private String password;
+
+
+
+
 
     //exist注解表示该字段在仅在类中存在，在数据库中不存在
     @TableField(exist = false)
@@ -34,11 +41,13 @@ public class User implements Serializable {
     private ArrayList<User> block = new ArrayList<>();
 
 
-    public User(String id,
+    public User(
                 String username,
-                String password,
+                Timestamp registration,
                 String phone,
-                Timestamp registration) {
+                String id,
+                String password
+                ) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -46,7 +55,11 @@ public class User implements Serializable {
         this.registration = registration;
     }
 
-    public User(String phone, String username, String password) {
+
+    @JsonCreator
+    public User(@JsonProperty("username") String username,
+                @JsonProperty("phone") String phone,
+                @JsonProperty("password") String password) {
         this.phone = phone;
         this.username = username;
         this.password = password;
