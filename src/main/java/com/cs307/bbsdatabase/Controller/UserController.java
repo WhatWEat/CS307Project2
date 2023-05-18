@@ -6,6 +6,9 @@ import com.cs307.bbsdatabase.Service.UserService;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,12 +27,16 @@ public class UserController {
     @PostMapping("/reg")
     //实现注册的方法,返回注册成功与否
     //此处若返回false则用户名已被占用，若未被占用则创建用户返回true
-    public boolean register(@RequestBody User user){
+    public boolean register(@RequestBody User user, HttpServletResponse response){
         if (findUserName(user.getUsername())!=null){
             System.out.println("用户已被注册");
             return false;
-        }else
+        }else{
             userService.createUser(user.getUsername(), user.getPhone(), user.getPassword());
+            Cookie cookie = new Cookie("session_id", user.getUsername());
+            response.addCookie(cookie);
+        }
+
         return true;
     }
     @GetMapping("/login")
@@ -47,7 +54,9 @@ public class UserController {
     @GetMapping("/findByID/{id}")
     //通过用户id查找用户，返回用户信息
     public User findById(@PathVariable String id){
+
         return userService.findUserById(id);
+
     }
     @GetMapping("/findByName/{name}")
     //通过用户名来查找

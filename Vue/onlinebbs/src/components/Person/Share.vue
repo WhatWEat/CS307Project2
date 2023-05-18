@@ -32,7 +32,7 @@
 
 <script>
 export default {
-  name: "Like",
+  name: "Share",
   data() {
     return {
       tableData: [
@@ -83,4 +83,3 @@ export default {
 <style scoped>
 
 </style>
-}
