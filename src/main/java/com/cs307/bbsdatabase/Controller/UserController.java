@@ -51,6 +51,7 @@ public class UserController {
     //通过用户id查找用户，返回用户信息
     public User findById(@PathVariable String id){
         return userService.findById(id);
+
     }
     @GetMapping("/findByName/{name}")
     //通过用户名来查找

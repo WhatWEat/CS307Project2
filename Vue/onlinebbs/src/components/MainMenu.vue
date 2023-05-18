@@ -23,5 +23,7 @@ export default {
 </script>
 
 <style scoped>
-
+.el-menu-demo {
+  background-color: transparent !important;
+}
 </style>
