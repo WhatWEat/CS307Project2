@@ -1,18 +1,17 @@
 package com.cs307.bbsdatabase.Entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.beans.Transient;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
 @TableName("Users")
 public class User implements Serializable {
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+
+    @TableField("user_id")
+    private String id;
     /*
     如果数据库表中属性名与类中属性名不对应，可以使用注解
     @TableField("xxx")
@@ -20,15 +19,26 @@ public class User implements Serializable {
     * */
     private final String username;
     private String password;
+
+    @TableField("phone_number")
     private String phone;
+
+    @TableField("registration_time")
     private final Timestamp registration;
 
     //exist注解表示该字段在仅在类中存在，在数据库中不存在
     @TableField(exist = false)
     private ArrayList<User> follow = new ArrayList<>();
 
-    public User(Integer id, String username, String password, String phone,
-        Timestamp registration) {
+    @TableField(exist = false)
+    private ArrayList<User> block = new ArrayList<>();
+
+
+    public User(String id,
+                String username,
+                String password,
+                String phone,
+                Timestamp registration) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -46,15 +56,15 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "User{" +
-            "id=" + id +
-            ", username='" + username + '\'' +
-            ", password='" + password + '\'' +
-            ", phone='" + phone + '\'' +
-            ", registration=" + registration +
-            '}';
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", phone='" + phone + '\'' +
+                ", registration=" + registration +
+                '}';
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -81,7 +91,10 @@ public class User implements Serializable {
     public String getPassword() {
         return password;
     }
-    public Integer getId() {
+
+    public String getId() {
         return id;
     }
+
+
 }
