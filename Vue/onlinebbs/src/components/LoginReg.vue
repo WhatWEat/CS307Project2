@@ -26,13 +26,6 @@ export default {
       showLoginForm: true,
     }
   },
-  isLogin: false,
-  methods: {
-    handleLogin(isLogin) {
-      this.isLogin = isLogin;
-      this.$router.push('/main');
-    }
-  }
 }
 </script>
 <style scoped>
