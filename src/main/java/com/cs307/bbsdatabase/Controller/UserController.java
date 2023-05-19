@@ -3,11 +3,12 @@ package com.cs307.bbsdatabase.Controller;
 import com.cs307.bbsdatabase.Entity.Post;
 import com.cs307.bbsdatabase.Entity.User;
 import com.cs307.bbsdatabase.Service.UserService;
-import java.sql.Timestamp;
 
 import java.util.ArrayList;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,18 +67,19 @@ public class UserController {
     @GetMapping("/findByID/{id}")
     //通过用户id查找用户，返回用户信息
     public User findById(@PathVariable String id){
-        return userService.findById(id);
+
+        return userService.findUserById(id);
 
     }
     @GetMapping("/findByName/{name}")
     //通过用户名来查找
     public User findUserName(@PathVariable String name){
-        return userService.findByUsername(name);
+        return userService.findUserByUsername(name);
     }
     @GetMapping("/findPostList/{name}")
     //查返回该用户发的所有贴子
     public ArrayList<Post> findPostList(@PathVariable String name){
-
-        return null;
+        System.out.println(name);
+        return userService.findPostByUser(name);
     }
 }

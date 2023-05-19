@@ -42,12 +42,12 @@ public class User implements Serializable {
 
 
     public User(
-        String username,
-        Timestamp registration,
-        String phone,
-        String id,
-        String password
-    ) {
+                String username,
+                Timestamp registration,
+                String phone,
+                String id,
+                String password
+                ) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -58,8 +58,8 @@ public class User implements Serializable {
 
     @JsonCreator
     public User(@JsonProperty("username") String username,
-        @JsonProperty("phone") String phone,
-        @JsonProperty("password") String password) {
+                @JsonProperty("phone") String phone,
+                @JsonProperty("password") String password) {
         this.phone = phone;
         this.username = username;
         this.password = password;
