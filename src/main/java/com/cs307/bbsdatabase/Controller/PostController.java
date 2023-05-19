@@ -2,6 +2,9 @@ package com.cs307.bbsdatabase.Controller;
 
 import com.cs307.bbsdatabase.Entity.Post;
 import java.util.ArrayList;
+
+import com.cs307.bbsdatabase.Service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,16 +16,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/post")
 public class PostController {
     private final int pageSize = 100;
+    @Autowired
+    private UserService userService;
     @GetMapping("/getList")
     //返回第page页的帖子列表，利用sql实现分页查询，简单说就是利用limit语句
     //每页的帖子数量为pageSize
     public ArrayList<Post> PostList(@PathVariable int page){
         return null;
     }
-    @PostMapping("/create")
+    @PostMapping("/create/{username}/{title}/{content}")
     //发帖子
-    public boolean createPost(@RequestBody Post post){
-        return false;
+    public boolean createPost(@PathVariable String username,@PathVariable String title,@PathVariable String content){
+        System.out.println("start!");
+        return userService.createPost(username,title,content);
     }
     @GetMapping("/findByID")
     //返回帖子id为id的帖子

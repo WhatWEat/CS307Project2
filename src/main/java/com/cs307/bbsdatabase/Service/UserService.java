@@ -29,6 +29,10 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     public User findUserById(String id){
         return userMapper.findById(id);
     }
+
+    public User findUserByPhone(String phone){
+        return userMapper.findByPhone(phone);
+    }
     public User findUserByUsername(String username){
         return userMapper.findByName(username);
     }
@@ -47,7 +51,9 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return postMapper.findByUser(username);
     }
 
-
+    public boolean createPost(String username,String title, String content){
+        return postMapper.createPost(title,content);
+    }
 
 //    public User findUser(String username)
 

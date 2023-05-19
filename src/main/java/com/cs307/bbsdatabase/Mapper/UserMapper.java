@@ -15,6 +15,8 @@ public interface UserMapper extends BaseMapper<User> {
     User findById(String id);
     @Select("SELECT * FROM users WHERE username = #{username}")
     User findByName(String username);
+    @Select("SELECT * FROM users WHERE phone_number = #{phone_number}")
+    User findByPhone(String phone_number);
 
     @Insert("INSERT INTO users (user_id,username,  password, phone_number,registration_time)\n" +
             "VALUES(#{user_id},#{username},#{password},#{phone_number},#{registration_time})")

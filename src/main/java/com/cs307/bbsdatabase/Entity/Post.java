@@ -14,7 +14,7 @@ import java.util.ArrayList;
 @TableName("posts")
 public class Post {
     @TableId(type = IdType.AUTO)
-    private final Integer post_id;
+    private Integer post_id;
 
     private String title;
     private String content;
@@ -26,11 +26,10 @@ public class Post {
     @TableField(exist = false)
     private  City postCity;
 
-    public Post(Integer post_id, String title, String content, Timestamp posting_time) {
-        this.post_id = post_id;
+    public Post( String title, String content) {
         this.title = title;
         this.content = content;
-        this.posting_time = posting_time;
+        this.posting_time = new Timestamp(System.currentTimeMillis());
     }
 
     public Post(Integer post_id, String title, String content, Timestamp posting_time,
