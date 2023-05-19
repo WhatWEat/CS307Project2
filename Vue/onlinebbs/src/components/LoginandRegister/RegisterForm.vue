@@ -21,6 +21,7 @@
 
 <script>
 import axios from "axios";
+
 export default {
   data() {
     return {
@@ -31,28 +32,29 @@ export default {
   },
   methods: {
     submit() {
-      if(this.phone === '' || this.username === '' || this.password === ''){
+      if (this.phone === '' || this.username === '' || this.password === '') {
         this.$message({
           message: '请填写完整信息',
           type: 'warning',
-          offset:280
+          offset: 280
         });
       } else {
-        axios.post(`/user/reg/${this.phone}/${this.username}/${this.password}`,null,{
+        axios.post(`/user/reg/${this.phone}/${this.username}/${this.password}`, null, {
           withCredentials: true
         }).then(res => {
-          if(res.data === true){
+          if (res.data === true) {
             this.$message({
               message: '注册成功',
               type: 'success',
-              offset:280
+              offset: 280,
+              duration: 1000
             });
             this.$router.push('/main');
           } else {
             this.$message({
               message: '注册失败',
               type: 'warning',
-              offset:280
+              offset: 280
             });
           }
         }).catch(err => {
@@ -70,16 +72,19 @@ export default {
   align-items: center;
   justify-content: center;
 }
+
 .form-container1 {
   display: flex;
   flex-direction: row;
   margin-top: 10px;
 }
+
 .form-container h2 {
   text-align: center;
   margin-top: 10px;
 }
-.form-container1 div{
+
+.form-container1 div {
   margin-left: 50px;
 }
 </style>

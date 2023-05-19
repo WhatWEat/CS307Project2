@@ -45,14 +45,16 @@ export default {
             this.$message({
               message: '登录成功',
               type: 'success',
-              offset:280
+              offset: 280,
+              duration: 1000
             });
             this.$router.push('/main');
           } else {
             this.$message({
               message: '登录失败',
               type: 'warning',
-              offset:280
+              offset:280,
+              duration: 1000
             });
           }
         }).catch(err => {
