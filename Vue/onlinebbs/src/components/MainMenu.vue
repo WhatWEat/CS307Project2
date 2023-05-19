@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "MainMenu",
   data() {
@@ -20,6 +22,9 @@ export default {
   },
   methods: {
     handleSelect(key, keyPath) {
+      // axios.get('/post/getCookie',{
+      //   withCredentials: true
+      // })
       console.log(key, keyPath);
     },
     logout() {

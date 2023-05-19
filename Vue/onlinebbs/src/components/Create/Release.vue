@@ -55,7 +55,8 @@ export default {
           title: '帖子标题'
         }
       ], //你需要把这里替换成你的帖子数据
-      currentPage: 1
+      currentPage: 1,
+      pageSize: 50,
     };
   },
   methods: {

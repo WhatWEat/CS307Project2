@@ -1,40 +1,55 @@
 <template>
   <div class="PostList">
     <div class="loading" v-if="loading">
-      Loading...
+      <el-skeleton :rows="15" animated class="skeleton-with"/>
     </div>
     <div class="posts" v-else>
-      <ul>
-        <li v-for="post in posts">
-<!--          <router-link :to="{ name: 'user_info', params: { name: post.author.loginname }}" :title="post.author_id">-->
-<!--            <img :src="post.author.avatar_url" :title="post.author.loginname"/>-->
-<!--          </router-link>-->
-          <span>
-<!--						{{ post.reply_count }}/{{ post.visit_count }}-->
-            {{read}}
-					</span>
-          <router-link :to="{ name: 'post-list', params: { id: post.id}}" :title="post.title">
+      <el-card v-for="post in posts" :key="post.id" class="post-card" @click="viewPost(post.id)">
+        <!--        帖子时间-->
+        <div class="post-time">{{ post.time }}</div>
+        <!--        帖子作者-->
+        <div class="post-author">{{ post.author }}</div>
+          <!-- 帖子标题 -->
+          <router-link :to="{ name: 'post-list', params: { id: post.id}}" :title="post.title"
+                       class="post-title">
             {{ post.title }}
           </router-link>
-          <span class="last_reply">
-						{{ post.last_reply_at | formatDate}}
-					</span>
-        </li>
-      </ul>
+
+      </el-card>
+      <!-- 无限滚动组件 -->
+      <div v-infinite-scroll="loadMore">
+        <el-button v-if="!loading">加载更多</el-button>
+        <el-spinner v-if="loading"></el-spinner>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+
 export default {
   name: 'PostList',
-  data () {
+  data() {
     return {
-      posts:{
+      posts: [{
+        id: 1,
+        title: 'Post 1',
+        time: '2022-12-21',
+        author: '王小虎',
       },
-      loading:false,
-      read: 10000,
+        {
+          id: 2,
+          title: 'Post 211111',
+          time: '2022-12-21',
+          author: '王小虎',
+        },
+        {
+          id: 3,
+          title: 'Post 3',
+          time: '2022-12-21',
+          author: '王小虎',
+        }],
     }
   },
   filters: {
@@ -43,10 +58,10 @@ export default {
     }
   },
   methods: {
-    getData(){
+    getData() {
       axios.get('/post/PostList')
-      .then( (response) => {
-        if( response.status === 200 ){
+      .then((response) => {
+        if (response.status === 200) {
           this.posts = response.data;
           this.loading = false;
           console.log(this.posts);
@@ -59,52 +74,33 @@ export default {
     }
   },
   beforeMount() {
-    this.loading = true;
+    // this.loading = true;
+    this.loading = false;
     this.getData();
   }
 }
 </script>
 
 <style scoped>
-.PostList .posts {
-  background-color: white;
-  padding: 0.5rem;
-  margin: 0.5rem 3rem;
+.skeleton-with {
+  width: 1000px;
 }
-.PostList .posts li {
-  list-style: none;
-  margin-bottom: 14px;
-  border-bottom: 1px solid #E7E7E7;
-  line-height: 30px;
+
+.post-card {
+  display: flex;
+  align-items: center;
 }
-.PostList .posts ul li img {
-  width: 1.5rem;
-  height: 1.5rem;
+
+.post-time,
+.post-author {
+  margin-left: 20px;
+  display: inline;
 }
-.PostList .posts li span {
-  display: inline-block;
-  text-align: center;
-  width: 70px;
-  font-size: 12px;
-  margin: 0 10px;
-}
-.PostList .posts a {
-  text-decoration: none;
-  color: inherit;
-  -o-text-overflow: ellipsis;
-  white-space: nowrap;
-  display: inline-block;
-  vertical-align: middle;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 70%;
-}
-.PostList .posts a:visited {
-  color:#858585;
-}
-.PostList .posts .last_reply {
-  float: right;
-  font-size: 0.7rem;
-  margin-top: 0.3rem;
+
+.post-title {
+  margin-left: 40px;
+  margin-right: 40px;
+  text-decoration: none; /* 去掉下划线 */
+  color: inherit; /* 继承父元素的文字颜色 */
 }
 </style>

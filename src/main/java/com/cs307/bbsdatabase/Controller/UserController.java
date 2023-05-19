@@ -47,6 +47,8 @@ public class UserController {
     //此处返回1则用户不存在，返回2则密码错误，返回0则登录成功
     public boolean login(@PathVariable String username, @PathVariable String password,
         HttpServletResponse response){
+        System.out.println("username"+username);
+        System.out.println("password"+password);
         if (findUserName(username) == null){
             return false;
         }else {

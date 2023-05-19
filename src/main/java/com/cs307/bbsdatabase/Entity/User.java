@@ -69,12 +69,12 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", phone='" + phone + '\'' +
-                ", registration=" + registration +
-                '}';
+            "id=" + id +
+            ", username='" + username + '\'' +
+            ", password='" + password + '\'' +
+            ", phone='" + phone + '\'' +
+            ", registration=" + registration +
+            '}';
     }
 
     public void setId(String id) {
@@ -108,6 +108,4 @@ public class User implements Serializable {
     public String getId() {
         return id;
     }
-
-
 }
