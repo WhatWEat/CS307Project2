@@ -2,6 +2,7 @@ package com.cs307.bbsdatabase.Controller;
 
 import com.cs307.bbsdatabase.Entity.Post;
 import com.cs307.bbsdatabase.Entity.User;
+import com.cs307.bbsdatabase.Service.PostService;
 import com.cs307.bbsdatabase.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,9 @@ public class UserController {
     //请把你的任务在Service中实现，Controller中只需要调用Service中的方法即可
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PostService postService;
 
     @PostMapping("/reg/{phone}/{username}/{password}")
     //实现注册的方法,返回注册成功与否
@@ -78,6 +82,6 @@ public class UserController {
     //查返回该用户发的所有贴子
     public ArrayList<Post> findPostList(@PathVariable String name) {
         System.out.println(name);
-        return userService.findPostByUser(name);
+        return postService.findPostByUser(name);
     }
 }

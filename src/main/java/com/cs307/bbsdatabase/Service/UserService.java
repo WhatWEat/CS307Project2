@@ -19,8 +19,7 @@ import org.springframework.stereotype.Service;
 public class UserService extends ServiceImpl<UserMapper, User> {
     @Autowired
     private UserMapper userMapper ;
-    @Autowired
-    private PostMapper postMapper;
+
 //    public List<User> getFollow(User user){
 //        QueryWrapper<User> a = new QueryWrapper<>();
 //        userMapper.select();
@@ -47,17 +46,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         User user = new User(username,phone_number,password);
         userMapper.createUser(username,user.getRegistration(),phone_number,user.getId(),password);
     }
-    public ArrayList<Post> findPostByUser(String username){
-        System.out.println(username);
-        return postMapper.findByUser(username);
-    }
 
-    public boolean createPost(String username, String title, String content) {
-        Post post = new Post(title,content);
-        int success = postMapper.insertPost(post);
-        postMapper.creatPost(post.getPost_id(),username);
-        return true;
-    }
 
 
 //    public User findUser(String username)
