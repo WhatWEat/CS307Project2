@@ -43,4 +43,8 @@ public class PostService extends ServiceImpl<PostMapper, Post> {
     public List<Post> findPostByLike(String username,int page, int pageSize){
         return postMapper.findPostByLike(username,pageSize,(page-1)*pageSize);
     }
+
+    public List<Post> findAllPost(int page, int pageSize){
+        return postMapper.findAllPost(pageSize,(page-1)*pageSize);
+    }
 }
