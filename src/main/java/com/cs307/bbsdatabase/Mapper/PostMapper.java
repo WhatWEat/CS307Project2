@@ -26,6 +26,9 @@ public interface PostMapper extends BaseMapper<Post> {
             limit #{limit} offset #{offset};""")
     List<Post> findPostByWrite(String username,int limit, int offset);
 
+    @Select("select * from posts limit #{limit} offset #{offset};")
+    List<Post> findAllPost(int limit,int offset);
+
     @Select("""
             select p.post_id, p.title, p.content, p.posting_time
             from userlikepost ulp
@@ -44,4 +47,6 @@ public interface PostMapper extends BaseMapper<Post> {
     @Insert("insert into UserLikePost(post_id, user_name)\n" +
             "VALUES (#{post_id}, #{username});")
     void userLikePost(int post_id,String username);
+
+
 }
