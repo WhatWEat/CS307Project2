@@ -4,17 +4,19 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
 @TableName("Replies")
 public class Reply implements Serializable {
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Integer reply_id;
     @TableField(exist = false)
     private Integer postID;
-    @TableField("parent_id")
-    private Integer parentReplyID;
+    private Integer parent_id;
     @TableField(exist = false)
     private Integer userID;
     private String content;
@@ -30,35 +32,50 @@ public class Reply implements Serializable {
         this.anonymous = anonymous;
     }
 
-    public Reply(Integer postID, Integer userID, String content, int stars, boolean anonymous) {
+    @JsonCreator
+    public Reply(@JsonProperty("reply_id") Integer reply_id,
+                 @JsonProperty("content")String content,
+                 @JsonProperty("stars")int stars,
+                 @JsonProperty("anonymous")boolean anonymous,
+                 @JsonProperty("parent_id")Integer parent_id) {
+        this.reply_id = reply_id;
+        this.content = content;
+        this.stars = stars;
+        this.anonymous = anonymous;
+        if (parent_id != null) {
+            this.parent_id = parent_id;
+        }
+    }
+
+    public Reply(Integer postID, String content, int stars, boolean anonymous) {
         this.postID = postID;
-        this.userID = userID;
-        this.parentReplyID = null;
+        this.parent_id = null;
         this.content = content;
         this.stars = stars;
         this.anonymous = anonymous;
     }
 
-    public Reply(Integer postID, Integer parentReplyID, Integer userID, String content, int stars,
-        boolean anonymous) {
-        this.postID = postID;
-        this.parentReplyID = parentReplyID;
-        this.userID = userID;
-        this.content = content;
-        this.stars = stars;
-        this.anonymous = anonymous;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
+    public void setReply_id(Integer reply_id) {
+        this.reply_id = reply_id;
     }
 
     public void setPostID(Integer postID) {
         this.postID = postID;
     }
 
-    public void setParentReplyID(Integer parentReplyID) {
-        this.parentReplyID = parentReplyID;
+    public void setParent_id(Integer parent_id) {
+        this.parent_id = parent_id;
+    }
+
+    @Override
+    public String toString() {
+        return "Reply{" +
+                "reply_id:" + reply_id +
+                ", parent_id:" + parent_id +
+                ", content:'" + content + '\'' +
+                ", stars:" + stars +
+                ", anonymous=" + anonymous +
+                '}';
     }
 
     public void setUserID(Integer userID) {
@@ -81,16 +98,16 @@ public class Reply implements Serializable {
         this.users = users;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getReply_id() {
+        return reply_id;
     }
 
     public Integer getPostID() {
         return postID;
     }
 
-    public Integer getParentReplyID() {
-        return parentReplyID;
+    public Integer getParent_id() {
+        return parent_id;
     }
 
     public Integer getUserID() {

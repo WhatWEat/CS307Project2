@@ -45,6 +45,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
                             String password){
         User user = new User(username,phone_number,password);
         userMapper.createUser(username,user.getRegistration(),phone_number,user.getId(),password);
+
     }
 
 
