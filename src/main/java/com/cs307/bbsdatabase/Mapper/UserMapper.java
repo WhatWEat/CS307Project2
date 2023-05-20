@@ -18,10 +18,10 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("SELECT * FROM users WHERE phone_number = #{phone_number}")
     User findByPhone(String phone_number);
 
-    @Insert("INSERT INTO users (user_id,username,  password, phone_number,registration_time)\n" +
-            "VALUES(#{user_id},#{username},#{password},#{phone_number},#{registration_time})")
-    void createUser(String user_id,String username,String password,String phone_number
-                    ,Timestamp registration_time
+    @Insert("INSERT INTO users (username,registration_time, phone_number,user_id,  password)\n" +
+            "VALUES(#{username},#{registration_time},#{phone_number},#{user_id},#{password})")
+    void createUser(String username,Timestamp registration_time,String phone_number,
+                    String user_id,String password
      );
 //    @Select("")
 }

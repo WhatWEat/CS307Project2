@@ -1,5 +1,6 @@
 package com.cs307.bbsdatabase.Service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cs307.bbsdatabase.Entity.Post;
 import com.cs307.bbsdatabase.Entity.User;
@@ -44,16 +45,20 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     public void createUser(String username,  String phone_number,
                             String password){
         User user = new User(username,phone_number,password);
-        userMapper.createUser(user.getId(),username,password,phone_number,user.getRegistration());
+        userMapper.createUser(username,user.getRegistration(),phone_number,user.getId(),password);
     }
     public ArrayList<Post> findPostByUser(String username){
         System.out.println(username);
         return postMapper.findByUser(username);
     }
 
-    public boolean createPost(String username,String title, String content){
-        return postMapper.createPost(title,content);
+    public boolean createPost(String username, String title, String content) {
+        Post post = new Post(title,content);
+        int success = postMapper.insertPost(post);
+        postMapper.creatPost(post.getPost_id(),username);
+        return true;
     }
+
 
 //    public User findUser(String username)
 

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/post")
 public class PostController {
@@ -24,11 +26,20 @@ public class PostController {
     public ArrayList<Post> PostList(@PathVariable int page){
         return null;
     }
+
+    @GetMapping("/getCookie")
+    public String getCookie(HttpServletRequest request){
+        System.out.println(request.getCookies()[0].getValue());
+        return request.getCookies()[0].getValue();
+    }
+
     @PostMapping("/create/{username}/{title}/{content}")
     //发帖子
     public boolean createPost(@PathVariable String username,@PathVariable String title,@PathVariable String content){
-        System.out.println("start!");
-        return userService.createPost(username,title,content);
+        Post post = new Post(title,content);
+        boolean success = userService.createPost(username,title,content);
+        System.out.println(post.getPost_id());
+        return success;
     }
     @GetMapping("/findByID")
     //返回帖子id为id的帖子
