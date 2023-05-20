@@ -10,11 +10,6 @@
           width="180"
       ></el-table-column>
       <el-table-column
-          prop="name"
-          label="作者"
-          width="180"
-      ></el-table-column>
-      <el-table-column
           prop="title"
           label="帖子标题"
           width="220"
@@ -27,7 +22,7 @@
         @current-change="handleCurrentChange"
         :current-page="currentPage"
         :page-size="50"
-        layout="total, sizes, prev, pager, next, jumper"
+        layout="sizes, prev, pager, next, jumper"
     >
     </el-pagination>
   </div>
@@ -35,14 +30,14 @@
 
 <script>
 export default {
-  name: "Share",
+  name: "Release",
   data() {
     return {
       tableData: [
         {
           date: '2016-05-02',
           name: '王小虎',
-          title: '帖子标题帖子标题帖子标题帖子标题'
+          title: '帖子标题'
         },
         {
           date: '2016-05-04',
@@ -60,7 +55,8 @@ export default {
           title: '帖子标题'
         }
       ], //你需要把这里替换成你的帖子数据
-      currentPage: 1
+      currentPage: 1,
+      pageSize: 50,
     };
   },
   methods: {
