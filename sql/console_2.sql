@@ -14,16 +14,15 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE IF NOT EXISTS posts
 (
-    post_id      BIGINT primary key,
+    post_id      SERIAL PRIMARY KEY,
     title        VARCHAR(100)  not null,
     content      VARCHAR(1000) not null,
     posting_time TIMESTAMP     not null
-
 );
 
 CREATE TABLE IF NOT EXISTS Replies
 (
-    reply_id  BIGINT primary key,
+    reply_id  SERIAL PRIMARY KEY,
     content   VARCHAR(1000) not null,
     stars     BIGINT        not null,
     anonymous BOOLEAN       not null,
@@ -157,7 +156,9 @@ CREATE TABLE IF NOT EXISTS UserBlockUser
 );
 
 -- 创建序列
-CREATE SEQUENCE user_id_seq;
+CREATE SEQUENCE user_id_seq START 1 INCREMENT 1;
+CREATE SEQUENCE replies_reply_id_seq START 1 INCREMENT 1;
+
 
 
 SELECT setval('user_id_seq', (SELECT max(CAST(user_id AS INT)) FROM users) + 1);
@@ -178,5 +179,17 @@ CREATE TRIGGER users_trigger
     ON users
     FOR EACH ROW
 EXECUTE PROCEDURE users_trigger_function();
+CREATE OR REPLACE FUNCTION assign_id()
+    RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.reply_id IS NULL THEN
+        SELECT nextval('replies_reply_id_seq') INTO NEW.reply_id;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
-
+CREATE TRIGGER assign_id_trigger
+    BEFORE INSERT ON Replies
+    FOR EACH ROW
+EXECUTE PROCEDURE assign_id();
