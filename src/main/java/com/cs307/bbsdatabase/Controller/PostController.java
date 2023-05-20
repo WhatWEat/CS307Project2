@@ -29,6 +29,10 @@ public class PostController {
     @GetMapping("/findPostByWrite/{page}/{pageSize}")
     //返回第page页的帖子列表，利用sql实现分页查询，简单说就是利用limit语句
     //每页的帖子数量为pageSize
+//     public List<Map<String,String>> findPostByWrite(@PathVariable int page, @PathVariable String username){
+//         List<Post> list =  postService.findPostByWrite(username,page,pageSize);
+//         return getMaps(list);
+
     public List<Map<String,String>> findPostByWrite(@PathVariable int page, @PathVariable int pageSize,HttpServletRequest request){
         List<Post> list =  postService.findPostByWrite(Cookies.getUsername(request),page,pageSize);
         return getKeylist(list);
@@ -36,6 +40,21 @@ public class PostController {
     @GetMapping("/findPostByLike/{page}/{pageSize}")
     //返回第page页的帖子列表，利用sql实现分页查询，简单说就是利用limit语句
     //每页的帖子数量为pageSize
+  
+//     public List<Map<String,String>> findPostByLike(@PathVariable int page, @PathVariable String username){
+//         List<Post> list =  postService.findPostByLike(username,page,pageSize);
+//         return getMaps(list);
+//     }
+    @GetMapping("/findAllPost/{page}")
+    public List<Map<String,String>> findAllPost(@PathVariable int page){
+        List<Post> list = postService.findAllPost(page,pageSize);
+        return getMaps(list);
+    }
+
+    @GetMapping("/getCookie")
+    public String getCookie(HttpServletRequest request){
+        System.out.println(request.getCookies()[0].getValue());
+        return request.getCookies()[0].getValue();
     public List<Map<String,String>> findPostByLike(@PathVariable int page, @PathVariable int pageSize,HttpServletRequest request){
         List<Post> list =  postService.findPostByLike(Cookies.getUsername(request),page,pageSize);
         return getKeylist(list);
@@ -60,6 +79,14 @@ public class PostController {
         postService.userLikePost(post_id,username);
     }
 
+    private List<Map<String, String>> getMaps(List<Post> list) {
+        List<Map<String,String>> out = new ArrayList<>();
+        for (Post post : list) {
+            Map<String, String> temp = getMap(post);
+            out.add(temp);
+        }
+        return out;
+    }
 
     private Map<String,String> getMap(Post post) {
         Map<String, String> temp = new HashMap<>();
