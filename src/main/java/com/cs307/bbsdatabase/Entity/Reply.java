@@ -11,9 +11,11 @@ import java.util.ArrayList;
 public class Reply implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
+    @TableField(exist = false)
     private Integer postID;
     @TableField("parent_id")
     private Integer parentReplyID;
+    @TableField(exist = false)
     private Integer userID;
     private String content;
     private int stars;
@@ -22,14 +24,9 @@ public class Reply implements Serializable {
     @TableField(exist = false)
     private ArrayList<User> users;
 
-    public Reply(Integer id, Integer postID, Integer parentReplyID, Integer userID, String content,
-        int stars, boolean anonymous) {
-        this.id = id;
-        this.postID = postID;
-        this.parentReplyID = parentReplyID;
-        this.userID = userID;
+    public Reply(String content, boolean anonymous) {
+        this.stars = 0;
         this.content = content;
-        this.stars = stars;
         this.anonymous = anonymous;
     }
 

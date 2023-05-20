@@ -1,5 +1,6 @@
 package com.cs307.bbsdatabase.Service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cs307.bbsdatabase.Entity.Post;
 import com.cs307.bbsdatabase.Entity.User;
@@ -7,6 +8,7 @@ import com.cs307.bbsdatabase.Mapper.PostMapper;
 import com.cs307.bbsdatabase.Mapper.UserMapper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class UserService extends ServiceImpl<UserMapper, User> {
     @Autowired
     private UserMapper userMapper ;
-    private PostMapper postMapper;
+
 //    public List<User> getFollow(User user){
 //        QueryWrapper<User> a = new QueryWrapper<>();
 //        userMapper.select();
@@ -26,6 +28,10 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     //根据id查找user
     public User findUserById(String id){
         return userMapper.findById(id);
+    }
+
+    public User findUserByPhone(String phone){
+        return userMapper.findByPhone(phone);
     }
     public User findUserByUsername(String username){
         return userMapper.findByName(username);
@@ -38,10 +44,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
     public void createUser(String username,  String phone_number,
                             String password){
         User user = new User(username,phone_number,password);
-        userMapper.createUser(user.getId(),username,password,phone_number,user.getRegistration());
-    }
-    public ArrayList<Post> findPostByUser(String username){
-        return postMapper.findByUser(username);
+        userMapper.createUser(username,user.getRegistration(),phone_number,user.getId(),password);
     }
 
 

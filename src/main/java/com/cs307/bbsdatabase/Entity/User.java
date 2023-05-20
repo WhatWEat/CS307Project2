@@ -29,10 +29,6 @@ public class User implements Serializable {
     private String id;
     private String password;
 
-
-
-
-
     //exist注解表示该字段在仅在类中存在，在数据库中不存在
     @TableField(exist = false)
     private ArrayList<User> follow = new ArrayList<>();
