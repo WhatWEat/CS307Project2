@@ -1,6 +1,7 @@
 package com.cs307.bbsdatabase.Controller;
 
 import com.cs307.bbsdatabase.Entity.Post;
+import com.cs307.bbsdatabase.Util.Cookies;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,40 +22,23 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping("/post")
 public class PostController {
-    private final int pageSize = 2;
     @Autowired
     private UserService userService;
     @Autowired
     private PostService postService;
-    @GetMapping("/findPostByWrite/{page}/{username}")
+    @GetMapping("/findPostByWrite/{page}/{pageSize}")
     //返回第page页的帖子列表，利用sql实现分页查询，简单说就是利用limit语句
     //每页的帖子数量为pageSize
-    public List<Map<String,String>> findPostByWrite(@PathVariable int page, @PathVariable String username){
-        List<Post> list =  postService.findPostByWrite(username,page,pageSize);
-        List<Map<String,String>> out = new ArrayList<>();
-        for (Post post : list) {
-            Map<String, String> temp = getMap(post);
-            out.add(temp);
-        }
-        return out;
+    public List<Map<String,String>> findPostByWrite(@PathVariable int page, @PathVariable int pageSize,HttpServletRequest request){
+        List<Post> list =  postService.findPostByWrite(Cookies.getUsername(request),page,pageSize);
+        return getKeylist(list);
     }
-    @GetMapping("/findPostByLike/{page}/{username}")
+    @GetMapping("/findPostByLike/{page}/{pageSize}")
     //返回第page页的帖子列表，利用sql实现分页查询，简单说就是利用limit语句
     //每页的帖子数量为pageSize
-    public List<Map<String,String>> findPostByLike(@PathVariable int page, @PathVariable String username){
-        List<Post> list =  postService.findPostByLike(username,page,pageSize);
-        List<Map<String,String>> out = new ArrayList<>();
-        for (Post post : list) {
-            Map<String, String> temp = getMap(post);
-            out.add(temp);
-        }
-        return out;
-    }
-
-    @GetMapping("/getCookie")
-    public String getCookie(HttpServletRequest request){
-        System.out.println(request.getCookies()[0].getValue());
-        return request.getCookies()[0].getValue();
+    public List<Map<String,String>> findPostByLike(@PathVariable int page, @PathVariable int pageSize,HttpServletRequest request){
+        List<Post> list =  postService.findPostByLike(Cookies.getUsername(request),page,pageSize);
+        return getKeylist(list);
     }
 
     @PostMapping("/create/{username}/{title}/{content}")
@@ -84,5 +68,13 @@ public class PostController {
         temp.put("content", post.getContent());
         temp.put("posting_time", post.getPosting_time().toString());
         return temp;
+    }
+    private List<Map<String,String>> getKeylist(List<Post> list){
+        List<Map<String,String>> out = new ArrayList<>();
+        for (Post post : list) {
+            Map<String, String> temp = getMap(post);
+            out.add(temp);
+        }
+        return out;
     }
 }
