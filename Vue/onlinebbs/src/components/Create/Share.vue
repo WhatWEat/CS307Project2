@@ -75,7 +75,7 @@ export default {
     fetchData() {
       // 在这里实现获取数据的逻辑，例如从你的后端API获取数据
       // 然后将获取的数据赋值给 this.tableData
-    }
+    },
   },
   mounted() {
     this.fetchData(); // 在组件挂载后，获取第一页的数据
