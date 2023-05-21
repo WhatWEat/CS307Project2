@@ -46,12 +46,12 @@ public class PostController {
         return getMaps(list);
     }
 
-    @PostMapping("/create/{username}/{title}/{content}")
+    @PostMapping("/create/{title}/{content}")
     //发帖子
-    public boolean createPost(@PathVariable String username,@PathVariable String title,@PathVariable String content){
+    public boolean createPost(@PathVariable String title,@PathVariable String content,HttpServletRequest request){
         Post post = new Post(title,content);
-        boolean success = postService.createPost(username,title,content);
-        System.out.println(post.getPost_id());
+        boolean success = postService.createPost(Cookies.getUsername(request),title,content);
+        System.out.println(success);
         return success;
     }
     @GetMapping("/findByID/{post_id}")
@@ -77,9 +77,9 @@ public class PostController {
     private Map<String,String> getMap(Post post) {
         Map<String, String> temp = new HashMap<>();
         temp.put("title", post.getTitle());
-        temp.put("post_id", post.getPost_id().toString());
+        temp.put("id", post.getPost_id().toString());
         temp.put("content", post.getContent());
-        temp.put("posting_time", post.getPosting_time().toString());
+        temp.put("time", post.getPosting_time().toString().substring(0,19));
         return temp;
     }
 }

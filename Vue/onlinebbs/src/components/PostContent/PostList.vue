@@ -1,28 +1,39 @@
 <template>
-  <div class="PostList">
-    <div class="loading" v-if="loading">
-      <el-skeleton :rows="15" animated class="skeleton-with"/>
-    </div>
-    <div class="posts" v-else>
-      <el-card v-for="post in posts" :key="post.id" class="post-card" @click="viewPost(post.id)">
-        <!--        帖子时间-->
-        <div class="post-time">{{ post.time }}</div>
-        <!--        帖子作者-->
-        <div class="post-author">{{ post.author }}</div>
-          <!-- 帖子标题 -->
-          <router-link :to="{ name: 'post-list', params: { id: post.id}}" :title="post.title"
-                       class="post-title">
-            {{ post.title }}
-          </router-link>
+  <el-container>
+    <el-main>
+      <div class="PostList" v-infinite-scroll="loadMorePosts" infinite-scroll-disabled="loading"
+           infinite-scroll-distance="10">
 
-      </el-card>
-      <!-- 无限滚动组件 -->
-      <div v-infinite-scroll="loadMore">
-        <el-button v-if="!loading">加载更多</el-button>
-        <el-spinner v-if="loading"></el-spinner>
+
+        <div class="loading" v-if="loading">
+          <el-skeleton :rows="15" animated class="skeleton-with"/>
+        </div>
+        <div class="posts" v-else>
+          <el-card v-for="post in posts" :key="post.id" class="post-card">
+            <!--        帖子时间-->
+            <div class="post-time"><i class="el-icon-magic-stick"></i>{{ post.time }}</div>
+            <!--        帖子作者-->
+            <div class="post-author">
+              <el-button type="info" icon="el-icon-user">{{ post.author }}</el-button>
+            </div>
+            <!-- 帖子标题 -->
+            <router-link :to="{ name: 'post-list', params: { id: post.id}}" :title="post.title"
+                         class="post-title">
+              {{ post.title }}
+            </router-link>
+          </el-card>
+        </div>
+
+
       </div>
-    </div>
-  </div>
+    </el-main>
+    <el-footer>
+      <div class="write">
+        <el-button type="primary" icon="el-icon-edit" @click="goWrite">发发我的</el-button>
+        <el-button type="success" icon="el-icon-search" @click="goSearch">搜搜你的</el-button>
+      </div>
+    </el-footer>
+  </el-container>
 </template>
 
 <script>
@@ -32,24 +43,10 @@ export default {
   name: 'PostList',
   data() {
     return {
-      posts: [{
-        id: 1,
-        title: 'Post 1',
-        time: '2022-12-21',
-        author: '王小虎',
-      },
-        {
-          id: 2,
-          title: 'Post 211111',
-          time: '2022-12-21',
-          author: '王小虎',
-        },
-        {
-          id: 3,
-          title: 'Post 3',
-          time: '2022-12-21',
-          author: '王小虎',
-        }],
+      hasMorePosts: true,
+      currentPage: 1,
+      loading: true,
+      posts: [],
     }
   },
   filters: {
@@ -59,46 +56,78 @@ export default {
   },
   methods: {
     getData() {
-      axios.get('/post/PostList')
+      axios.get('/post/findAllPost/1/20', {
+        withCredentials: true
+      })
       .then((response) => {
         if (response.status === 200) {
           this.posts = response.data;
           this.loading = false;
-          console.log(this.posts);
+          // console.log(this.posts);
           console.log('受到信息');
         }
       })
       .catch(function (error) {
         console.log(error);
       });
-    }
+    },
+    loadMorePosts() {
+      this.currentPage += 1;
+      axios.get('/post/findAllPost/' + this.currentPage + '/20', {
+        withCredentials: true
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          this.posts = this.posts.concat(response.data);
+          this.loading = false;
+          // console.log(this.posts);
+          console.log('更多信息');
+        } else {
+          this.hasMorePosts = false;
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },
+    goWrite(){
+      this.$router.push('/write');
+    },
+    goSearch(){
+
+    },
   },
   beforeMount() {
-    // this.loading = true;
-    this.loading = false;
+    this.loading = true;
     this.getData();
   }
 }
 </script>
 
 <style scoped>
+.PostList {
+  height: 70vh;
+  overflow-y: auto;
+}
+
 .skeleton-with {
   width: 1000px;
 }
 
 .post-card {
+  width: 800px;
   display: flex;
   align-items: center;
 }
 
 .post-time,
 .post-author {
-  margin-left: 20px;
   display: inline;
+  margin-right: 50px;
 }
 
 .post-title {
-  margin-left: 40px;
+  margin-left: 100px;
   margin-right: 40px;
   text-decoration: none; /* 去掉下划线 */
   color: inherit; /* 继承父元素的文字颜色 */

@@ -12,6 +12,7 @@ import Share from "@/components/Person/Share.vue";
 import myReply from "@/components/Create/myReply.vue";
 import PersonCreate from "@/components/PersonCreate.vue";
 import Subscribe from "@/components/Person/Subscribe.vue";
+import WritePost from "@/components/PostContent/WritePost.vue";
 
 Vue.use(VueRouter)
 export const router = new VueRouter({
@@ -20,6 +21,7 @@ export const router = new VueRouter({
         {path: '/person', redirect: '/person/share'},
         {path: '/create', redirect: '/create/my-reply'},
         {path: '/login', component: LoginReg},
+        {path: '/write', component: WritePost, meta: {requiresAuth: true}},
         {
           path: '/main', component: MainBBS, meta: {requiresAuth: true},
         },

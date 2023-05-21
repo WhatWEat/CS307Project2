@@ -7,7 +7,9 @@
       <background></background>
     </div>
     <div class="router-container">
-      <router-view></router-view>
+      <transition name="fade" mode="out-in">
+        <router-view></router-view>
+      </transition>
     </div>
   </div>
 </template>
@@ -15,6 +17,7 @@
 <script>
 import MainMenu from "@/components/MainMenu.vue";
 import background from "@/components/BackGround/BackGround.vue";
+
 export default {
   name: 'App',
   components: {
@@ -33,7 +36,8 @@ export default {
   align-items: center;
   height: 80vh;
 }
-.background{
+
+.background {
   position: absolute;
   top: 0;
   left: 0;
@@ -41,6 +45,7 @@ export default {
   height: 100%;
   z-index: 1;
 }
+
 .menu-container {
   align-self: flex-end;
   z-index: 2;
@@ -51,5 +56,12 @@ export default {
   align-items: flex-start;
   height: 100%;
   z-index: 2;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>
