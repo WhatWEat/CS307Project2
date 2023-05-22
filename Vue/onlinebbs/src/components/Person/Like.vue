@@ -1,4 +1,5 @@
 <template>
+<!--  我的点赞-->
   <div>
     <el-table
         :data="tableData"
@@ -24,8 +25,22 @@
       <el-table-column
           prop="count"
           label="点赞总数"
-          width="180"
+          width="80"
+          align="center"
       ></el-table-column>
+      <el-table-column
+          label="取消点赞"
+          width="160"
+          align="center">
+        <template slot-scope="scope">
+          <el-switch
+              v-model="scope.row.value"
+              @change="handleChange(scope.row)"
+              active-color="#ff4949"
+              inactive-color="#13ce66">
+          </el-switch>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
         @size-change="handleSizeChange"
@@ -84,6 +99,9 @@ export default {
     fetchData() {
       // 在这里实现获取数据的逻辑，例如从你的后端API获取数据
       // 然后将获取的数据赋值给 this.tableData
+    },
+    handleChange(row) {
+      console.log(row);
     }
   },
   mounted() {

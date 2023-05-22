@@ -4,7 +4,10 @@
     <el-tabs type="border-card" v-model="activeTab">
       <el-tab-pane label="我的回复" name="/create/my-reply"></el-tab-pane>
       <el-tab-pane label="我的帖子" name="/create/my-post"></el-tab-pane>
-      <router-view></router-view>
+      <el-tab-pane label="我的转发" name="/create/my-share"></el-tab-pane>
+      <transition name="fade" mode="out-in">
+        <router-view></router-view>
+      </transition>
     </el-tabs>
 
   </div>

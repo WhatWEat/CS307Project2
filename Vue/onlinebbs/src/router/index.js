@@ -8,7 +8,7 @@ import PostContent from "@/components/PostContent/PostContent.vue";
 import Marked from "@/components/Person/Marked.vue";
 import Like from "@/components/Person/Like.vue";
 import Release from "@/components/Create/Release.vue";
-import Share from "@/components/Person/Share.vue";
+import Share from "@/components/Create/Share.vue";
 import myReply from "@/components/Create/myReply.vue";
 import PersonCreate from "@/components/PersonCreate.vue";
 import Subscribe from "@/components/Person/Subscribe.vue";
@@ -18,7 +18,7 @@ Vue.use(VueRouter)
 export const router = new VueRouter({
       routes: [
         {path: '/', redirect: '/login'},
-        {path: '/person', redirect: '/person/share'},
+        {path: '/person', redirect: '/person/mark'},
         {path: '/create', redirect: '/create/my-reply'},
         {path: '/login', component: LoginReg},
         {path: '/write', component: WritePost, meta: {requiresAuth: true}},
@@ -38,9 +38,6 @@ export const router = new VueRouter({
               path: 'like',
               component: Like
             }, {
-              path: 'share',
-              component: Share
-            }, {
               path: 'subscribe',
               component: Subscribe
             }]
@@ -58,6 +55,10 @@ export const router = new VueRouter({
               path: 'my-reply',
               component: myReply
             },
+            {
+              path: 'my-share',
+              component: Share
+            }
           ]
         },
         {path: '/comment', component: Comment},

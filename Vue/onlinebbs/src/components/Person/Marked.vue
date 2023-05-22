@@ -1,4 +1,5 @@
 <template>
+  <!--  我的收藏-->
   <div>
     <el-table
         :data="tableData"
@@ -8,18 +9,34 @@
           prop="date"
           label="发表时间"
           width="180"
+          align="center"
       ></el-table-column>
       <el-table-column
           prop="name"
           label="作者"
           width="180"
+          align="center"
       ></el-table-column>
       <el-table-column
           prop="title"
           label="帖子标题"
           width="180"
+          align="center"
           :formatter="row => row.title.length > 20 ? row.title.substr(0,20) + '...' : row.title"
       ></el-table-column>
+      <el-table-column
+          label="取消收藏"
+          width="160"
+          align="center">
+        <template slot-scope="scope">
+          <el-switch
+              v-model="scope.row.value"
+              @change="handleChange(scope.row)"
+              active-color="#ff4949"
+              inactive-color="#13ce66">
+          </el-switch>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
         @size-change="handleSizeChange"
@@ -39,6 +56,7 @@ export default {
     return {
       tableData: [
         {
+          id: '1',
           date: '2016-05-02',
           name: '王小虎',
           title: '帖子标题',
@@ -74,6 +92,9 @@ export default {
     fetchData() {
       // 在这里实现获取数据的逻辑，例如从你的后端API获取数据
       // 然后将获取的数据赋值给 this.tableData
+    },
+    handleChange(row) {
+      console.log(row);
     }
   },
   mounted() {

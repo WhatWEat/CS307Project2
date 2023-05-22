@@ -11,17 +11,17 @@
             <el-tag v-for="tag in post.tags" :key="tag.type" :type="tag.type"
                     effect="dark" class="tag-item">{{ tag.tag }} </el-tag>
           </span>
+          <span>
+              <el-button type="primary" icon="el-icon-circle-check" circle></el-button>
+              <el-button type="primary" icon="el-icon-share" circle></el-button>
+              <el-button type="primary" icon="el-icon-star-off" circle></el-button>
+            </span>
           <span style="float: right">发帖时间：{{ post.create_at }}</span>
         </div>
         <el-card style="box-shadow: none;">
           <div slot="header"
                style="display: flex; justify-content: space-between; align-items: center;">
             <span>作者: {{ post.author }}</span>
-            <span>
-              <el-button type="primary" icon="el-icon-circle-check" circle></el-button>
-              <el-button type="primary" icon="el-icon-share" circle></el-button>
-              <el-button type="primary" icon="el-icon-star-off" circle></el-button>
-            </span>
             <span style="float: right">
               <el-button type="danger">屏蔽</el-button>
               <el-button type="warning">关注</el-button>
