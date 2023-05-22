@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.cs307.bbsdatabase.Service.PostService;
 import com.cs307.bbsdatabase.Service.UserService;
+import com.cs307.bbsdatabase.Util.Cookies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +38,9 @@ public class PostController {
     //返回第page页的帖子列表，利用sql实现分页查询，简单说就是利用limit语句
     //每页的帖子数量为pageSize
     public List<Map<String,String>> findPostByWrite(@PathVariable int page,HttpServletRequest request){
-        List<Post> list =  postService.findPostByWrite(getCookie(request),page,pageSize);
+        List<Post> list =  postService.findPostByWrite(Cookies.getUsername(request),page,pageSize);
+        return getMaps(list);
+    }
 
     @GetMapping("/findAllPost/{page}/{pageSize}")
     //返回第page页的帖子列表
