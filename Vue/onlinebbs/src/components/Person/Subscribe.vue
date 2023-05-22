@@ -1,4 +1,5 @@
 <template>
+<!--  我的关注-->
   <div>
     <el-table
         :data="tableData"
@@ -19,6 +20,19 @@
           label="帖子数量"
           width="180"
       ></el-table-column>
+      <el-table-column
+          label="取消关注"
+          width="160"
+          align="center">
+        <template slot-scope="scope">
+          <el-switch
+              v-model="scope.row.value"
+              @change="handleChange(scope.row)"
+              active-color="#ff4949"
+              inactive-color="#13ce66">
+          </el-switch>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
         @size-change="handleSizeChange"
@@ -73,6 +87,9 @@ export default {
     fetchData() {
       // 在这里实现获取数据的逻辑，例如从你的后端API获取数据
       // 然后将获取的数据赋值给 this.tableData
+    },
+    handleChange(row) {
+      console.log(row);
     }
   },
   mounted() {

@@ -5,9 +5,10 @@
         style="width: 100%"
     >
       <el-table-column
-          prop="date"
+          prop="time"
           label="发表时间"
           width="180"
+          align="center"
       ></el-table-column>
       <el-table-column
           prop="title"
@@ -29,28 +30,30 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "Release",
   data() {
     return {
       tableData: [
         {
-          date: '2016-05-02',
+          time: '2016-05-02',
           name: '王小虎',
           title: '帖子标题'
         },
         {
-          date: '2016-05-04',
+          time: '2016-05-04',
           name: '王小虎',
           title: '帖子标题'
         },
         {
-          date: '2016-05-01',
+          time: '2016-05-01',
           name: '王小虎',
           title: '帖子标题'
         },
         {
-          date: '2016-05-03',
+          time: '2016-05-03',
           name: '王小虎',
           title: '帖子标题'
         }
@@ -71,6 +74,14 @@ export default {
     fetchData() {
       // 在这里实现获取数据的逻辑，例如从你的后端API获取数据
       // 然后将获取的数据赋值给 this.tableData
+      axios.get(`/post/findPostByWrite/${this.currentPage}/${this.pageSize}`,{
+        withCredentials: true,
+      }).then(res => {
+        this.tableData = res.data;
+        console.log(this.tableData);
+      }).catch(err => {
+        console.log(err);
+      });
     }
   },
   mounted() {
