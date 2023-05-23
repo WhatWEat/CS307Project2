@@ -15,7 +15,7 @@
               <el-button type="primary" icon="el-icon-circle-check" circle @click="likePost"
                          v-if="!post.like"></el-button>
               <el-button type="primary" icon="el-icon-share" circle></el-button>
-              <el-button type="primary" icon="el-icon-star-off" circle></el-button>
+              <el-button type="primary" icon="el-icon-star-off" circle v-if="!post.marked"></el-button>
             </span>
           <span style="float: right">发帖时间：{{ post.time }}</span>
         </div>
@@ -97,7 +97,6 @@ export default {
       }).then(
           res => {
             this.tags = res.data;
-            console.log(this.tags);
           })
     },
     likePost() {
@@ -125,7 +124,6 @@ export default {
     }
   },
   mounted() {
-    console.log(this.id);
     this.getPost();
     this.getTags();
   }

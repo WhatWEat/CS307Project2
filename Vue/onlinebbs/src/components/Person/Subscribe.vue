@@ -72,12 +72,15 @@ export default {
           count: 140,
         }
       ], //你需要把这里替换成你的帖子数据
-      currentPage: 1
+      currentPage: 1,
+      currentSize: 50
     };
   },
   methods: {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
+      this.currentSize = val;
+      this.fetchData(); // 当每页条数改变时，获取新的数据
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);

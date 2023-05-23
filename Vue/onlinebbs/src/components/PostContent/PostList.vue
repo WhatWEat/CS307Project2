@@ -10,17 +10,27 @@
         </div>
         <div class="posts" v-else>
           <el-card v-for="post in posts" :key="post.id" class="post-card">
+            <span style="margin-right: 50px;float: left;">
+              <el-button type="primary" icon="el-icon-finished" v-if="post.share===0"
+                         size="small">原创</el-button>
+              <el-button type="primary" icon="el-icon-document-copy" v-else
+                         size="small">转载</el-button>
+            </span>
             <!--        帖子时间-->
-            <div class="post-time"><i class="el-icon-magic-stick"></i>{{ post.time }}</div>
+            <span class="post-time"><i class="el-icon-magic-stick"></i>{{ post.time }}</span>
             <!--        帖子作者-->
-            <div class="post-author">
+            <div
+                style="flex-grow: 1; align-items: center; justify-content: space-between;display: inline">
+            <span class="post-author">
               <el-button type="info" icon="el-icon-user">{{ post.author }}</el-button>
+            </span>
+              <!-- 帖子标题 -->
+              <router-link :to="{ name: 'post-list', params: { id: post.id}}" :title="post.title"
+                           class="post-title">
+                {{ post.title }}
+              </router-link>
             </div>
-            <!-- 帖子标题 -->
-            <router-link :to="{ name: 'post-list', params: { id: post.id}}" :title="post.title"
-                         class="post-title">
-              {{ post.title }}
-            </router-link>
+
           </el-card>
         </div>
 
@@ -90,10 +100,10 @@ export default {
         console.log(error);
       });
     },
-    goWrite(){
+    goWrite() {
       this.$router.push('/write');
     },
-    goSearch(){
+    goSearch() {
 
     },
   },
@@ -122,7 +132,6 @@ export default {
 
 .post-time,
 .post-author {
-  display: inline;
   margin-right: 50px;
 }
 
