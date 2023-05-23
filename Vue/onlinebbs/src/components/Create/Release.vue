@@ -36,28 +36,7 @@ export default {
   name: "Release",
   data() {
     return {
-      tableData: [
-        {
-          time: '2016-05-02',
-          name: '王小虎',
-          title: '帖子标题'
-        },
-        {
-          time: '2016-05-04',
-          name: '王小虎',
-          title: '帖子标题'
-        },
-        {
-          time: '2016-05-01',
-          name: '王小虎',
-          title: '帖子标题'
-        },
-        {
-          time: '2016-05-03',
-          name: '王小虎',
-          title: '帖子标题'
-        }
-      ], //你需要把这里替换成你的帖子数据
+      tableData: [],
       currentPage: 1,
       pageSize: 50,
     };
@@ -65,6 +44,8 @@ export default {
   methods: {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
+      this.pageSize = val;
+      this.fetchData();
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);

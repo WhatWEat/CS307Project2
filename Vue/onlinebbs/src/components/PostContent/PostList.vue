@@ -11,7 +11,7 @@
         <div class="posts" v-else>
           <el-card v-for="post in posts" :key="post.id" class="post-card">
             <span style="margin-right: 50px;float: left;">
-              <el-button type="primary" icon="el-icon-finished" v-if="post.share===0"
+              <el-button type="danger" icon="el-icon-finished" v-if="post.shared==='0'"
                          size="small">原创</el-button>
               <el-button type="primary" icon="el-icon-document-copy" v-else
                          size="small">转载</el-button>
@@ -73,7 +73,7 @@ export default {
         if (response.status === 200) {
           this.posts = response.data;
           this.loading = false;
-          // console.log(this.posts);
+          console.log(this.posts);
           console.log('受到信息');
         }
       })
