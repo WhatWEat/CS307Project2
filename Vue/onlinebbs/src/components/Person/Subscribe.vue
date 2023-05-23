@@ -46,6 +46,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "Subscribe",
   data() {
@@ -88,8 +90,7 @@ export default {
       this.fetchData(); // 当页数改变时，获取新的数据
     },
     fetchData() {
-      // 在这里实现获取数据的逻辑，例如从你的后端API获取数据
-      // 然后将获取的数据赋值给 this.tableData
+
     },
     handleChange(row) {
       console.log(row);

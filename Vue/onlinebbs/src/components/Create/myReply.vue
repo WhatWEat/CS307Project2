@@ -36,6 +36,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "myReply",
   data() {
@@ -62,12 +64,15 @@ export default {
           content: '王小虎',
         }
       ], //你需要把这里替换成你的帖子数据
-      currentPage: 1
+      currentPage: 1,
+      currentSize: 50,
     };
   },
   methods: {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
+      this.currentPage = val;
+      this.fetchData();
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
@@ -75,8 +80,13 @@ export default {
       this.fetchData(); // 当页数改变时，获取新的数据
     },
     fetchData() {
-      // 在这里实现获取数据的逻辑，例如从你的后端API获取数据
-      // 然后将获取的数据赋值给 this.tableData
+      axios.get(`reply/findReplyByUser/${this.currentPage}/${this.currentSize}`)
+      .then(response => {
+        this.tableData = response.data;
+      })
+      .catch(error => {
+        console.log(error);
+      });
     }
   },
   mounted() {

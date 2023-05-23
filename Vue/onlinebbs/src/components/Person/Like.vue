@@ -110,10 +110,17 @@ export default {
       }).then(res => {
         this.tableData = res.data;
       })
-      // 在这里实现获取数据的逻辑，例如从你的后端API获取数据
-      // 然后将获取的数据赋值给 this.tableData
     },
     handleChange(row) {
+      if(row.type===true){
+        axios.post(`/post/userDislikePost/${row.id}`, null, {
+          withCredentials: true
+        })
+      } else {
+        axios.post(`/post/userLikePost/${row.id}`, null, {
+          withCredentials: true
+        })
+      }
       console.log(row);
     }
   },

@@ -97,7 +97,7 @@ export default {
     fetchData() {
       // 在这里实现获取数据的逻辑，例如从你的后端API获取数据
       // 然后将获取的数据赋值给 this.tableData
-      axios.get(`/post/findPostByLike/${this.currentPage}/${this.currentSize}`,{
+      axios.get(`/post/findPostByFavorite/${this.currentPage}/${this.currentSize}`,{
         withCredentials: true
       }).then(res => {
         this.tableData = res.data;
