@@ -26,8 +26,7 @@ public class PostController {
     //  1.返回post带上作者
     //  2.完善post里favorite/share等方法
     //  3.user的频闭与关注
-
-
+    
     private final int pageSize = 2;
     @Autowired
     private UserService userService;
