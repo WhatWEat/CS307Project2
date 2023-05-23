@@ -34,6 +34,24 @@ public interface PostMapper extends BaseMapper<Post> {
             limit #{limit} offset #{offset};""")
     List<Post> findPostByLike(String username, int limit, int offset);
 
+    @Select("""
+            select p.post_id, p.title, p.content, p.posting_time, p.shared
+            from userfavoritepost ufp
+            join posts p on p.post_id = ufp.post_id
+            where ufp.user_name = #{username}
+            limit #{limit} offset #{offset};""")
+    List<Post> findPostByFavorite(String username, int limit, int offset);
+
+    @Select("""
+            select p.post_id,p.title,p.content,p.posting_time,p.shared
+            from posts p join userwritepost u on p.post_id = u.post_id
+            where user_name = #{username} and shared != 0
+            limit #{limit} offset #{offset};""")
+    List<Post> findPostByShare(String username, int limit, int offset);
+
+    @Select("select count(*) from userlikepost where post_id = #{post_id};")
+    int findCountLikeById(int post_id);
+
     @Select("SELECT EXISTS(SELECT 1 FROM UserLikePost WHERE post_id = #{post_id} AND user_name = #{username});")
     boolean ifLike(int post_id,String username);
 
@@ -52,7 +70,7 @@ public interface PostMapper extends BaseMapper<Post> {
     @Insert("insert into posts(title, content, posting_time, shared) " +
             "values(#{title}, #{content}, #{posting_time}, #{shared})")
     @Options(useGeneratedKeys=true, keyProperty="post_id", keyColumn="post_id")
-    int sharePOst(Post post);
+    int sharePost(Post post);
 
     @Insert("insert into UserWritePost(post_id, user_name) VALUES (#{post_id},#{username});")
     void creatPost(int post_id,String username);
@@ -61,7 +79,7 @@ public interface PostMapper extends BaseMapper<Post> {
             "VALUES (#{post_id}, #{username});")
     void userLikePost(int post_id,String username);
 
-    @Insert("insert into userfavoritepost (post_id, user_name) VALUES (#{post_id},#{user_name});")
+    @Insert("insert into userfavoritepost (post_id, user_name) VALUES (#{post_id},#{username});")
     void userFavoritePost(int post_id, String username);
 
     @Delete("delete from userlikepost where user_name = #{username} and post_id = #{post_id};")
