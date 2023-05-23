@@ -37,7 +37,7 @@ public class ReplyController {
     }
 
     //reply回复post请用这个
-    @GetMapping("replyToPost/{post_id}/{content}/{anonymous}/{username}")
+    @GetMapping("replyToPost/{post_id}/{content}/{anonymous}/{userna me}")
     public boolean replyToPost(@PathVariable int post_id, @PathVariable String content,@PathVariable Boolean anonymous,
     @PathVariable String username){
         return replyService.replyToPost(post_id,content,anonymous,username);
