@@ -61,5 +61,27 @@ public class PostService extends ServiceImpl<PostMapper, Post> {
         return postMapper.findAllPost(pageSize,(page-1)*pageSize);
     }
 
+    public void userSharePost(Post post){
+        postMapper.sharePOst(post);
+    }
 
+    public String ifLIke(int post_id, String username){
+        if (postMapper.ifLike(post_id,username)){
+            return "true";
+        }else {
+            return "false";
+        }
+    }
+
+    public String ifFavorite(int post_id, String username){
+        if (postMapper.ifFavorite(post_id, username)) {
+            return "true";
+        }else {
+            return "false";
+        }
+    }
+
+    public String findWriter(int post_id){
+        return postMapper.findWriter(post_id);
+    }
 }

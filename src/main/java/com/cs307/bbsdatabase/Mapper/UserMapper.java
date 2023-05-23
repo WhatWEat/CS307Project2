@@ -20,6 +20,10 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("SELECT * FROM users WHERE phone_number = #{phone_number}")
     User findByPhone(String phone_number);
 
+    @Select("SELECT EXISTS(SELECT 1 FROM userfollowuser " +
+            "WHERE user_follower = #{user_follower} AND user_be_followed = #{user_be_followed});")
+    boolean ifFollow(String user_follower, String user_be_followed);
+
     @Insert("INSERT INTO users (username,registration_time, phone_number,user_id,  password)\n" +
             "VALUES(#{username},#{registration_time},#{phone_number},#{user_id},#{password})")
     void createUser(String username,Timestamp registration_time,String phone_number,

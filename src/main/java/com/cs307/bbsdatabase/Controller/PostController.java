@@ -34,29 +34,32 @@ public class PostController {
     @GetMapping("/findAllPost/{page}/{pageSize}")
     //返回第page页的帖子列表
     public List<Map<String, String>> findAllPost(@PathVariable int page,
-        @PathVariable int pageSize) {
+        @PathVariable int pageSize,HttpServletRequest request) {
+        String username = Cookies.getUsername(request) ;
         List<Post> list = postService.findAllPost(page, pageSize);
-        return getMaps(list);
+        return getMaps(list,username);
     }
 
     @GetMapping("/findPostByWrite/{page}/{pageSize}")
     //返回第page页的自己发布的帖子列表
     public List<Map<String, String>> findPostByWrite(@PathVariable int page,
         @PathVariable int pageSize, HttpServletRequest request) {
-        List<Post> list = postService.findPostByWrite(Cookies.getUsername(request), page, pageSize);
-        return getMaps(list);
+        String username = Cookies.getUsername(request) ;
+        List<Post> list = postService.findPostByWrite(username, page, pageSize);
+        return getMaps(list,username);
     }
 
     @GetMapping("/findPostByLike/{page}/{pageSize}")
     //返回第page页的自己喜欢的帖子列表
     public List<Map<String, String>> findPostByLike(@PathVariable int page,
         @PathVariable int pageSize, HttpServletRequest request) {
-        List<Post> list = postService.findPostByLike(Cookies.getUsername(request), page, pageSize);
-        return getMaps(list);
+        String username = Cookies.getUsername(request) ;
+        List<Post> list = postService.findPostByLike(username, page, pageSize);
+        return getMaps(list,username);
     }
 
     @PostMapping("/create")
-    //发帖子
+    //发帖子,shared已设置为0
     public boolean createPost(@RequestBody Post post, HttpServletRequest request) {
         boolean success = postService.createPost(Cookies.getUsername(request), post);
         System.out.println(success);
@@ -65,9 +68,9 @@ public class PostController {
 
     @GetMapping("/findByID/{post_id}")
     //返回帖子id为id的帖子
-    public Map<String, String> createPost(@PathVariable Integer post_id) {
+    public Map<String, String> findPostById(@PathVariable Integer post_id,HttpServletRequest request) {
         Post post = postService.findPostById(post_id);
-        return getMap(post);
+        return getMap(post,Cookies.getUsername(request));
     }
     @GetMapping("/getTags/{post_id}")
     //返回帖子id为id的帖子的标签,与上面的方法连用
@@ -78,6 +81,14 @@ public class PostController {
         System.out.println();
         return list;
     }
+
+    @PostMapping("sharePost/{post_id}")
+    public void userSharePost(@PathVariable int post_id,HttpServletRequest request){
+        Post beShared = postService.findPostById(post_id);
+        Post newPost = new Post(beShared.getTitle(), beShared.getContent(),beShared.getCategories(), beShared.getPost_id());
+        postService.userSharePost(newPost);
+    }
+
     @PostMapping("/userLikePost/{post_id}")
     //用户进行喜欢操作
     public void userLikePost(@PathVariable int post_id, HttpServletRequest request) {
@@ -103,21 +114,28 @@ public class PostController {
     }
 
 
-    private List<Map<String, String>> getMaps(List<Post> list) {
+    private List<Map<String, String>> getMaps(List<Post> list,String username) {
         List<Map<String, String>> out = new ArrayList<>();
         for (Post post : list) {
-            Map<String, String> temp = getMap(post);
+            Map<String, String> temp = getMap(post,username);
             out.add(temp);
         }
         return out;
     }
 
-    private Map<String, String> getMap(Post post) {
+    private Map<String, String> getMap(Post post, String username) {
         Map<String, String> temp = new HashMap<>();
         temp.put("title", post.getTitle());
         temp.put("id", post.getPost_id().toString());
         temp.put("content", post.getContent());
         temp.put("time", post.getPosting_time().toString().substring(0, 19));
+        temp.put("shared",String.valueOf(post.getShared()));
+        temp.put("author", postService.findWriter(post.getPost_id()));
+        temp.put("like", postService.ifLIke(post.getPost_id(),username));
+        temp.put("marked", postService.ifFavorite(post.getPost_id(),username));
+        if (post.getCategories()==null){
+            temp.put("tags","[]");
+        }else temp.put("tags",post.getCategories().toString());
         return temp;
     }
 }
