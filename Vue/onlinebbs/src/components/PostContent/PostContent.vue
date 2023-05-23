@@ -12,10 +12,16 @@
                     effect="dark" class="tag-item">{{ tag.tag }} </el-tag>
           </span>
           <span>
-              <el-button type="primary" icon="el-icon-circle-check" circle @click="likePost"
-                         v-if="!post.like"></el-button>
-              <el-button type="primary" icon="el-icon-share" circle></el-button>
-              <el-button type="primary" icon="el-icon-star-off" circle></el-button>
+              <el-button type="success" icon="el-icon-circle-check" circle @click="likePost"
+                         v-if="like==='false'"></el-button>
+              <el-button type="danger" icon="el-icon-circle-check" circle @click="dislikePost"
+                         v-else></el-button>
+              <el-button type="success" icon="el-icon-star-off" circle @click="markPost"
+                         v-if="marked==='false'"></el-button>
+              <el-button type="danger" icon="el-icon-star-off" circle @click="dismarkPost"
+                         v-else></el-button>
+              <el-button type="primary" icon="el-icon-share" circle @click="sharePost"></el-button>
+
             </span>
           <span style="float: right">发帖时间：{{ post.time }}</span>
         </div>
@@ -52,32 +58,11 @@ export default {
   props: ['id'],
   data() {
     return {
-      post: {
-        title: 'niu',
-        time: '',
-        author: 'test',
-        share: false,
-        like: false,
-        marked: false,
-      },
-      tags: [
-        {
-          tag: 'test1',
-          type: 'success'
-        },
-        {
-          tag: 'test2',
-          type: 'info'
-        },
-        {
-          tag: 'test3',
-          type: 'warning'
-        },
-        {
-          tag: 'test4',
-          type: 'danger'
-        },
-      ],
+      share: 'false',
+      like: 'false',
+      marked: 'false',
+      post: {},
+      tags: [],
       loading: false
     };
   },
@@ -88,6 +73,10 @@ export default {
       }).then(
           res => {
             this.post = res.data;
+            this.share = this.post.share;
+            this.like = this.post.like;
+            this.marked = this.post.marked;
+            console.log(this.post);
           }
       )
     },
@@ -97,35 +86,65 @@ export default {
       }).then(
           res => {
             this.tags = res.data;
-            console.log(this.tags);
           })
     },
     likePost() {
       axios.post(`/post/userLikePost/${this.id}`, null, {
         withCredentials: true
       }).then(res => {
-        if (res.data === true) {
-          this.post.like = true;
-          this.$message({
-            message: '点赞成功',
-            type: 'success',
-            offset: 280,
-            duration: 1000
-          });
-          this.$router.push('/main');
-        } else {
-          this.$message({
-            message: '点赞失败',
-            type: 'warning',
-            offset: 280,
-            duration: 1000
-          });
-        }
+        this.like = 'true';
+        this.$message({
+          message: '点赞成功',
+          type: 'success',
+          offset: 280,
+          duration: 1000
+        });
       })
+    },
+    dislikePost(){
+      axios.post(`/post/userDislikePost/${this.id}`, null, {
+        withCredentials: true
+      }).then(res => {
+        this.like = 'false';
+        this.$message({
+          message: '取消点赞',
+          type: 'warning',
+          offset: 280,
+          duration: 1000
+        });
+      })
+    },
+    markPost(){
+      axios.post(`/post/userFavoritePost/${this.id}`, null, {
+        withCredentials: true
+      }).then(res => {
+        this.marked = 'true';
+        this.$message({
+          message: '点赞成功',
+          type: 'success',
+          offset: 280,
+          duration: 1000
+        });
+      })
+    },
+    dismarkPost(){
+      axios.post(`/post/userCancelFavoritePost/${this.id}`, null, {
+        withCredentials: true
+      }).then(res => {
+        this.marked = 'false';
+        this.$message({
+          message: '取消收藏',
+          type: 'warning',
+          offset: 280,
+          duration: 1000
+        });
+      })
+    },
+    sharePost(){
+
     }
   },
   mounted() {
-    console.log(this.id);
     this.getPost();
     this.getTags();
   }

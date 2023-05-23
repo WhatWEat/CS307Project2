@@ -14,11 +14,13 @@ import com.cs307.bbsdatabase.Util.Cookies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@RequestMapping("/reply")
 public class ReplyController {
     @Autowired
     private ReplyService replyService;
@@ -35,7 +37,9 @@ public class ReplyController {
     }
 
     //reply回复post请用这个
+
     @GetMapping("replyToPost/{post_id}/{content}/{anonymous}")
+
     public boolean replyToPost(@PathVariable int post_id, @PathVariable String content,@PathVariable Boolean anonymous,
                                HttpServletRequest request){
         return replyService.replyToPost(post_id,content,anonymous, Cookies.getUsername(request));
