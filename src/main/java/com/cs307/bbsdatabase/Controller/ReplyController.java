@@ -10,10 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.cs307.bbsdatabase.Service.ReplyService;
+import com.cs307.bbsdatabase.Util.Cookies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class ReplyController {
@@ -27,32 +30,42 @@ public class ReplyController {
     //查询user的所有回复
     @GetMapping("/findReplyByUser/{page}/{username}")
     public List<Map<String,String>> findReplyByUser(@PathVariable int page, @PathVariable String username){
-        List<Reply> arrayList =  replyService.findReplyByUser(username,page,pageSize);
+        List<Reply> list = replyService.findReplyByUser(username,page,pageSize);
+        return getMaps(list);
+    }
+
+    //reply回复post请用这个
+    @GetMapping("replyToPost/{post_id}/{content}/{anonymous}")
+    public boolean replyToPost(@PathVariable int post_id, @PathVariable String content,@PathVariable Boolean anonymous,
+                               HttpServletRequest request){
+        return replyService.replyToPost(post_id,content,anonymous, Cookies.getUsername(request));
+    }
+
+    //reply回复reply请用这个
+    @GetMapping("replyToReply/{parent_id}/{content}/{anonymous}")
+    public  boolean replyToReply(@PathVariable int parent_id, @PathVariable String content,@PathVariable Boolean anonymous,
+                                 HttpServletRequest request){
+        return replyService.replyToReply(parent_id,content,anonymous,Cookies.getUsername(request));
+    }
+
+    @GetMapping("findSubReply/{reply_id}")
+    public List<Map<String,String>> findSubReply(@PathVariable int reply_id){
+        List<Reply> list = replyService.findSubReply(reply_id);
+        return getMaps(list);
+    }
+
+    private List<Map<String, String>> getMaps(List<Reply> list) {
         List<Map<String,String>> out = new ArrayList<>();
-        for (Reply reply : arrayList) {
+        for (Reply reply : list) {
             Map<String, String> temp = getMap(reply);
             out.add(temp);
         }
         return out;
     }
 
-    //reply回复post请用这个
-    @GetMapping("replyToPost/{post_id}/{content}/{anonymous}/{username}")
-    public boolean replyToPost(@PathVariable int post_id, @PathVariable String content,@PathVariable Boolean anonymous,
-    @PathVariable String username){
-        return replyService.replyToPost(post_id,content,anonymous,username);
-    }
-
-    //reply回复reply请用这个
-    @GetMapping("replyToReply/{parent_id}/{content}/{anonymous}/{username}")
-    public  boolean replyToReply(@PathVariable int parent_id, @PathVariable String content,@PathVariable Boolean anonymous,
-                                 @PathVariable String username){
-        return replyService.replyToReply(parent_id,content,anonymous,username);
-    }
-
     private Map<String,String> getMap(Reply reply){
         Map<String,String> out = new HashMap<>();
-        ArrayList<Reply> son = replyService.findReplyByParent(reply.getReply_id());
+        List<Reply> son = replyService.findReplyByParent(reply.getReply_id());
         out.put("content",reply.getContent());
         out.put("stars", String.valueOf(reply.getStars()));
         if (reply.getParent_id() == null){
