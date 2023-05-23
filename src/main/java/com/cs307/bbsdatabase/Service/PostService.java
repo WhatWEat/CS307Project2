@@ -18,10 +18,10 @@ public class PostService extends ServiceImpl<PostMapper, Post> {
     private PostMapper postMapper;
     @Autowired
     private CategoryService categoryService;
-    public ArrayList<Post> findPostByUser(String username){
-        System.out.println(username);
-        return postMapper.findByUser(username);
-    }
+//    public ArrayList<Post> findPostByUser(String username,){
+//        System.out.println(username);
+//        return postMapper.findPostByWrite(username);
+//    }
 
     public boolean createPost(String username, Post post) {
         int success = postMapper.insertPost(post);
@@ -41,6 +41,18 @@ public class PostService extends ServiceImpl<PostMapper, Post> {
         postMapper.userLikePost(post_id,username);
     }
 
+    public void userDislikePost(int post_id,String username){
+        postMapper.userDislikePost(post_id,username);
+    }
+
+    public void userFavoritePost(int post_id,String username){
+        postMapper.userFavoritePost(post_id,username);
+    }
+
+    public void userCancelFavoritePost(int post_id, String username){
+        postMapper.userCancelFavorite(post_id,username);
+    }
+
     public List<Post> findPostByLike(String username,int page, int pageSize){
         return postMapper.findPostByLike(username,pageSize,(page-1)*pageSize);
     }
@@ -48,4 +60,6 @@ public class PostService extends ServiceImpl<PostMapper, Post> {
     public List<Post> findAllPost(int page, int pageSize){
         return postMapper.findAllPost(pageSize,(page-1)*pageSize);
     }
+
+
 }

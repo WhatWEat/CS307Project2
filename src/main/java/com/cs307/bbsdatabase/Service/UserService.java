@@ -45,7 +45,14 @@ public class UserService extends ServiceImpl<UserMapper, User> {
                             String password){
         User user = new User(username,phone_number,password);
         userMapper.createUser(username,user.getRegistration(),phone_number,user.getId(),password);
+    }
 
+    public void userFollowUser(String follower,String be_followed){
+        userMapper.userFollowUser(follower,be_followed);
+    }
+
+    public void userCancelFollow(String follower,String be_followed){
+        userMapper.userCancelFollowUser(follower,be_followed);
     }
 
 

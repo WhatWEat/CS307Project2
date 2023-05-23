@@ -5,6 +5,8 @@ import com.cs307.bbsdatabase.Entity.User;
 
 import java.sql.Timestamp;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -23,5 +25,12 @@ public interface UserMapper extends BaseMapper<User> {
     void createUser(String username,Timestamp registration_time,String phone_number,
                     String user_id,String password
      );
+
+    @Insert("insert into userfollowuser (user_follower, user_be_followed) VALUES (#{follower},#{be_followed});")
+    void userFollowUser(String follower,String be_followed);
 //    @Select("")
+
+
+    @Delete("delete from userfollowuser where user_follower = #{follower} and user_be_followed = #{be_followed};")
+    void userCancelFollowUser(String follower,String be_followed);
 }
