@@ -19,6 +19,8 @@ public class Post {
     private String title;
     private String content;
     private final Timestamp posting_time;
+
+    private int shared;
     @TableField(exist = false)
     private Integer User_id;
     @TableField(exist = false)
@@ -35,11 +37,12 @@ public class Post {
         this.content = content;
         this.posting_time = new Timestamp(System.currentTimeMillis());
     }
-    public Post( String title, String content, ArrayList<String> categories) {
+    public Post( String title, String content, ArrayList<String> categories,int shared) {
         this.title = title;
         this.content = content;
         this.categories = categories;
         this.posting_time = new Timestamp(System.currentTimeMillis());
+        this.shared = shared;
     }
 
     public Integer getPost_id() {
@@ -52,6 +55,10 @@ public class Post {
 
     public String getContent() {
         return content;
+    }
+
+    public int getShared() {
+        return shared;
     }
 
     public Timestamp getPosting_time() {

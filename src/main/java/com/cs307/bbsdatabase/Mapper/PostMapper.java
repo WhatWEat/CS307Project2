@@ -16,7 +16,7 @@ public interface PostMapper extends BaseMapper<Post> {
     Post findPostById(int post_id);
 
     @Select("""
-            select p.post_id, p.title, p.content, p.posting_time
+            select p.post_id, p.title, p.content, p.posting_time, p.shared
             from UserWritePost uwp
             join posts p on uwp.post_id = p.post_id
             where uwp.user_name = #{username}
@@ -27,16 +27,32 @@ public interface PostMapper extends BaseMapper<Post> {
     List<Post> findAllPost(int limit,int offset);
 
     @Select("""
-            select p.post_id, p.title, p.content, p.posting_time
+            select p.post_id, p.title, p.content, p.posting_time, p.shared
             from userlikepost ulp
-                     join posts p on p.post_id = ulp.post_id
+            join posts p on p.post_id = ulp.post_id
             where ulp.user_name = #{username}
             limit #{limit} offset #{offset};""")
     List<Post> findPostByLike(String username, int limit, int offset);
+
+    @Select("SELECT EXISTS(SELECT 1 FROM UserLikePost WHERE post_id = #{post_id} AND user_name = #{username});")
+    boolean ifLike(int post_id,String username);
+
+    @Select("SELECT EXISTS(SELECT 1 FROM userfavoritepost WHERE post_id = #{post_id} AND user_name = #{username});")
+    boolean ifFavorite(int post_id,String username);
+
+    @Select("select user_name from userwritepost where post_id = #{post_id};")
+    String findWriter(int post_id);
+
     //我改了字段名，可能会有错误
-    @Insert("insert into posts(title, content, posting_time) values(#{title}, #{content}, #{posting_time})")
+    @Insert("insert into posts(title, content, posting_time, shared) " +
+            "values(#{title}, #{content}, #{posting_time}, 0)")
     @Options(useGeneratedKeys=true, keyProperty="post_id", keyColumn="post_id")
     int insertPost(Post post);
+
+    @Insert("insert into posts(title, content, posting_time, shared) " +
+            "values(#{title}, #{content}, #{posting_time}, #{shared})")
+    @Options(useGeneratedKeys=true, keyProperty="post_id", keyColumn="post_id")
+    int sharePOst(Post post);
 
     @Insert("insert into UserWritePost(post_id, user_name) VALUES (#{post_id},#{username});")
     void creatPost(int post_id,String username);
@@ -53,4 +69,6 @@ public interface PostMapper extends BaseMapper<Post> {
 
     @Delete("delete from userfavoritepost where user_name = #{username} and post_id = #{post_id};")
     void userCancelFavorite(int post_id, String username);
+
+
 }

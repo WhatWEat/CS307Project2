@@ -55,6 +55,14 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         userMapper.userCancelFollowUser(follower,be_followed);
     }
 
+    public String ifFollow(String user_follower, String user_be_followed){
+        if (userMapper.ifFollow(user_follower,user_be_followed)){
+            return "true";
+        }else {
+            return "false";
+        }
+    }
+
 
 
 //    public User findUser(String username)
