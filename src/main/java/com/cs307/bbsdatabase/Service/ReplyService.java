@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @MapperScan("com.cs307.bbsdatabase")
@@ -30,11 +31,16 @@ public class ReplyService extends ServiceImpl<ReplyMapper, Reply> {
         return true;
     }
 
-    public ArrayList<Reply> findReplyByUser(String username, int page, int pageSize){
+    public List<Reply> findReplyByUser(String username, int page, int pageSize){
         return replyMapper.findReplyByUser(username,pageSize,(page-1)*pageSize);
     }
 
-    public ArrayList<Reply> findReplyByParent(int reply_id){
+    public List<Reply> findReplyByParent(int reply_id){
         return replyMapper.findReplyByParent(reply_id);
     }
+
+    public List<Reply> findSubReply(int reply_id){
+        return replyMapper.findSubReply(reply_id);
+    }
+
 }
