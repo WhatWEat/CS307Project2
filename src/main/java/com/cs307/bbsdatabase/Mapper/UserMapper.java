@@ -37,4 +37,6 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Delete("delete from userfollowuser where user_follower = #{follower} and user_be_followed = #{be_followed};")
     void userCancelFollowUser(String follower,String be_followed);
+
+
 }
