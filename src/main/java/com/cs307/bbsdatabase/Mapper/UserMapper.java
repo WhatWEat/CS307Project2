@@ -24,6 +24,27 @@ public interface UserMapper extends BaseMapper<User> {
             "WHERE user_follower = #{user_follower} AND user_be_followed = #{user_be_followed});")
     boolean ifFollow(String user_follower, String user_be_followed);
 
+    @Select("""
+            select u.user_id,u.registration_time,u.phone_number,u.username
+            from users u join userfollowuser u2 on u.username = u2.user_be_followed
+            where u2.user_follower = #{username}
+            limit #{limit} offset #{offset};""")
+    List<User> findFollowList(String username, int limit, int offset);
+
+    @Select("""
+            select u.user_id,u.registration_time,u.phone_number,u.username
+            from users u join userfollowuser u2 on u.username = u2.user_follower
+            where u2.user_be_followed = #{username}
+            limit #{limit} offset #{offset};""")
+    List<User> findFanList( String username,int limit, int offset);
+
+
+    @Select("select count(*) from userfollowuser where user_follower = #{username};")
+    int findCountFollowList(String username);
+
+    @Select("select count(*) from userfollowuser where user_be_followed = #{username};")
+    int findCountFansList(String username);
+
     @Insert("INSERT INTO users (username,registration_time, phone_number,user_id,  password)\n" +
             "VALUES(#{username},#{registration_time},#{phone_number},#{user_id},#{password})")
     void createUser(String username,Timestamp registration_time,String phone_number,

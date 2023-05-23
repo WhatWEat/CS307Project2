@@ -55,6 +55,22 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         userMapper.userCancelFollowUser(follower,be_followed);
     }
 
+    public List<User> findFollowList(String username, int page, int pageSize){
+        return userMapper.findFollowList(username,pageSize,(page-1)*pageSize);
+    }
+
+    public List<User> findFanList(String username, int page, int pageSize){
+        return userMapper.findFanList(username,pageSize,(page-1)*pageSize);
+    }
+
+    public int findCountFollowList(String username){
+        return userMapper.findCountFollowList(username);
+    }
+
+    public int findCountFansList(String username){
+        return userMapper.findCountFansList(username);
+    }
+
     public String ifFollow(String user_follower, String user_be_followed){
         if (userMapper.ifFollow(user_follower,user_be_followed)){
             return "true";
@@ -62,6 +78,7 @@ public class UserService extends ServiceImpl<UserMapper, User> {
             return "false";
         }
     }
+
 
 
 

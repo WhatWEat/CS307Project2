@@ -1,5 +1,6 @@
 package com.cs307.bbsdatabase.Controller;
 
+import com.cs307.bbsdatabase.Entity.Post;
 import com.cs307.bbsdatabase.Entity.User;
 import com.cs307.bbsdatabase.Service.UserService;
 import com.cs307.bbsdatabase.Util.Cookies;
@@ -9,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -84,4 +89,40 @@ public class UserController {
         userService.userCancelFollow(Cookies.getUsername(request),be_followed);
     }
 
+    @PostMapping("findFollowList/{username}/{page}/{pageSize}")
+    public List<Map<String, String>> findFollowList(@PathVariable int page,
+                                                    @PathVariable int pageSize,HttpServletRequest request){
+        String username = Cookies.getUsername(request);
+        List<User> followed = userService.findFollowList(username,page,pageSize);
+        return getMaps(followed,username);
+    }
+
+    @PostMapping("findFanList/{username}/{page}/{pageSize}")
+    public List<Map<String, String>> findFanList(@PathVariable int page,
+                                                    @PathVariable int pageSize,HttpServletRequest request){
+        String username = Cookies.getUsername(request);
+        List<User> followed = userService.findFanList(username,page,pageSize);
+        return getMaps(followed,username);
+    }
+
+    public Map<String, String> getMap(User user,String username){
+        Map<String, String> temp = new HashMap<>();
+        temp.put("username", user.getUsername());
+        temp.put("id",user.getId());
+        temp.put("time",user.getRegistration().toString().substring(0, 19));
+//        temp.put("phone",user.getPhone());
+        temp.put("ifBeFollowed",userService.ifFollow(username,user.getUsername()));
+        temp.put("countUserFans",String.valueOf(userService.findCountFansList(user.getUsername())));
+        temp.put("countUserFollow",String.valueOf(userService.findCountFollowList(user.getUsername())));
+        return temp;
+    }
+
+    private List<Map<String, String>> getMaps(List<User> list, String username) {
+        List<Map<String, String>> out = new ArrayList<>();
+        for (User user : list) {
+            Map<String, String> temp = getMap(user, username);
+            out.add(temp);
+        }
+        return out;
+    }
 }

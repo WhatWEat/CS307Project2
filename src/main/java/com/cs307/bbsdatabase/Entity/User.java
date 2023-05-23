@@ -62,6 +62,13 @@ public class User implements Serializable {
         this.registration = new Timestamp(System.currentTimeMillis());
     }
 
+    public User(String id, Timestamp registration,String username, String phone) {
+        this.username = username;
+        this.registration = registration;
+        this.phone = phone;
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "User{" +
