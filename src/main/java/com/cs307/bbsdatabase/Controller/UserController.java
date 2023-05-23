@@ -1,15 +1,14 @@
 package com.cs307.bbsdatabase.Controller;
 
-import com.cs307.bbsdatabase.Entity.Post;
 import com.cs307.bbsdatabase.Entity.User;
-import com.cs307.bbsdatabase.Service.PostService;
 import com.cs307.bbsdatabase.Service.UserService;
+import com.cs307.bbsdatabase.Util.Cookies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/user")
@@ -17,9 +16,6 @@ public class UserController {
     //请把你的任务在Service中实现，Controller中只需要调用Service中的方法即可
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private PostService postService;
 
     @PostMapping("/reg/{phone}/{username}/{password}")
     //实现注册的方法,返回注册成功与否
@@ -78,10 +74,14 @@ public class UserController {
         return userService.findUserByUsername(name);
     }
 
-    @GetMapping("/findPostList/{name}")
-    //查返回该用户发的所有贴子
-    public ArrayList<Post> findPostList(@PathVariable String name) {
-        System.out.println(name);
-        return postService.findPostByUser(name);
+    @PostMapping("/followUser/{be_followed}")
+    public void userFollowUser(@PathVariable String be_followed,HttpServletRequest request){
+        userService.userFollowUser(Cookies.getUsername(request),be_followed);
     }
+
+    @PostMapping("cancelFollowUser/{be_followed}")
+    public void userCancelFollowUser(@PathVariable String be_followed,HttpServletRequest request){
+        userService.userCancelFollow(Cookies.getUsername(request),be_followed);
+    }
+
 }

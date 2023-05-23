@@ -48,6 +48,7 @@ public class PostController {
     }
 
     @GetMapping("/findPostByLike/{page}/{pageSize}")
+    //返回第page页的自己喜欢的帖子列表
     public List<Map<String, String>> findPostByLike(@PathVariable int page,
         @PathVariable int pageSize, HttpServletRequest request) {
         List<Post> list = postService.findPostByLike(Cookies.getUsername(request), page, pageSize);
@@ -78,8 +79,27 @@ public class PostController {
         return list;
     }
     @PostMapping("/userLikePost/{post_id}")
+    //用户进行喜欢操作
     public void userLikePost(@PathVariable int post_id, HttpServletRequest request) {
         postService.userLikePost(post_id, Cookies.getUsername(request));
+    }
+
+    @PostMapping("/userDislikePost/{post_id}")
+    //用户取消喜欢
+    public void userDislikePost(@PathVariable int post_id, HttpServletRequest request){
+        postService.userDislikePost(post_id,Cookies.getUsername(request));
+    }
+
+    @PostMapping("/userFavoritePost/{post_id}")
+    //用户进行收藏操作
+    public void userFavoritePost(@PathVariable int post_id, HttpServletRequest request){
+        postService.userFavoritePost(post_id,Cookies.getUsername(request));
+    }
+
+    @PostMapping("/userCancelFavoritePost/{post_id}")
+    //用户取消收藏
+    public void userCancelFavoritePost(@PathVariable int post_id, HttpServletRequest request){
+        postService.userCancelFavoritePost(post_id,Cookies.getUsername(request));
     }
 
 

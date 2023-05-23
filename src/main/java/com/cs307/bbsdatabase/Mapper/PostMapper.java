@@ -2,18 +2,15 @@ package com.cs307.bbsdatabase.Mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cs307.bbsdatabase.Entity.Post;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Mapper
 public interface PostMapper extends BaseMapper<Post> {
-    @Select("select p.post_id, p.title, p.content, p.posting_time from UserWritePost uwp join posts p on uwp.post_id = p.post_id where uwp.user_name = #{username};")
-    ArrayList<Post> findByUser(String username);
+//    @Select("select p.post_id, p.title, p.content, p.posting_time from UserWritePost uwp join posts p on uwp.post_id = p.post_id where uwp.user_name = #{username};")
+//    ArrayList<Post> findByUser(String username);
 
     @Select("select * from posts where post_id = #{post_id};")
     Post findPostById(int post_id);
@@ -48,5 +45,12 @@ public interface PostMapper extends BaseMapper<Post> {
             "VALUES (#{post_id}, #{username});")
     void userLikePost(int post_id,String username);
 
+    @Insert("insert into userfavoritepost (post_id, user_name) VALUES (#{post_id},#{user_name});")
+    void userFavoritePost(int post_id, String username);
 
+    @Delete("delete from userlikepost where user_name = #{username} and post_id = #{post_id};")
+    void userDislikePost(int post_id,String username);
+
+    @Delete("delete from userfavoritepost where user_name = #{username} and post_id = #{post_id};")
+    void userCancelFavorite(int post_id, String username);
 }
