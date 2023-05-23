@@ -66,7 +66,8 @@ export const router = new VueRouter({
           meta: {requiresAuth: true},
           path: '/post-list/:id',
           name: 'post-list',
-          component: PostContent
+          component: PostContent,
+          props: true
         },
         {path: '/test', component: Marked},
       ],

@@ -8,15 +8,16 @@
              style="display: flex; justify-content: space-between; align-items: center;">
           <span class="post-title">{{ post.title }}</span>
           <span class="tag-container">
-            <el-tag v-for="tag in post.tags" :key="tag.type" :type="tag.type"
+            <el-tag v-for="tag in tags" :key="tag.type" :type="tag.type"
                     effect="dark" class="tag-item">{{ tag.tag }} </el-tag>
           </span>
           <span>
-              <el-button type="primary" icon="el-icon-circle-check" circle></el-button>
+              <el-button type="primary" icon="el-icon-circle-check" circle @click="likePost"
+                         v-if="!post.like"></el-button>
               <el-button type="primary" icon="el-icon-share" circle></el-button>
               <el-button type="primary" icon="el-icon-star-off" circle></el-button>
             </span>
-          <span style="float: right">发帖时间：{{ post.create_at }}</span>
+          <span style="float: right">发帖时间：{{ post.time }}</span>
         </div>
         <el-card style="box-shadow: none;">
           <div slot="header"
@@ -28,8 +29,8 @@
             </span>
 
           </div>
-          <div>
-            <span>内容: {{ post.content }}</span>
+          <div style="white-space: pre-wrap;">
+            <span>{{ post.content }}</span>
           </div>
         </el-card>
       </el-card>
@@ -43,38 +44,91 @@
 
 <script>
 import Comment from "@/components/PostContent/Comment.vue";
+import axios from "axios";
 
 export default {
   name: "PostContent",
   components: {Comment},
+  props: ['id'],
   data() {
     return {
       post: {
         title: 'niu',
-        create_at: 2022,
+        time: '',
         author: 'test',
-        tags: [
-          {
-            tag: 'test1',
-            type: 'success'
-          },
-          {
-            tag: 'test2',
-            type: 'info'
-          },
-          {
-            tag: 'test3',
-            type: 'warning'
-          },
-          {
-            tag: 'test4',
-            type: 'danger'
-          },
-        ],
+        share: false,
+        like: false,
+        marked: false,
       },
+      tags: [
+        {
+          tag: 'test1',
+          type: 'success'
+        },
+        {
+          tag: 'test2',
+          type: 'info'
+        },
+        {
+          tag: 'test3',
+          type: 'warning'
+        },
+        {
+          tag: 'test4',
+          type: 'danger'
+        },
+      ],
       loading: false
     };
   },
+  methods: {
+    getPost() {
+      axios.get(`/post/findByID/${this.id}`, {
+        withCredentials: true
+      }).then(
+          res => {
+            this.post = res.data;
+          }
+      )
+    },
+    getTags() {
+      axios.get(`/post/getTags/${this.id}`, {
+        withCredentials: true
+      }).then(
+          res => {
+            this.tags = res.data;
+            console.log(this.tags);
+          })
+    },
+    likePost() {
+      axios.post(`/post/userLikePost/${this.id}`, null, {
+        withCredentials: true
+      }).then(res => {
+        if (res.data === true) {
+          this.post.like = true;
+          this.$message({
+            message: '点赞成功',
+            type: 'success',
+            offset: 280,
+            duration: 1000
+          });
+          this.$router.push('/main');
+        } else {
+          this.$message({
+            message: '点赞失败',
+            type: 'warning',
+            offset: 280,
+            duration: 1000
+          });
+        }
+      })
+    }
+  },
+  mounted() {
+    console.log(this.id);
+    this.getPost();
+    this.getTags();
+  }
 }
 </script>
 

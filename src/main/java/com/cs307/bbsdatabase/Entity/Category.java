@@ -7,17 +7,32 @@ Category的id与内容均为final
  */
 public class Category {
     @TableId(type = IdType.AUTO)
-    private final Integer category_id;
+    private Integer categoryid;
 
-    private final String category;
+    private String category;
 
-    public Category(Integer category_id, String category) {
-        this.category_id = category_id;
+    public Category() {
+    }
+
+    public Category(String category) {
         this.category = category;
     }
 
-    public Integer getCategory_id() {
-        return category_id;
+    public Category(Integer categoryid, String category) {
+        this.categoryid = categoryid;
+        this.category = category;
+    }
+
+    public void setCategory_id(Integer categoryid) {
+        this.categoryid = categoryid;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public Integer getCategoryid() {
+        return categoryid;
     }
 
 
