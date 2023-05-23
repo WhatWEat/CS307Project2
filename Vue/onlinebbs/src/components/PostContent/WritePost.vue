@@ -10,6 +10,9 @@
           <el-input class="input" type="textarea" placeholder="请输入内容" v-model="content"
                     rows="15"></el-input>
         </el-form-item>
+        <el-form-item label="分类" >
+          <new-tags :dynamic-tags="tags"></new-tags>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-check" @click="sendPost">发这个</el-button>
           <el-button type="danger" icon="el-icon-close" @click="goBack">不发了</el-button>
@@ -23,13 +26,16 @@
 
 <script>
 import axios from "axios";
+import newTags from "@/components/PostContent/newTags.vue";
 
 export default {
   name: "WritePost",
+  components: {newTags},
   data() {
     return {
       title: '',
       content: '',
+      tags: ['原创'],
     }
   },
   methods: {
@@ -39,10 +45,14 @@ export default {
           message: '请填写完整信息',
           type: 'warning',
           offset: 280,
-          duration: 600
+          duration: 600,
         });
       } else {
-        axios.post(`post/create/${this.title}/${this.content}`, null, {
+        axios.post(`post/create`, {
+          title: this.title,
+          content: this.content,
+          categories: this.tags,
+        }, {
           withCredentials: true
         }).then(res => {
           if (res.data === true) {
@@ -67,6 +77,7 @@ export default {
       }
     },
     goBack() {
+      console.log(this.tags);
       this.$router.push('/main');
     },
   }

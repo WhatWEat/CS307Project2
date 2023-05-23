@@ -36,7 +36,7 @@ public interface PostMapper extends BaseMapper<Post> {
             where ulp.user_name = #{username}
             limit #{limit} offset #{offset};""")
     List<Post> findPostByLike(String username, int limit, int offset);
-
+    //我改了字段名，可能会有错误
     @Insert("insert into posts(title, content, posting_time) values(#{title}, #{content}, #{posting_time})")
     @Options(useGeneratedKeys=true, keyProperty="post_id", keyColumn="post_id")
     int insertPost(Post post);

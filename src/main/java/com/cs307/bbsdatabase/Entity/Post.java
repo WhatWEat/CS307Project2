@@ -14,7 +14,7 @@ import java.util.ArrayList;
 @TableName("posts")
 public class Post {
     @TableId(type = IdType.AUTO)
-    private Integer post_id;
+    private Integer postid;
 
     private String title;
     private String content;
@@ -22,26 +22,28 @@ public class Post {
     @TableField(exist = false)
     private Integer User_id;
     @TableField(exist = false)
-    private ArrayList<Category> categories;
+    private ArrayList<String> categories;
     @TableField(exist = false)
     private  City postCity;
+
+    public Post() {
+        this.posting_time = new Timestamp(System.currentTimeMillis());
+    }
 
     public Post( String title, String content) {
         this.title = title;
         this.content = content;
         this.posting_time = new Timestamp(System.currentTimeMillis());
     }
-
-    public Post(Integer post_id, String title, String content, Timestamp posting_time ) {
-        this.post_id = post_id;
+    public Post( String title, String content, ArrayList<String> categories) {
         this.title = title;
         this.content = content;
-        this.posting_time = posting_time;
-
+        this.categories = categories;
+        this.posting_time = new Timestamp(System.currentTimeMillis());
     }
 
     public Integer getPost_id() {
-        return post_id;
+        return postid;
     }
 
     public String getTitle() {
@@ -60,12 +62,16 @@ public class Post {
         return User_id;
     }
 
-    public ArrayList<Category> getCategories() {
+    public ArrayList<String> getCategories() {
         return categories;
     }
 
     public City getPostCity() {
         return postCity;
+    }
+
+    public void setPost_id(Integer postid) {
+        this.postid = postid;
     }
 
     public void setTitle(String title) {
@@ -76,7 +82,7 @@ public class Post {
         this.content = content;
     }
 
-    public void setCategories(ArrayList<Category> categories) {
+    public void setCategories(ArrayList<String> categories) {
         this.categories = categories;
     }
 }
