@@ -65,7 +65,7 @@ public class ReplyController {
 
     private Map<String,String> getMap(Reply reply){
         Map<String,String> out = new HashMap<>();
-        List<Reply> son = replyService.findReplyByParent(reply.getReply_id());
+//        List<Reply> son = replyService.findReplyByParent(reply.getReply_id());
         out.put("content",reply.getContent());
         out.put("stars", String.valueOf(reply.getStars()));
         if (reply.getParent_id() == null){
@@ -75,7 +75,7 @@ public class ReplyController {
         }
         out.put("anonymous",String.valueOf(reply.isAnonymous()));
         out.put("reply_id",String.valueOf(reply.getReply_id()));
-        out.put("subReplies",son.toString());
+//        out.put("subReplies",son.toString());
         return out;
     }
 }
