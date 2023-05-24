@@ -4,6 +4,7 @@
     <el-table
         :data="tableData"
         style="width: 100%"
+        @cell-click="goPost"
     >
       <el-table-column
           prop="time"
@@ -84,17 +85,21 @@ export default {
     },
     handleChange(row) {
       if(row.value === true){
-        axios.post(`/post/userDislikePost/${row.id}`,null,{
+        axios.post(`/post/userFavoritePost/${row.id}`,null,{
           withCredentials: true
         })
       } else {
-        axios.post(`/post/userLikePost/${row.id}`,null,{
+        axios.post(`/post/userCancelFavoritePost/${row.id}`,null,{
           withCredentials: true
         })
       }
       console.log(row.value);
-    }
+    },
+    goPost(row,column,cell,event){
+      this.$router.push(`/post-list/${row.id}`);
+    },
   },
+
   mounted() {
     this.fetchData(); // 在组件挂载后，获取第一页的数据
   }

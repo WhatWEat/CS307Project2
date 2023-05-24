@@ -100,7 +100,6 @@ public class PostController {
         Post beShared = postService.findPostById(post_id);
         Post newPost = new Post(beShared.getTitle(), beShared.getContent(), beShared.getCategories(), beShared.getPost_id());
         postService.userSharePost(newPost, Cookies.getUsername(request));
-
     }
 
     @PostMapping("/userLikePost/{post_id}")

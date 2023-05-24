@@ -6,19 +6,22 @@
         style="width: 100%"
     >
       <el-table-column
-          prop="date"
+          prop="time"
           label="注册时间"
           width="180"
+          align="center"
       ></el-table-column>
       <el-table-column
           prop="username"
           label="用户名"
           width="180"
+          align="center"
       ></el-table-column>
       <el-table-column
           prop="countUserFans"
           label="粉丝数量"
           width="180"
+          align="center"
       ></el-table-column>
       <el-table-column
           label="取消关注"
@@ -77,21 +80,22 @@ export default {
       })
     },
     handleChange(row) {
-      if (row.type === true) {
-        axios.get(`/user/cancelFollowUser/${row.username}`, {
+      if (row.value === true) {
+        axios.post(`/user/cancelFollowUser/${row.username}`,null, {
           withCredentials: true
         });
       } else {
-        axios.get(`/user/followUser/${row.username}`, {
+        axios.post(`/user/followUser/${row.username}`, null,{
           withCredentials: true
         });
-        console.log(row);
       }
+      console.log(row.value === true);
+      console.log(row.value);
     },
-    mounted() {
-      this.fetchData(); // 在组件挂载后，获取第一页的数据
-    },
-  }
+  },
+  mounted() {
+    this.fetchData(); // 在组件挂载后，获取第一页的数据
+  },
 }
 </script>
 

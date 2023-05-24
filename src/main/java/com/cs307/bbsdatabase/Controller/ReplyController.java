@@ -1,15 +1,23 @@
 package com.cs307.bbsdatabase.Controller;
 
+import com.cs307.bbsdatabase.Entity.Post;
 import com.cs307.bbsdatabase.Entity.Reply;
-import com.cs307.bbsdatabase.Service.ReplyService;
-import com.cs307.bbsdatabase.Service.UserService;
-import com.cs307.bbsdatabase.Util.Cookies;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
+import com.cs307.bbsdatabase.Entity.User;
+import com.cs307.bbsdatabase.Mapper.ReplyMapper;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.cs307.bbsdatabase.Service.ReplyService;
+import com.cs307.bbsdatabase.Util.Cookies;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/reply")

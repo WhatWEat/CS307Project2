@@ -21,7 +21,8 @@
               size="medium"
               @click="sendComment"
               type="primary"
-          >发表评论</el-button
+          >发表评论
+          </el-button
           >
         </div>
       </div>
@@ -72,17 +73,6 @@
               ><i class="iconfont el-icon-s-comment"></i
               >{{ reply.commentNum }}</span
               >
-              <i
-                  v-if="reply.likeFlag"
-                  class="iconfont el-icon-caret-top likeIcon"
-                  @click="like(reply.id)"
-              ></i>
-              <i
-                  v-else
-                  class="iconfont el-icon-caret-top"
-                  @click="like(reply.id)"
-              ></i
-              >{{ reply.like }}
             </div>
             <div class="talk-box">
               <p>
@@ -111,7 +101,8 @@
                 size="medium"
                 @click="sendCommentReply(i)"
                 type="primary"
-            >发表评论</el-button
+            >发表评论
+            </el-button
             >
           </div>
         </div>
@@ -122,6 +113,7 @@
 
 <script>
 import axios from "axios";
+
 const clickoutside = {
   // 初始化指令
   bind(el, binding, vnode) {
@@ -136,11 +128,13 @@ const clickoutside = {
         binding.value(e);
       }
     }
+
     // 给当前元素绑定个私有变量，方便在unbind中可以解除事件监听
     el.vueClickOutside = documentHandler;
     document.addEventListener("click", documentHandler);
   },
-  update() {},
+  update() {
+  },
   unbind(el, binding) {
     // 解除事件监听
     document.removeEventListener("click", el.vueClickOutside);
@@ -193,7 +187,7 @@ export default {
       ],
     };
   },
-  directives: { clickoutside },
+  directives: {clickoutside},
   created() {
     // 注意this
     // 获取用户登录信息
@@ -205,33 +199,20 @@ export default {
       // alert(this.userId+"nmnm")
       //let url = `/api1/ts/tcomment/commentList/${this.itemId}/${this.userId}`
       //查询评论信息列表展示, 文章id/用户id
-      axios.get("http://localhost:8080/ts/tcomment/commentList/"+this.itemId+"/"+this.userId).then((resp) => {
-        if (resp.data.success) {
-          let list = resp.data.data;
-          console.log(list.comments);
-          this.comments = list.comments;
-        }
-      });
+      axios.get(
+          "http://localhost:8080/ts/tcomment/commentList/" + this.itemId + "/" + this.userId).then(
+          (resp) => {
+            if (resp.data.success) {
+              let list = resp.data.data;
+              console.log(list.comments);
+              this.comments = list.comments;
+            }
+          });
     },
     getLoginUser() {
       // 后台session获取登录信息
-      axios.get("http://localhost:8080/ts/tuser/getLoginUser").then((resp) => {
-        if (resp.data.success) {
-          let user = resp.data.data.user;
-          console.log(user);
-          if (user == null) {
-            this.avatar = "https://s1.ax1x.com/2022/06/10/Xc9lUf.png"; // 没登陆时，默认头像地址
-          } else {
-            this.username = user.username;
-            this.userId = user.id;
-            console.log(this.userId)
-            //alert(this.userId)
-            this.avatar = user.avatar;
-          }
-        }
-      }).finally(()=>{
-        this.myrefresh() // 刷新
-      });
+      this.avatar = "https://s1.ax1x.com/2022/06/10/Xc9lUf.png"; // 没登陆时，默认头像地址
+      this.myrefresh() // 刷新
     },
     inputFocus() {
       var replyInput = document.getElementById("replyInput");
@@ -275,14 +256,16 @@ export default {
         a.content = this.replyComment;
         a.avatar = this.avatar;
         a.itemId = 6666;
-        a.parentId = "0";
+        a.parent_id = "0";
         a.parentName = "";
 
-        axios
-        .post("http://localhost:8080/ts/tcomment/addComment", a)
+        axios.post(`/reply/replyToPost/1/${this.content}/false`, null,
+            {
+              withCredentials: true
+            })
         .then((response) => {
+          console.log(response.data);
           if (response.data.success) {
-            console.log(response.data);
             this.$message.success("评论成功!");
           } else {
             this.$message.error("评论失败，请稍后重试！");
@@ -363,24 +346,29 @@ export default {
   font-family: PingFang SC, HarmonyOS_Regular, Helvetica Neue, Microsoft YaHei,
   sans-serif;
 }
+
 .my-reply {
   padding: 10px;
   background-color: #fafbfc;
 }
+
 .my-reply .header-img {
   display: inline-block;
   vertical-align: top;
 }
+
 .my-reply .reply-info {
   display: inline-block;
   margin-left: 5px;
   width: 90%;
 }
+
 @media screen and (max-width: 1200px) {
   .my-reply .reply-info {
     width: 80%;
   }
 }
+
 .my-reply .reply-info .reply-input {
   min-height: 20px;
   line-height: 22px;
@@ -389,18 +377,22 @@ export default {
   background-color: #fff;
   border-radius: 5px;
 }
+
 .my-reply .reply-info .reply-input:empty:before {
   content: attr(placeholder);
 }
+
 .my-reply .reply-info .reply-input:focus:before {
   content: none;
 }
+
 .my-reply .reply-info .reply-input:focus {
   padding: 8px 8px;
   border: 2px solid #409eff;
   box-shadow: none;
   outline: none;
 }
+
 /* .reply-info>div .reply-input:focus{
     border: 2px solid #409EFF;
 } */
@@ -408,27 +400,34 @@ export default {
   height: 25px;
   margin: 10px 0;
 }
+
 .my-reply .reply-btn-box .reply-btn {
   position: relative;
   float: right;
   margin-right: 15px;
 }
+
 .my-comment-reply {
   margin-left: 50px;
 }
+
 .my-comment-reply .reply-input {
   width: flex;
 }
+
 .author-title:not(:last-child) {
   border-bottom: 1px solid rgba(178, 186, 194, 0.3);
 }
+
 .author-title {
   padding: 10px;
 }
+
 .author-title .header-img {
   display: inline-block;
   vertical-align: top;
 }
+
 .author-title .author-info {
   display: inline-block;
   margin-left: 5px;
@@ -436,6 +435,7 @@ export default {
   height: 40px;
   line-height: 20px;
 }
+
 .author-title .author-info > span {
   display: block;
   cursor: pointer;
@@ -443,46 +443,58 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
 .author-title .author-info .author-name {
   color: #303133;
   font-size: 18px;
   font-weight: 500;
 }
+
 .reply-box .talk-box {
   color: #606266;
 }
+
 .reply-box .talk-box span {
   color: #6298ce;
 }
+
 .author-title .author-info .author-time {
   font-size: 14px;
 }
+
 .author-time {
   color: #606266;
 }
+
 .author-title .icon-btn {
   width: 30%;
   padding: 0 !important;
   float: right;
 }
+
 @media screen and (max-width: 1200px) {
   .author-title .icon-btn {
     width: 20%;
     padding: 7px;
   }
 }
+
 .author-title .icon-btn > span {
   cursor: pointer;
 }
+
 .author-title .icon-btn .iconfont {
   margin: 0 5px;
 }
+
 .author-title .talk-box {
   margin: 0 50px;
 }
+
 .author-title .talk-box > p {
   margin: 0;
 }
+
 .author-title .talk-box .reply {
   font-size: 16px;
   color: #606266;
@@ -492,6 +504,7 @@ export default {
   margin: 10px 0 0 50px;
   background-color: #efefef;
 }
+
 /* 点赞图标颜色 */
 .likeIcon {
   color: #40a0ff;
