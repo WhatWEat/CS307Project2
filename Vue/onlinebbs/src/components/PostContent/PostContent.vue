@@ -52,7 +52,7 @@
     </el-main>
     <el-footer>
       <!--      评论区-->
-      <Comment></Comment>
+      <Comment :postid="id"></Comment>
     </el-footer>
   </el-container>
 </template>

@@ -80,7 +80,9 @@ export default {
       this.fetchData(); // 当页数改变时，获取新的数据
     },
     fetchData() {
-      axios.get(`reply/findReplyByUser/${this.currentPage}/${this.currentSize}`)
+      axios.get(`reply/findReplyByUser/${this.currentPage}/${this.currentSize}`,{
+        withCredentials: true
+      })
       .then(response => {
         this.tableData = response.data;
       })
