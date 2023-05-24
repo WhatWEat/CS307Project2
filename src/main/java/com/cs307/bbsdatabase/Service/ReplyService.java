@@ -43,4 +43,34 @@ public class ReplyService extends ServiceImpl<ReplyMapper, Reply> {
         return replyMapper.findSubReply(reply_id);
     }
 
+    public List<Reply> findTopReplyByPost(int post_id){
+        return replyMapper.findTopReplyByPost(post_id);
+    }
+
+    public int findPostIDByReply(int reply_id){
+        return replyMapper.findPostIDByReply(reply_id);
+    }
+    public int findCountSubReply(int reply_id){
+        return replyMapper.findCountSubReply(reply_id);
+    }
+
+    public String findUserByReply(int reply_id){
+        return replyMapper.findUserByReply(reply_id);
+    }
+
+    public void UserLikeReply(int reply_id, String username){
+        replyMapper.UserLikeReply(reply_id,username);
+    }
+
+    public void UserDislikeReply(int reply_id, String username){
+        replyMapper.UserDislikeReply(reply_id,username);
+    }
+
+    public boolean ifLikeReply(int reply_id, String username){
+        return replyMapper.ifLikeReply(reply_id,username);
+    }
+
+    public int countLike(int reply_id){
+        return replyMapper.countLike(reply_id);
+    }
 }
