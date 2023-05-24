@@ -2,7 +2,10 @@ drop table if exists PostReply,PostCity,city,PostCategory,category,UserReply,
     Replies,UserWritePost,UserLikePost,
     UserSharePost,UserFavoritePost,posts,UserFollowUser,UserBlockUser,users;
 
-
+-- 创建序列
+DROP SEQUENCE IF EXISTS user_id_seq, replies_reply_id_seq;
+CREATE SEQUENCE user_id_seq START 1 INCREMENT 1;
+CREATE SEQUENCE replies_reply_id_seq START 1 INCREMENT 1;
 CREATE TABLE IF NOT EXISTS users
 (
     username          VARCHAR(50) primary key,
@@ -144,10 +147,6 @@ CREATE TABLE IF NOT EXISTS UserBlockUser
 
     primary key (user_blocker, user_be_blocked)
 );
-
--- 创建序列
-CREATE SEQUENCE user_id_seq START 1 INCREMENT 1;
-CREATE SEQUENCE replies_reply_id_seq START 1 INCREMENT 1;
 
 
 
