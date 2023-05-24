@@ -89,7 +89,9 @@ public class UserController {
         userService.userCancelFollow(Cookies.getUsername(request),be_followed);
     }
 
+
     @GetMapping("findFollowList/{page}/{pageSize}")
+
     public List<Map<String, String>> findFollowList(@PathVariable int page,
                                                     @PathVariable int pageSize,HttpServletRequest request){
         String username = Cookies.getUsername(request);
@@ -97,7 +99,9 @@ public class UserController {
         return getMaps(followed,username);
     }
 
+
     @GetMapping("findFanList/{page}/{pageSize}")
+
     public List<Map<String, String>> findFanList(@PathVariable int page,
                                                     @PathVariable int pageSize,HttpServletRequest request){
         String username = Cookies.getUsername(request);

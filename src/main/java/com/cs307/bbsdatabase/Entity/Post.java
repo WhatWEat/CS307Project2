@@ -1,20 +1,19 @@
 package com.cs307.bbsdatabase.Entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import org.apache.ibatis.annotations.Param;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+
 /*
 帖子的id、作者、发布时间、发布城市为final
 允许改动content、title、categories
  */
 @TableName("posts")
 public class Post {
-    @TableId(type = IdType.AUTO)
-    private Integer postid;
+    private Integer post_id;
 
     private String title;
     private String content;
@@ -26,18 +25,20 @@ public class Post {
     @TableField(exist = false)
     private ArrayList<String> categories;
     @TableField(exist = false)
-    private  City postCity;
+    private City postCity;
 
     public Post() {
         this.posting_time = new Timestamp(System.currentTimeMillis());
     }
 
-    public Post( String title, String content) {
+    public Post(String title, String content) {
         this.title = title;
         this.content = content;
         this.posting_time = new Timestamp(System.currentTimeMillis());
     }
-    public Post( String title, String content, ArrayList<String> categories,int shared) {
+
+
+    public Post(String title, String content, ArrayList<String> categories, int shared) {
         this.title = title;
         this.content = content;
         this.categories = categories;
@@ -45,8 +46,30 @@ public class Post {
         this.shared = shared;
     }
 
+
+    public Post(@Param("post_id") int post_id, @Param("title") String title,
+                @Param("content") String content, @Param("posting_time") Timestamp posting_time,
+                @Param("shared") int shared) {
+        this.post_id = post_id;
+        this.title = title;
+        this.content = content;
+        this.posting_time = posting_time;
+        this.shared = shared;
+    }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "post_id=" + post_id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", posting_time=" + posting_time +
+                ", shared=" + shared +
+                '}';
+    }
+
     public Integer getPost_id() {
-        return postid;
+        return post_id;
     }
 
     public String getTitle() {
@@ -78,7 +101,7 @@ public class Post {
     }
 
     public void setPost_id(Integer postid) {
-        this.postid = postid;
+        this.post_id = postid;
     }
 
     public void setTitle(String title) {

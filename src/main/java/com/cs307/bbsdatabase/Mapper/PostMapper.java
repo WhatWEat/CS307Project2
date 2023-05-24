@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cs307.bbsdatabase.Entity.Post;
 import org.apache.ibatis.annotations.*;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,17 @@ public interface PostMapper extends BaseMapper<Post> {
 //    @Select("select p.post_id, p.title, p.content, p.posting_time from UserWritePost uwp join posts p on uwp.post_id = p.post_id where uwp.user_name = #{username};")
 //    ArrayList<Post> findByUser(String username);
 
+//    @Select("select * from posts where post_id = #{post_id};")
+//    Post findPostById(int post_id);
+
     @Select("select * from posts where post_id = #{post_id};")
+    @ConstructorArgs({
+            @Arg(column = "post_id", javaType = int.class),
+            @Arg(column = "title", javaType = String.class),
+            @Arg(column = "content", javaType = String.class),
+            @Arg(column = "posting_time", javaType = Timestamp.class),
+            @Arg(column = "shared", javaType = int.class)
+    })
     Post findPostById(int post_id);
 
     @Select("""
@@ -20,10 +31,28 @@ public interface PostMapper extends BaseMapper<Post> {
             from UserWritePost uwp
             join posts p on uwp.post_id = p.post_id
             where uwp.user_name = #{username}
+            order by posting_time desc
             limit #{limit} offset #{offset};""")
+    @ConstructorArgs({
+            @Arg(column = "post_id", javaType = int.class),
+            @Arg(column = "title", javaType = String.class),
+            @Arg(column = "content", javaType = String.class),
+            @Arg(column = "posting_time", javaType = Timestamp.class),
+            @Arg(column = "shared", javaType = int.class)
+    })
     List<Post> findPostByWrite(String username,int limit, int offset);
 
-    @Select("select * from posts limit #{limit} offset #{offset};")
+    @Insert("insert into UserWritePost(post_id, user_name) VALUES (#{post_id},#{username});")
+    void creatPost(int post_id,String username);
+
+    @Select("select * from posts order by posting_time desc limit #{limit} offset #{offset};")
+    @ConstructorArgs({
+            @Arg(column = "post_id", javaType = int.class),
+            @Arg(column = "title", javaType = String.class),
+            @Arg(column = "content", javaType = String.class),
+            @Arg(column = "posting_time", javaType = Timestamp.class),
+            @Arg(column = "shared", javaType = int.class)
+    })
     List<Post> findAllPost(int limit,int offset);
 
     @Select("""
@@ -31,7 +60,15 @@ public interface PostMapper extends BaseMapper<Post> {
             from userlikepost ulp
             join posts p on p.post_id = ulp.post_id
             where ulp.user_name = #{username}
+            order by posting_time desc
             limit #{limit} offset #{offset};""")
+    @ConstructorArgs({
+            @Arg(column = "post_id", javaType = int.class),
+            @Arg(column = "title", javaType = String.class),
+            @Arg(column = "content", javaType = String.class),
+            @Arg(column = "posting_time", javaType = Timestamp.class),
+            @Arg(column = "shared", javaType = int.class)
+    })
     List<Post> findPostByLike(String username, int limit, int offset);
 
     @Select("""
@@ -39,14 +76,30 @@ public interface PostMapper extends BaseMapper<Post> {
             from userfavoritepost ufp
             join posts p on p.post_id = ufp.post_id
             where ufp.user_name = #{username}
+            order by posting_time desc
             limit #{limit} offset #{offset};""")
+    @ConstructorArgs({
+            @Arg(column = "post_id", javaType = int.class),
+            @Arg(column = "title", javaType = String.class),
+            @Arg(column = "content", javaType = String.class),
+            @Arg(column = "posting_time", javaType = Timestamp.class),
+            @Arg(column = "shared", javaType = int.class)
+    })
     List<Post> findPostByFavorite(String username, int limit, int offset);
 
     @Select("""
             select p.post_id,p.title,p.content,p.posting_time,p.shared
             from posts p join userwritepost u on p.post_id = u.post_id
             where user_name = #{username} and shared != 0
+            order by posting_time desc
             limit #{limit} offset #{offset};""")
+    @ConstructorArgs({
+            @Arg(column = "post_id", javaType = int.class),
+            @Arg(column = "title", javaType = String.class),
+            @Arg(column = "content", javaType = String.class),
+            @Arg(column = "posting_time", javaType = Timestamp.class),
+            @Arg(column = "shared", javaType = int.class)
+    })
     List<Post> findPostByShare(String username, int limit, int offset);
 
     @Select("select count(*) from userlikepost where post_id = #{post_id};")
@@ -72,8 +125,7 @@ public interface PostMapper extends BaseMapper<Post> {
     @Options(useGeneratedKeys=true, keyProperty="post_id", keyColumn="post_id")
     int sharePost(Post post);
 
-    @Insert("insert into UserWritePost(post_id, user_name) VALUES (#{post_id},#{username});")
-    void creatPost(int post_id,String username);
+
 
     @Insert("insert into UserLikePost(post_id, user_name)\n" +
             "VALUES (#{post_id}, #{username});")
@@ -87,6 +139,7 @@ public interface PostMapper extends BaseMapper<Post> {
 
     @Delete("delete from userfavoritepost where user_name = #{username} and post_id = #{post_id};")
     void userCancelFavorite(int post_id, String username);
+
 
 
 }

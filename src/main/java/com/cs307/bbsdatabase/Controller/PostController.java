@@ -62,7 +62,7 @@ public class PostController {
     }
 
     @GetMapping("/findPostByShare/{page}/{pageSize}")
-    //返回第page页的自己喜欢的帖子列表
+    //返回第page页的自己分享的帖子列表
     public List<Map<String, String>> findPostByShare(@PathVariable int page,
                                                     @PathVariable int pageSize, HttpServletRequest request) {
         String username = Cookies.getUsername(request) ;
@@ -138,8 +138,9 @@ public class PostController {
 
     private Map<String, String> getMap(Post post, String username) {
         Map<String, String> temp = new HashMap<>();
+        System.out.println(post);
         temp.put("title", post.getTitle());
-        temp.put("id", post.getPost_id().toString());
+        temp.put("id", String.valueOf(post.getPost_id()));
         temp.put("content", post.getContent());
         temp.put("time", post.getPosting_time().toString().substring(0, 19));
         temp.put("shared", String.valueOf(post.getShared()));
