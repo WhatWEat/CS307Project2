@@ -89,7 +89,6 @@ CREATE TABLE IF NOT EXISTS UserReply
 
     primary key (reply_id, user_name)
 );
-
 CREATE TABLE IF NOT EXISTS UserWritePost
 (
     post_id   BIGINT      not null,
