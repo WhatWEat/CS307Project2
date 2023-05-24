@@ -3,12 +3,10 @@ package com.cs307.bbsdatabase.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cs307.bbsdatabase.Entity.Post;
 import com.cs307.bbsdatabase.Mapper.PostMapper;
-import com.cs307.bbsdatabase.Mapper.UserMapper;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,6 +14,7 @@ import java.util.List;
 public class PostService extends ServiceImpl<PostMapper, Post> {
     @Autowired
     private PostMapper postMapper;
+
     @Autowired
     private CategoryService categoryService;
 //    public ArrayList<Post> findPostByUser(String username,){

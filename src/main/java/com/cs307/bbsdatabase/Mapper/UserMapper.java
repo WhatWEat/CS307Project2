@@ -28,6 +28,7 @@ public interface UserMapper extends BaseMapper<User> {
             select u.user_id,u.registration_time,u.phone_number,u.username
             from users u join userfollowuser u2 on u.username = u2.user_be_followed
             where u2.user_follower = #{username}
+            order by u.user_id
             limit #{limit} offset #{offset};""")
     List<User> findFollowList(String username, int limit, int offset);
 
@@ -35,6 +36,7 @@ public interface UserMapper extends BaseMapper<User> {
             select u.user_id,u.registration_time,u.phone_number,u.username
             from users u join userfollowuser u2 on u.username = u2.user_follower
             where u2.user_be_followed = #{username}
+            order by u.user_id
             limit #{limit} offset #{offset};""")
     List<User> findFanList( String username,int limit, int offset);
 
