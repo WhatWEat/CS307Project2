@@ -31,7 +31,8 @@
             <span>作者: {{ post.author }}</span>
             <span style="float: right">
               <el-button type="danger">屏蔽</el-button>
-              <el-button type="warning">关注</el-button>
+              <el-button type="warning" v-if="this.followed==='false'" @click="followUser">关注</el-button>
+              <el-button type="warning" v-else @click="cancelFollowUser">取消关注</el-button>
             </span>
 
           </div>
@@ -61,6 +62,7 @@ export default {
       share: 'false',
       like: 'false',
       marked: 'false',
+      followed: 'false',
       post: {},
       tags: [],
       loading: false
@@ -142,6 +144,32 @@ export default {
     },
     sharePost(){
 
+    },
+    followUser(){
+      axios.post(`/user/followUser/${this.post.author}`,null,{
+        withCredentials: true
+      }).then(res=>{
+        this.followed = 'true';
+        this.$message({
+          message: '关注成功',
+          type: 'success',
+          offset: 280,
+          duration: 1000
+        });
+      })
+    },
+    cancelFollowUser(){
+      axios.post(`/user/cancelFollowUser/${this.post.author}`,null,{
+        withCredentials: true
+      }).then(res=>{
+        this.followed = 'false';
+        this.$message({
+          message: '取消关注',
+          type: 'warning',
+          offset: 280,
+          duration: 1000
+        });
+      })
     }
   },
   mounted() {
