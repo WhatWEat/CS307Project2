@@ -1,8 +1,8 @@
 drop table if exists PostReply,PostCity,city,PostCategory,category,UserReply,UserLikeReply,
     Replies,UserWritePost,UserLikePost,
     UserSharePost,UserFavoritePost,posts,UserFollowUser,UserBlockUser,users;
-
-
+drop sequence if exists user_id_seq;
+create sequence user_id_seq;
 CREATE TABLE IF NOT EXISTS users
 (
     username          VARCHAR(50) primary key,
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS Replies
 
 CREATE TABLE IF NOT EXISTS Category
 (
-    category_id BIGINT primary key,
+    categoryid serial primary key,
     category    varchar(30) not null
 );
 
@@ -70,13 +70,13 @@ CREATE TABLE IF NOT EXISTS PostCity
 
 CREATE TABLE IF NOT EXISTS PostCategory
 (
-    category_id BIGINT not null,
+    categoryid BIGINT not null,
     post_id     BIGINT not null,
 
-    foreign key (category_id) references Category (category_id),
+    foreign key (categoryid) references Category (categoryid),
     foreign key (post_id) references posts (post_id),
 
-    primary key (category_id, post_id)
+    primary key (categoryid, post_id)
 );
 
 CREATE TABLE IF NOT EXISTS UserReply
@@ -155,7 +155,6 @@ CREATE TABLE IF NOT EXISTS UserBlockUser
     primary key (user_blocker, user_be_blocked)
 );
 
-create sequence user_id_seq;
 
 SELECT setval('user_id_seq', (SELECT max(CAST(user_id AS INT)) FROM users) + 1);
 
