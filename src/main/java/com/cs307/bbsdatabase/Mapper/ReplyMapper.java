@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.*;
 public interface ReplyMapper extends BaseMapper<Reply> {
 
     @Select("""
-            select r.reply_id,r.content,r.anonymous, r.parent_id
+            select r.reply_id,r.content,r.anonymous, r.parent_id,r.replying_time
                         from userreply ur
                         join replies r on ur.reply_id = r.reply_id
                         where ur.user_name = #{username}
