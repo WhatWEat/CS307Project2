@@ -20,6 +20,8 @@ public class Reply implements Serializable {
     @Nullable
     private Integer parent_id;
 
+    @TableField(exist = false)
+    private String toReply;
     private Timestamp replying_time;
     @TableField(exist = false)
     private String username;
@@ -186,5 +188,13 @@ public class Reply implements Serializable {
 
     public void setLike(int like) {
         this.like = like;
+    }
+
+    public String getToReply() {
+        return toReply;
+    }
+
+    public void setToReply(String toReply) {
+        this.toReply = toReply;
     }
 }

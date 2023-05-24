@@ -4,20 +4,16 @@ import com.cs307.bbsdatabase.Entity.Post;
 import com.cs307.bbsdatabase.Entity.Reply;
 import com.cs307.bbsdatabase.Entity.User;
 import com.cs307.bbsdatabase.Mapper.ReplyMapper;
-import com.cs307.bbsdatabase.Service.UserService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.cs307.bbsdatabase.Service.ReplyService;
+import com.cs307.bbsdatabase.Service.UserService;
 import com.cs307.bbsdatabase.Util.Cookies;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -46,7 +42,7 @@ public class ReplyController {
         return list;
     }
 
-    @GetMapping("/findTopReplyByPost/{post_id}")
+    @GetMapping("/findTopReplyByPost/{post_id}/{page}/{pageSize}")
     public List<Reply> findTopReplyByPost(@PathVariable int post_id,HttpServletRequest request) {
         String username = Cookies.getUsername(request);
         List<Reply> list = replyService.findTopReplyByPost(post_id);
@@ -91,7 +87,7 @@ public class ReplyController {
         reply.setSon(replyService.findSubReply(reply.getReply_id()));
         setReply(reply, username);
         for (Reply son : reply.getSon()) {
-            setReply(son, username);
+            setSubReply(son, username);
         }
         return reply;
     }
@@ -111,6 +107,24 @@ public class ReplyController {
 //        }
         reply.setCommentNum(replyService.findCountSubReply(reply.getReply_id()));
         reply.setLike(replyService.countLike(reply.getReply_id()));
+//        out.put("subReplies",son.toString());
+        return reply;
+    }
+    private Reply setSubReply(Reply reply, String username) {
+//        out.put("content",reply.getContent());
+        if (reply.getParent_id() == null) {
+            reply.setPostID(replyService.findPostIDByReply(reply.getReply_id()));
+        }
+        //这里的if分支是为了匿名留的
+//        if (reply.isAnonymous()){
+//            out.put("anonymous", String.valueOf(reply.isAnonymous()));
+//        }else {
+        reply.setUsername(replyService.findUserByReply(reply.getReply_id()));
+        reply.setIfFollowed(userService.ifFollow(username, replyService.findUserByReply(reply.getReply_id())).equals("true"));
+
+//        }
+        reply.setLike(replyService.countLike(reply.getReply_id()));
+        reply.setToReply(replyService.findUserByReply(reply.getParent_id()));
 //        out.put("subReplies",son.toString());
         return reply;
     }
