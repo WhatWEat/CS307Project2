@@ -132,12 +132,11 @@ export default {
 
 .post-time,
 .post-author {
-  margin-right: 50px;
+  margin-right: 20px;
 }
 
 .post-title {
-  margin-left: 100px;
-  margin-right: 40px;
+  margin-left: 20px;
   text-decoration: none; /* 去掉下划线 */
   color: inherit; /* 继承父元素的文字颜色 */
 }

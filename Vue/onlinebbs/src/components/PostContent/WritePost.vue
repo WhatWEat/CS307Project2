@@ -4,7 +4,8 @@
 
       <el-form label-width="100px">
         <el-form-item label="标题">
-          <el-input class="input" placeholder="请输入标题" v-model="title"></el-input>
+          <el-input class="input" placeholder="请输入标题" v-model="title"
+          maxlength="15" show-word-limit></el-input>
         </el-form-item>
         <el-form-item label="内容">
           <el-input class="input" type="textarea" placeholder="请输入内容" v-model="content"

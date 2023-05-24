@@ -3,6 +3,7 @@
     <el-table
         :data="tableData"
         style="width: 100%"
+        @cell-click="goPost"
     >
       <el-table-column
           prop="time"
@@ -59,10 +60,13 @@ export default {
         withCredentials: true,
       }).then(res => {
         this.tableData = res.data;
-        console.log(this.tableData);
+        // console.log(this.tableData);
       }).catch(err => {
         console.log(err);
       });
+    },
+    goPost(row,column,cell,event){
+      this.$router.push(`/post-list/${row.id}`);
     }
   },
   mounted() {

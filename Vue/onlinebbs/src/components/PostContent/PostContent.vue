@@ -29,9 +29,17 @@
           <div slot="header"
                style="display: flex; justify-content: space-between; align-items: center;">
             <span>作者: {{ post.author }}</span>
+            <span v-if="this.shared!=='0'">
+              <el-button type="info" @click="goOriginPost"> 原贴地址 </el-button>
+              <el-popconfirm
+                  title="确定前往原贴吗？">
+
+              </el-popconfirm>
+            </span>
             <span style="float: right">
               <el-button type="danger">屏蔽</el-button>
-              <el-button type="warning" v-if="this.followed==='false'" @click="followUser">关注</el-button>
+              <el-button type="warning" v-if="this.followed==='false'"
+                         @click="followUser">关注</el-button>
               <el-button type="warning" v-else @click="cancelFollowUser">取消关注</el-button>
             </span>
 
@@ -59,7 +67,7 @@ export default {
   props: ['id'],
   data() {
     return {
-      share: 'false',
+      shared: '0',
       like: 'false',
       marked: 'false',
       followed: 'false',
@@ -75,9 +83,10 @@ export default {
       }).then(
           res => {
             this.post = res.data;
-            this.share = this.post.share;
+            this.shared = this.post.shared;
             this.like = this.post.like;
             this.marked = this.post.marked;
+            this.followed = this.post.followed;
             console.log(this.post);
           }
       )
@@ -103,7 +112,7 @@ export default {
         });
       })
     },
-    dislikePost(){
+    dislikePost() {
       axios.post(`/post/userDislikePost/${this.id}`, null, {
         withCredentials: true
       }).then(res => {
@@ -116,7 +125,7 @@ export default {
         });
       })
     },
-    markPost(){
+    markPost() {
       axios.post(`/post/userFavoritePost/${this.id}`, null, {
         withCredentials: true
       }).then(res => {
@@ -129,7 +138,7 @@ export default {
         });
       })
     },
-    dismarkPost(){
+    dismarkPost() {
       axios.post(`/post/userCancelFavoritePost/${this.id}`, null, {
         withCredentials: true
       }).then(res => {
@@ -142,13 +151,23 @@ export default {
         });
       })
     },
-    sharePost(){
-
-    },
-    followUser(){
-      axios.post(`/user/followUser/${this.post.author}`,null,{
+    sharePost() {
+      axios.post(`/post/sharePost/${this.id}`, null, {
         withCredentials: true
-      }).then(res=>{
+      }).then(res => {
+        this.share = 'true';
+        this.$message({
+          message: '分享成功',
+          type: 'success',
+          offset: 280,
+          duration: 1000
+        });
+      })
+    },
+    followUser() {
+      axios.post(`/user/followUser/${this.post.author}`, null, {
+        withCredentials: true
+      }).then(res => {
         this.followed = 'true';
         this.$message({
           message: '关注成功',
@@ -158,10 +177,10 @@ export default {
         });
       })
     },
-    cancelFollowUser(){
-      axios.post(`/user/cancelFollowUser/${this.post.author}`,null,{
+    cancelFollowUser() {
+      axios.post(`/user/cancelFollowUser/${this.post.author}`, null, {
         withCredentials: true
-      }).then(res=>{
+      }).then(res => {
         this.followed = 'false';
         this.$message({
           message: '取消关注',
@@ -170,12 +189,31 @@ export default {
           duration: 1000
         });
       })
+    },
+    goOriginPost() {
+      this.$router.push(`/post-list/${this.post.shared}`);
+      // this.$router.go(0);
     }
   },
   mounted() {
     this.getPost();
     this.getTags();
-  }
+  },
+  beforeRouteUpdate(to, from, next) {
+    // 执行你想要的操作
+    console.log('Component updated due to route change');
+    // 继续路由导航
+    next();
+    console.log(to.path);
+    try{
+      this.id = to.path.split('/')[2];
+    } catch (e) {
+      console.log('postContent有点问题');
+    }
+
+    this.getTags();
+    this.getPost();
+  },
 }
 </script>
 
