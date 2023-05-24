@@ -3,16 +3,19 @@
     <el-table
         :data="tableData"
         style="width: 100%"
+        @cell-click="goPost"
     >
       <el-table-column
-          prop="date"
+          prop="time"
           label="发表时间"
           width="180"
+          align="center"
       ></el-table-column>
       <el-table-column
-          prop="name"
+          prop="author"
           label="作者"
           width="180"
+          align="center"
       ></el-table-column>
       <el-table-column
           prop="title"
@@ -34,38 +37,22 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "Share",
   data() {
     return {
       tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          title: '帖子标题帖子标题帖子标题帖子标题'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          title: '帖子标题'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          title: '帖子标题'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          title: '帖子标题'
-        }
       ], //你需要把这里替换成你的帖子数据
-      currentPage: 1
+      currentPage: 1,
+      currentSize: 50,
     };
   },
   methods: {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
+      this.currentSize = val;
+      this.fetchData();
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
@@ -73,8 +60,16 @@ export default {
       this.fetchData(); // 当页数改变时，获取新的数据
     },
     fetchData() {
-      // 在这里实现获取数据的逻辑，例如从你的后端API获取数据
-      // 然后将获取的数据赋值给 this.tableData
+      axios.get(`/post/findPostByShare/${this.currentPage}/${this.currentSize}`,{
+        withCredentials: true
+      }).then(res => {
+        this.tableData = res.data;
+      }).catch(err => {
+        console.log(err);
+      });
+    },
+    goPost(row,column,cell,event){
+      this.$router.push(`/post-list/${row.id}`);
     },
   },
   mounted() {

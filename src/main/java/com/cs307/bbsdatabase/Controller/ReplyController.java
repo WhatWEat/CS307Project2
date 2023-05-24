@@ -4,6 +4,7 @@ import com.cs307.bbsdatabase.Entity.Post;
 import com.cs307.bbsdatabase.Entity.Reply;
 import com.cs307.bbsdatabase.Entity.User;
 import com.cs307.bbsdatabase.Mapper.ReplyMapper;
+import com.cs307.bbsdatabase.Service.UserService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import com.cs307.bbsdatabase.Util.Cookies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,7 +46,7 @@ public class ReplyController {
         return list;
     }
 
-    @GetMapping("/findTopReplyByPost/{post_id}/{page}/{pageSize}")
+    @GetMapping("/findTopReplyByPost/{post_id}")
     public List<Reply> findTopReplyByPost(@PathVariable int post_id,HttpServletRequest request) {
         String username = Cookies.getUsername(request);
         List<Reply> list = replyService.findTopReplyByPost(post_id);
