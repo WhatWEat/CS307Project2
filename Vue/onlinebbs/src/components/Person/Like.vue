@@ -12,7 +12,7 @@
           align="center"
       ></el-table-column>
       <el-table-column
-          prop="name"
+          prop="author"
           label="作者"
           width="180"
           align="center"
@@ -62,33 +62,7 @@ export default {
   name: "Like",
   data() {
     return {
-      tableData: [
-        {
-          id: 1,
-          time: '2016-05-02',
-          name: '王小虎',
-          title: '帖子标题',
-          count: 100
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          title: '帖子标题',
-          count: 100
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          title: '帖子标题',
-          count: 100
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          title: '帖子标题',
-          count: 100
-        }
-      ], //你需要把这里替换成你的帖子数据
+      tableData: [],
       currentPage: 1,
       currentSize: 50
     };
