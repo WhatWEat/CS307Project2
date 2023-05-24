@@ -88,7 +88,7 @@
             <el-button
                 class="reply-btn"
                 size="medium"
-                @click="sendCommentReply(item)"
+                @click="sendCommentReply(i,item)"
                 type="primary"
             >发表评论
             </el-button
@@ -255,14 +255,15 @@ export default {
             this.$message.success("评论成功!");
         })
         .finally(() => {
-          this.myrefresh();
+          this.$router.go(0);
+          // this.myrefresh();
         });
         //
         document.getElementById("replyInput").innerHTML = "";
         this.replyComment = "";
       }
     },
-    sendCommentReply(item) {
+    sendCommentReply(i,item) {
       // 子回复提交
       if (!this.replyComment) {
         this.$message({
@@ -272,15 +273,6 @@ export default {
         });
       } else {
         // 组装请求数据
-        let a = {};
-        console.log(item);
-        a.userId = this.userId;
-        a.username = this.username;
-        a.content = this.replyComment;
-        a.avatar = this.avatar;
-        a.itemId = 6666;
-        a.parentId = this.parentId;
-        a.parentName = this.parentName;
         //
         axios
         .post(`reply/replyToReply/${item.reply_id}/${this.replyComment}/false`, null,{
@@ -290,7 +282,8 @@ export default {
             this.$message.success("回复成功！");
         })
         .finally(() => {
-          // this.$router.go(0);
+          this.$router.go(0);
+          // this.myrefresh();
         });
 
         this.replyComment = "";
@@ -300,21 +293,6 @@ export default {
     },
     onDivInput: function (e) {
       this.replyComment = e.target.innerHTML;
-    },
-    like(id) {
-      //点赞  评论id
-      // alert(id)
-      //组装数据
-      let a = {
-        commentId: id,
-        userId: this.userId,
-      };
-      axios
-      .post("http://localhost:8080/ts/tlike/likeControl", a)
-      .then((resp) => {
-        //this.$message.success("成功！！")
-        this.myrefresh();
-      });
     },
 
   },
