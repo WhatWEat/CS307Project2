@@ -1,5 +1,5 @@
 <template>
-<!--  我的关注-->
+  <!--  我的关注-->
   <div>
     <el-table
         :data="tableData"
@@ -11,13 +11,13 @@
           width="180"
       ></el-table-column>
       <el-table-column
-          prop="name"
+          prop="username"
           label="用户名"
           width="180"
       ></el-table-column>
       <el-table-column
-          prop="count"
-          label="帖子数量"
+          prop="countUserFans"
+          label="粉丝数量"
           width="180"
       ></el-table-column>
       <el-table-column
@@ -52,28 +52,7 @@ export default {
   name: "Subscribe",
   data() {
     return {
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          count: 100,
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          count: 120,
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          count: 130,
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          count: 140,
-        }
-      ], //你需要把这里替换成你的帖子数据
+      tableData: [],
       currentPage: 1,
       currentSize: 50
     };
@@ -90,14 +69,28 @@ export default {
       this.fetchData(); // 当页数改变时，获取新的数据
     },
     fetchData() {
-
+      axios.get(`/user/findFollowList/${this.currentPage}/${this.currentSize}`, {
+        withCredentials: true
+      }).then(res => {
+        this.tableData = res.data;
+        console.log(this.tableData);
+      })
     },
     handleChange(row) {
-      console.log(row);
-    }
-  },
-  mounted() {
-    this.fetchData(); // 在组件挂载后，获取第一页的数据
+      if (row.type === true) {
+        axios.get(`/user/cancelFollowUser/${row.username}`, {
+          withCredentials: true
+        });
+      } else {
+        axios.get(`/user/followUser/${row.username}`, {
+          withCredentials: true
+        });
+        console.log(row);
+      }
+    },
+    mounted() {
+      this.fetchData(); // 在组件挂载后，获取第一页的数据
+    },
   }
 }
 </script>
