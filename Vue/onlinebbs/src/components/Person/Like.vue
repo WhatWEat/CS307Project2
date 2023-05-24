@@ -6,14 +6,16 @@
         style="width: 100%"
     >
       <el-table-column
-          prop="date"
+          prop="time"
           label="发表时间"
           width="180"
+          align="center"
       ></el-table-column>
       <el-table-column
           prop="name"
           label="作者"
           width="180"
+          align="center"
       ></el-table-column>
       <el-table-column
           prop="title"
@@ -54,13 +56,16 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "Like",
   data() {
     return {
       tableData: [
         {
-          date: '2016-05-02',
+          id: 1,
+          time: '2016-05-02',
           name: '王小虎',
           title: '帖子标题',
           count: 100
@@ -84,12 +89,15 @@ export default {
           count: 100
         }
       ], //你需要把这里替换成你的帖子数据
-      currentPage: 1
+      currentPage: 1,
+      currentSize: 50
     };
   },
   methods: {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
+      this.currentSize = val;
+      this.fetchData(); // 当每页条数改变时，获取新的数据
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
@@ -97,10 +105,22 @@ export default {
       this.fetchData(); // 当页数改变时，获取新的数据
     },
     fetchData() {
-      // 在这里实现获取数据的逻辑，例如从你的后端API获取数据
-      // 然后将获取的数据赋值给 this.tableData
+      axios.get(`post/findPostByLike/${this.currentPage}/${this.currentSize}`,{
+        withCredentials: true
+      }).then(res => {
+        this.tableData = res.data;
+      })
     },
     handleChange(row) {
+      if(row.type===true){
+        axios.post(`/post/userDislikePost/${row.id}`, null, {
+          withCredentials: true
+        })
+      } else {
+        axios.post(`/post/userLikePost/${row.id}`, null, {
+          withCredentials: true
+        })
+      }
       console.log(row);
     }
   },

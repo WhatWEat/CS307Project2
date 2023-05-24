@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS Replies
 
 CREATE TABLE IF NOT EXISTS Category
 (
-    category_id BIGINT primary key,
+    categoryid SERIAL primary key,
     category    varchar(30) not null
 );
 
@@ -70,13 +70,13 @@ CREATE TABLE IF NOT EXISTS PostCity
 
 CREATE TABLE IF NOT EXISTS PostCategory
 (
-    category_id BIGINT not null,
+    categoryid BIGINT not null,
     post_id     BIGINT not null,
 
-    foreign key (category_id) references Category (category_id),
+    foreign key (categoryid) references Category (categoryid),
     foreign key (post_id) references posts (post_id),
 
-    primary key (category_id, post_id)
+    primary key (categoryid, post_id)
 );
 
 CREATE TABLE IF NOT EXISTS UserReply
