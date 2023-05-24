@@ -65,7 +65,7 @@
             </div>
             <div class="talk-box">
               <p>
-                回复<span> @{{ reply.parentName }}: </span>
+                回复<span> @{{ reply.toReply }}: </span>
                 <span class="reply"> {{ reply.content }}</span>
               </p>
             </div>
@@ -197,10 +197,6 @@ export default {
   },
   methods: {
     myrefresh() {
-      //console.log(this.userId)
-      // alert(this.userId+"nmnm")
-      //let url = `/api1/ts/tcomment/commentList/${this.itemId}/${this.userId}`
-      //查询评论信息列表展示, 文章id/用户id
       axios.get(
           "/reply/findTopReplyByPost/" + this.postid,{
             withCredentials: true
@@ -250,7 +246,7 @@ export default {
           message: "评论不能为空",
         });
       } else {
-        axios.post(`/reply/replyToPost/${this.postid}/${this.content}/false`, null,
+        axios.post(`/reply/replyToPost/${this.postid}/${this.replyComment}/false`, null,
             {
               withCredentials: true
             })
@@ -291,14 +287,10 @@ export default {
           withCredentials:true
         })
         .then((response) => {
-          if (response.data.success) {
             this.$message.success("回复成功！");
-          } else {
-            this.$message.error("回复失败，请稍后重试！");
-          }
         })
         .finally(() => {
-          this.myrefresh();
+          // this.$router.go(0);
         });
 
         this.replyComment = "";

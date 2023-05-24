@@ -32,7 +32,7 @@ public class ReplyController {
 //        return replyMapper.selectAllReply();
 //    }
     //查询user的所有回复
-    @GetMapping("/findReplyByUser/{page}/{pageSize}/{username}")
+    @GetMapping("/findReplyByUser/{page}/{pageSize}")
     public List<Reply> findReplyByUser(@PathVariable int page, @PathVariable int pageSize,HttpServletRequest request) {
         String username = Cookies.getUsername(request);
         List<Reply> list = replyService.findReplyByUser(username, page, pageSize);
@@ -42,7 +42,7 @@ public class ReplyController {
         return list;
     }
 
-    @GetMapping("/findTopReplyByPost/{post_id}/{page}/{pageSize}")
+    @GetMapping("/findTopReplyByPost/{post_id}")
     public List<Reply> findTopReplyByPost(@PathVariable int post_id,HttpServletRequest request) {
         String username = Cookies.getUsername(request);
         List<Reply> list = replyService.findTopReplyByPost(post_id);
