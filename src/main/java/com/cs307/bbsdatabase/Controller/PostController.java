@@ -3,6 +3,7 @@ package com.cs307.bbsdatabase.Controller;
 import com.cs307.bbsdatabase.Entity.Post;
 import com.cs307.bbsdatabase.Service.CategoryService;
 import com.cs307.bbsdatabase.Service.PostService;
+import com.cs307.bbsdatabase.Service.UserService;
 import com.cs307.bbsdatabase.Util.Cookies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,8 @@ public class PostController {
     private CategoryService categoryService;
     @Autowired
     private PostService postService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/findAllPost/{page}/{pageSize}")
     //返回第page页的帖子列表
@@ -141,9 +144,11 @@ public class PostController {
         temp.put("content", post.getContent());
         temp.put("time", post.getPosting_time().toString().substring(0, 19));
         temp.put("shared", String.valueOf(post.getShared()));
-        temp.put("author", postService.findWriter(post.getPost_id()));
+        String author = postService.findWriter(post.getPost_id());
+        temp.put("author", author);
         temp.put("like", postService.ifLIke(post.getPost_id(), username));
         temp.put("marked", postService.ifFavorite(post.getPost_id(), username));
+        temp.put("followed",userService.ifFollow(username,author));
         temp.put("count",String.valueOf(postService.findCountLikeById(post.getPost_id())));
         return temp;
     }
