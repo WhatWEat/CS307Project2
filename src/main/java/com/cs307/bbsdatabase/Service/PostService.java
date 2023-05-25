@@ -44,6 +44,10 @@ public class PostService extends ServiceImpl<PostMapper, Post> {
         postMapper.userDislikePost(post_id,username);
     }
 
+    public List<Post> hotList(int page, int pageSize){
+        return postMapper.hotList(pageSize,(page-1)*pageSize);
+    }
+
     public int findCountLikeById(int post_id){
         return postMapper.findCountLikeById(post_id);
     }
@@ -68,8 +72,8 @@ public class PostService extends ServiceImpl<PostMapper, Post> {
         return postMapper.findPostByShare(username,pageSize,(page-1)*pageSize);
     }
 
-    public List<Post> findAllPost(int page, int pageSize){
-        return postMapper.findAllPost(pageSize,(page-1)*pageSize);
+    public List<Post> findAllPost(int page, int pageSize,String username){
+        return postMapper.findAllPost(pageSize,(page-1)*pageSize,username);
     }
 
     public void userSharePost(Post post,String username){
@@ -95,5 +99,17 @@ public class PostService extends ServiceImpl<PostMapper, Post> {
 
     public String findWriter(int post_id){
         return postMapper.findWriter(post_id);
+    }
+
+    public List<Post> findUserLikePostOfUser(String userA, String userB){
+        return postMapper.findUserLikePostOfUser(userA,userB);
+    }
+
+    public List<Post> findUserFavoritePostOfUser(String userA, String userB){
+        return postMapper.findUserFavoritePostOfUser(userA,userB);
+    }
+
+    public void updateHot(int changeHot, int post_id){
+        postMapper.updateHot(changeHot,post_id);
     }
 }

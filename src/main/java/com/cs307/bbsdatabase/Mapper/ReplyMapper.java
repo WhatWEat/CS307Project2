@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.*;
 public interface ReplyMapper extends BaseMapper<Reply> {
 
     @Select("""
-            select r.reply_id,r.content,r.anonymous, r.parent_id,r.replying_time
+            select r.reply_id,r.content,r.anonymous, r.parent_id,r.replying_time,r.post_id
                         from userreply ur
                         join replies r on ur.reply_id = r.reply_id
                         where ur.user_name = #{username}
@@ -23,7 +23,8 @@ public interface ReplyMapper extends BaseMapper<Reply> {
             @Arg(column = "content", javaType = String.class),
             @Arg(column = "replying_time", javaType = Timestamp.class),
             @Arg(column = "anonymous", javaType = Boolean.class),
-            @Arg(column = "parent_id", javaType = Integer.class)
+            @Arg(column = "parent_id", javaType = Integer.class),
+            @Arg(column = "post_id" , javaType = Integer.class)
     })
     List<Reply>findReplyByUser(String username, int limit, int offset);
 
@@ -33,11 +34,12 @@ public interface ReplyMapper extends BaseMapper<Reply> {
             @Arg(column = "content", javaType = String.class),
             @Arg(column = "replying_time", javaType = Timestamp.class),
             @Arg(column = "anonymous", javaType = Boolean.class),
-            @Arg(column = "parent_id", javaType = Integer.class)
+            @Arg(column = "parent_id", javaType = Integer.class),
+            @Arg(column = "post_id" , javaType = Integer.class)
     })
     List<Reply>findReplyByParent(int reply_id);
 
-    @Insert("insert into replies (content,anonymous,replying_time) values (#{content},#{anonymous},now());")
+    @Insert("insert into replies (content,anonymous,replying_time,post_id) values (#{content},#{anonymous},now(),#{post_id});")
     @Options(useGeneratedKeys=true, keyProperty="reply_id", keyColumn="reply_id")
     int replyToPost(Reply reply);
 
@@ -47,8 +49,8 @@ public interface ReplyMapper extends BaseMapper<Reply> {
     @Insert("insert into userreply(user_name, reply_id) VALUES (#{username},#{reply_id})")
     void userReply(String username, int reply_id);
 
-    @Insert("insert into replies (content,parent_id,anonymous,replying_time) " +
-            "values (#{content},#{parent_id},#{anonymous},now());")
+    @Insert("insert into replies (content,parent_id,anonymous,replying_time,post_id) " +
+            "values (#{content},#{parent_id},#{anonymous},now(),#{post_id});")
     @Options(useGeneratedKeys=true, keyProperty="reply_id", keyColumn="reply_id")
     int replyToReply(Reply reply);
 
@@ -56,7 +58,7 @@ public interface ReplyMapper extends BaseMapper<Reply> {
     @Select("""
             WITH RECURSIVE ReplyTree AS (
               SELECT
-                reply_id, content, anonymous, parent_id,replying_time
+                reply_id, content, anonymous, parent_id,replying_time, post_id
               FROM
                 Replies
               WHERE
@@ -75,12 +77,29 @@ public interface ReplyMapper extends BaseMapper<Reply> {
             @Arg(column = "content", javaType = String.class),
             @Arg(column = "replying_time", javaType = Timestamp.class),
             @Arg(column = "anonymous", javaType = Boolean.class),
-            @Arg(column = "parent_id", javaType = Integer.class)
+            @Arg(column = "parent_id", javaType = Integer.class),
+            @Arg(column = "post_id" , javaType = Integer.class)
     })
     List<Reply> findSubReply(int reply_id);
 
     @Select("""
-            select r.parent_id, r.content, r.anonymous,r.replying_time,r.reply_id
+            SELECT R.*
+            FROM Replies R
+            INNER JOIN UserReply UR ON R.reply_id = UR.reply_id AND UR.user_name = #{userB}
+            INNER JOIN UserLikeReply ULR ON R.reply_id = ULR.reply_id AND ULR.user_name = #{userA};
+            """)
+    @ConstructorArgs({
+            @Arg(column = "reply_id", javaType = Integer.class),
+            @Arg(column = "content", javaType = String.class),
+            @Arg(column = "replying_time", javaType = Timestamp.class),
+            @Arg(column = "anonymous", javaType = Boolean.class),
+            @Arg(column = "parent_id", javaType = Integer.class),
+            @Arg(column = "post_id" , javaType = Integer.class)
+    })
+    List<Reply> findUserLikeReplyOfUser(String userA, String userB);
+
+    @Select("""
+            select r.parent_id, r.content, r.anonymous,r.replying_time,r.reply_id, r.post_id
             from postreply pr join replies r on r.reply_id = pr.reply_id
             where pr.post_id = #{post_id}
             order by replying_time;""")
@@ -89,7 +108,8 @@ public interface ReplyMapper extends BaseMapper<Reply> {
             @Arg(column = "content", javaType = String.class),
             @Arg(column = "replying_time", javaType = Timestamp.class),
             @Arg(column = "anonymous", javaType = Boolean.class),
-            @Arg(column = "parent_id", javaType = Integer.class)
+            @Arg(column = "parent_id", javaType = Integer.class),
+            @Arg(column = "post_id" , javaType = Integer.class)
     })
     List<Reply> findTopReplyByPost(int post_id);
 
@@ -102,21 +122,22 @@ public interface ReplyMapper extends BaseMapper<Reply> {
             @Arg(column = "content", javaType = String.class),
             @Arg(column = "replying_time", javaType = Timestamp.class),
             @Arg(column = "anonymous", javaType = Boolean.class),
-            @Arg(column = "parent_id", javaType = Integer.class)
+            @Arg(column = "parent_id", javaType = Integer.class),
+            @Arg(column = "post_id" , javaType = Integer.class)
     })
     Reply findReplyById(int reply_id);
 
     @Select("""
             WITH RECURSIVE ReplyTree AS (
                           SELECT
-                            reply_id, content, anonymous, parent_id,replying_time
+                            reply_id, content, anonymous, parent_id,replying_time, post_id
                           FROM
                             Replies
                           WHERE
                             reply_id <> #{reply_id} and parent_id = #{reply_id}
                           UNION
                           SELECT
-                            R.reply_id, R.content, R.anonymous, R.parent_id, R.replying_time
+                            R.reply_id, R.content, R.anonymous, R.parent_id, R.replying_time, R.post_id
                           FROM
                             Replies R
                             JOIN ReplyTree RT ON R.parent_id = RT.reply_id
