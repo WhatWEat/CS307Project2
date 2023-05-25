@@ -96,6 +96,16 @@ public interface ReplyMapper extends BaseMapper<Reply> {
     @Select("select post_id from postreply where reply_id = #{reply_id};")
     int findPostIDByReply(int reply_id);
 
+    @Select("select * from replies where reply_id = #{reply_id};")
+    @ConstructorArgs({
+            @Arg(column = "reply_id", javaType = Integer.class),
+            @Arg(column = "content", javaType = String.class),
+            @Arg(column = "replying_time", javaType = Timestamp.class),
+            @Arg(column = "anonymous", javaType = Boolean.class),
+            @Arg(column = "parent_id", javaType = Integer.class)
+    })
+    Reply findReplyById(int reply_id);
+
     @Select("""
             WITH RECURSIVE ReplyTree AS (
                           SELECT
