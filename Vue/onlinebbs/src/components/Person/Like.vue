@@ -99,7 +99,10 @@ export default {
       console.log(row);
     },
     goPost(row,column,cell,event){
-      this.$router.push(`/post-list/${row.id}`);
+      if(column.label!=='取消点赞'){
+        this.$router.push(`/post-list/${row.id}`);
+      }
+
     }
   },
   mounted() {

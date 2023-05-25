@@ -85,18 +85,21 @@ export default {
     },
     handleChange(row) {
       if(row.value === true){
-        axios.post(`/post/userFavoritePost/${row.id}`,null,{
+        axios.post(`/post/userCancelFavoritePost/${row.id}`,null,{
           withCredentials: true
         })
       } else {
-        axios.post(`/post/userCancelFavoritePost/${row.id}`,null,{
+        axios.post(`/post/userFavoritePost/${row.id}`,null,{
           withCredentials: true
         })
       }
       console.log(row.value);
     },
     goPost(row,column,cell,event){
-      this.$router.push(`/post-list/${row.id}`);
+      if(column.label !== '取消收藏'){
+        this.$router.push(`/post-list/${row.id}`);
+      }
+
     },
   },
 
