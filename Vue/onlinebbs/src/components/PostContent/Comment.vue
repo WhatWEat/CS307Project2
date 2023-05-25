@@ -34,31 +34,20 @@
         <el-avatar class="header-img" :size="40" :src="item.avatar"></el-avatar>
         <div class="author-info">
           <span class="author-name">{{ item.username }}</span>
-          <span class="author-time">{{ item.time }}</span>
+          <span class="author-time">{{ item.replying_time | formatDate}}</span>
         </div>
         <div class="icon-btn">
           <span @click="showReplyInput(i, item.username, item.id)">
             <i class="iconfont el-icon-s-comment"></i>{{ item.commentNum }}
           </span>
-          <i
-              v-if="item.likeFlag"
-              class="iconfont el-icon-caret-top likeIcon"
-              @click="like(item.id)"
-          ></i>
-          <i
-              v-else
-              class="iconfont el-icon-caret-top"
-              @click="like(item.id)"
-          ></i
-          >{{ item.like }}
         </div>
         <div class="talk-box">
           <p>
-            <span class="reply"> {{ item.comment }}</span>
+            <span class="reply"> {{ item.content }}</span>
           </p>
         </div>
         <div class="reply-box">
-          <div v-for="(reply, j) in item.reply" :key="j" class="author-title">
+          <div v-for="(reply, j) in item.son" :key="j" class="author-title">
             <el-avatar
                 class="header-img"
                 :size="40"
@@ -66,18 +55,18 @@
             ></el-avatar>
             <div class="author-info">
               <span class="author-name">{{ reply.username }}</span>
-              <span class="author-time">{{ reply.time }}</span>
+              <span class="author-time">{{ reply.replying_time | formatDate}}</span>
             </div>
             <div class="icon-btn">
               <span @click="showReplyInput(i, reply.username, reply.id)"
               ><i class="iconfont el-icon-s-comment"></i
-              >{{ reply.commentNum }}</span
+              ></span
               >
             </div>
             <div class="talk-box">
               <p>
-                回复<span> @{{ reply.parentName }}: </span>
-                <span class="reply"> {{ reply.comment }}</span>
+                回复<span> @{{ reply.toReply }}: </span>
+                <span class="reply"> {{ reply.content }}</span>
               </p>
             </div>
             <div class="reply-box"></div>
@@ -99,7 +88,7 @@
             <el-button
                 class="reply-btn"
                 size="medium"
-                @click="sendCommentReply(i)"
+                @click="sendCommentReply(i,item)"
                 type="primary"
             >发表评论
             </el-button
@@ -143,6 +132,7 @@ const clickoutside = {
 };
 export default {
   name: "Comment", // 组件名称
+  props: ['postid'],
   data() {
     return {
       placeholder: "", // 回复者名称
@@ -189,29 +179,36 @@ export default {
   },
   directives: {clickoutside},
   created() {
+    // this.myrefresh();
     // 注意this
     // 获取用户登录信息
-    //this.getLoginUser();
+    this.getLoginUser();
+  },
+  filters: {
+    formatDate(value) {
+      let date = new Date(value);
+
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let day = date.getDate();
+
+      return year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
+    }
   },
   methods: {
     myrefresh() {
-      //console.log(this.userId)
-      // alert(this.userId+"nmnm")
-      //let url = `/api1/ts/tcomment/commentList/${this.itemId}/${this.userId}`
-      //查询评论信息列表展示, 文章id/用户id
       axios.get(
-          "http://localhost:8080/ts/tcomment/commentList/" + this.itemId + "/" + this.userId).then(
+          "/reply/findTopReplyByPost/" + this.postid,{
+            withCredentials: true
+          }).then(
           (resp) => {
-            if (resp.data.success) {
-              let list = resp.data.data;
-              console.log(list.comments);
-              this.comments = list.comments;
-            }
+            let list = resp.data;
+            console.log(list);
+            this.comments = list;
           });
     },
     getLoginUser() {
-      // 后台session获取登录信息
-      this.avatar = "https://s1.ax1x.com/2022/06/10/Xc9lUf.png"; // 没登陆时，默认头像地址
+      this.avatar = "https://s1.ax1x.com/2022/06/10/Xc9lUf.png";
       this.myrefresh() // 刷新
     },
     inputFocus() {
@@ -249,37 +246,24 @@ export default {
           message: "评论不能为空",
         });
       } else {
-        let a = {};
-
-        a.userId = this.userId;
-        a.username = this.username;
-        a.content = this.replyComment;
-        a.avatar = this.avatar;
-        a.itemId = 6666;
-        a.parent_id = "0";
-        a.parentName = "";
-
-        axios.post(`/reply/replyToPost/1/${this.content}/false`, null,
+        axios.post(`/reply/replyToPost/${this.postid}/${this.replyComment}/false`, null,
             {
               withCredentials: true
             })
         .then((response) => {
           console.log(response.data);
-          if (response.data.success) {
             this.$message.success("评论成功!");
-          } else {
-            this.$message.error("评论失败，请稍后重试！");
-          }
         })
         .finally(() => {
-          this.myrefresh();
+          this.$router.go(0);
+          // this.myrefresh();
         });
         //
         document.getElementById("replyInput").innerHTML = "";
         this.replyComment = "";
       }
     },
-    sendCommentReply(i) {
+    sendCommentReply(i,item) {
       // 子回复提交
       if (!this.replyComment) {
         this.$message({
@@ -289,27 +273,17 @@ export default {
         });
       } else {
         // 组装请求数据
-        let a = {};
-
-        a.userId = this.userId;
-        a.username = this.username;
-        a.content = this.replyComment;
-        a.avatar = this.avatar;
-        a.itemId = 6666;
-        a.parentId = this.parentId;
-        a.parentName = this.parentName;
         //
         axios
-        .post("http://localhost:8080/ts/tcomment/addComment", a)
+        .post(`reply/replyToReply/${item.reply_id}/${this.replyComment}/false`, null,{
+          withCredentials:true
+        })
         .then((response) => {
-          if (response.data.success) {
             this.$message.success("回复成功！");
-          } else {
-            this.$message.error("回复失败，请稍后重试！");
-          }
         })
         .finally(() => {
-          this.myrefresh();
+          this.$router.go(0);
+          // this.myrefresh();
         });
 
         this.replyComment = "";
@@ -320,21 +294,7 @@ export default {
     onDivInput: function (e) {
       this.replyComment = e.target.innerHTML;
     },
-    like(id) {
-      //点赞  评论id
-      // alert(id)
-      //组装数据
-      let a = {
-        commentId: id,
-        userId: this.userId,
-      };
-      axios
-      .post("http://localhost:8080/ts/tlike/likeControl", a)
-      .then((resp) => {
-        //this.$message.success("成功！！")
-        this.myrefresh();
-      });
-    },
+
   },
 };
 </script>
@@ -412,7 +372,8 @@ export default {
 }
 
 .my-comment-reply .reply-input {
-  width: flex;
+  /*width: flex;*/
+  display: flex;
 }
 
 .author-title:not(:last-child) {

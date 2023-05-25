@@ -60,7 +60,7 @@ export default {
         withCredentials: true,
       }).then(res => {
         this.tableData = res.data;
-        // console.log(this.tableData);
+        console.log(this.tableData);
       }).catch(err => {
         console.log(err);
       });

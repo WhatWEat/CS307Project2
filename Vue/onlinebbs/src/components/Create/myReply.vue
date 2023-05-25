@@ -3,18 +3,13 @@
     <el-table
         :data="tableData"
         style="width: 100%"
+        @cell-click="goPost"
     >
       <el-table-column
-          prop="date"
+          prop="replying_time"
           label="回复时间"
           width="180"
-      ></el-table-column>
-      <el-table-column
-          prop="title"
-          label="帖子标题"
-          width="220"
-          align="center"
-          :formatter="row => row.title.length > 11 ? row.title.substr(0,11) + '...' : row.title"
+          :formatter="formatDate"
       ></el-table-column>
       <el-table-column
           prop="content"
@@ -69,9 +64,19 @@ export default {
     };
   },
   methods: {
+    formatDate(row, column) {
+      let timestamp = row.replying_time;
+      let date = new Date(timestamp);
+
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let day = date.getDate();
+
+      return year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
-      this.currentPage = val;
+      this.currentSize = val;
       this.fetchData();
     },
     handleCurrentChange(val) {
@@ -80,13 +85,21 @@ export default {
       this.fetchData(); // 当页数改变时，获取新的数据
     },
     fetchData() {
-      axios.get(`reply/findReplyByUser/${this.currentPage}/${this.currentSize}`)
+      axios.get(`reply/findReplyByUser/${this.currentPage}/${this.currentSize}`,{
+        withCredentials: true
+      })
       .then(response => {
         this.tableData = response.data;
+        console.log(this.tableData);
       })
       .catch(error => {
         console.log(error);
       });
+    },
+    goPost(row, column, cell, event) {
+      if(column.label !== '取消收藏'){
+        this.$router.push(`/post-list/${row.postID}`);
+      }
     }
   },
   mounted() {

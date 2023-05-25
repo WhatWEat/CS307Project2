@@ -35,6 +35,9 @@ public class ReplyController {
     @GetMapping("/findReplyByUser/{page}/{pageSize}")
     public List<Reply> findReplyByUser(@PathVariable int page, @PathVariable int pageSize,HttpServletRequest request) {
         String username = Cookies.getUsername(request);
+        System.out.println(page);
+        System.out.println(pageSize);
+        System.out.println();
         List<Reply> list = replyService.findReplyByUser(username, page, pageSize);
         for (Reply member: list){
             setReply(member,username);
