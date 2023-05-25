@@ -130,11 +130,11 @@ public class ReplyController {
         return reply;
     }
 
-    private int getPostId(int reply_id){
+    private Integer getPostId(int reply_id){
         Reply reply = replyService.findReplyById(reply_id);
         while (reply.getParent_id()!=null){
-            reply =  replyService.findReplyById(reply.getParent_id());
+            reply = replyService.findReplyById(reply.getParent_id());
         }
-        return replyService.findPostIDByReply(reply_id);
+        return replyService.findPostIDByReply(reply.getReply_id());
     }
 }
