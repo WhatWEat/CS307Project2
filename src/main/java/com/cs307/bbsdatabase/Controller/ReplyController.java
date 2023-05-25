@@ -41,6 +41,7 @@ public class ReplyController {
         List<Reply> list = replyService.findReplyByUser(username, page, pageSize);
         for (Reply member: list){
             setReply(member,username);
+            member.setPostID(getPostId(member.getReply_id()));
         }
         return list;
     }
@@ -130,5 +131,13 @@ public class ReplyController {
         reply.setToReply(replyService.findUserByReply(reply.getParent_id()));
 //        out.put("subReplies",son.toString());
         return reply;
+    }
+
+    private int getPostId(int reply_id){
+        Reply reply = replyService.findReplyById(reply_id);
+        while (reply.getParent_id()!=null){
+            reply =  replyService.findReplyById(reply.getParent_id());
+        }
+        return replyService.findPostIDByReply(reply_id);
     }
 }

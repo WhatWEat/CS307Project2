@@ -73,4 +73,8 @@ public class ReplyService extends ServiceImpl<ReplyMapper, Reply> {
     public int countLike(int reply_id){
         return replyMapper.countLike(reply_id);
     }
+
+    public Reply findReplyById(int reply_id){
+        return replyMapper.findReplyById(reply_id);
+    }
 }
