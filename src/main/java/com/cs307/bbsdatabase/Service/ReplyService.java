@@ -47,7 +47,7 @@ public class ReplyService extends ServiceImpl<ReplyMapper, Reply> {
         return replyMapper.findTopReplyByPost(post_id);
     }
 
-    public int findPostIDByReply(int reply_id){
+    public Integer findPostIDByReply(int reply_id){
         return replyMapper.findPostIDByReply(reply_id);
     }
     public int findCountSubReply(int reply_id){
