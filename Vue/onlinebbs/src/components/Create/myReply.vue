@@ -3,6 +3,7 @@
     <el-table
         :data="tableData"
         style="width: 100%"
+        @cell-click="goPost"
     >
       <el-table-column
           prop="replying_time"
@@ -94,6 +95,12 @@ export default {
       .catch(error => {
         console.log(error);
       });
+    },
+    goPost(row,column,cell,event){
+      if(row.postID == null){
+      } else {
+        this.$router.push(`/post-list/${row.postID}`);
+      }
     }
   },
   mounted() {
