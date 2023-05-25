@@ -30,7 +30,15 @@ public class PostController {
     public List<Map<String, String>> findAllPost(@PathVariable int page,
                                                  @PathVariable int pageSize, HttpServletRequest request) {
         String username = Cookies.getUsername(request);
-        List<Post> list = postService.findAllPost(page, pageSize);
+        List<Post> list = postService.findAllPost(page, pageSize,username);
+        return getMaps(list, username);
+    }
+    @GetMapping("/hotList/{page}/{pageSize}")
+    //热榜
+    public List<Map<String, String>> hotList(@PathVariable int page,
+                                                 @PathVariable int pageSize, HttpServletRequest request) {
+        String username = Cookies.getUsername(request);
+        List<Post> list = postService.hotList(page, pageSize);
         return getMaps(list, username);
     }
 
@@ -96,34 +104,40 @@ public class PostController {
     }
 
     @PostMapping("sharePost/{post_id}")
+    //分享帖子
     public void userSharePost(@PathVariable int post_id, HttpServletRequest request) {
         Post beShared = postService.findPostById(post_id);
         Post newPost = new Post(beShared.getTitle(), beShared.getContent(), beShared.getCategories(), beShared.getPost_id());
         postService.userSharePost(newPost, Cookies.getUsername(request));
+        postService.updateHot(2,post_id);
     }
 
     @PostMapping("/userLikePost/{post_id}")
     //用户进行喜欢操作
     public void userLikePost(@PathVariable int post_id, HttpServletRequest request) {
         postService.userLikePost(post_id, Cookies.getUsername(request));
+        postService.updateHot(1,post_id);
     }
 
     @PostMapping("/userDislikePost/{post_id}")
     //用户取消喜欢
     public void userDislikePost(@PathVariable int post_id, HttpServletRequest request) {
         postService.userDislikePost(post_id, Cookies.getUsername(request));
+        postService.updateHot(-1,post_id);
     }
 
     @PostMapping("/userFavoritePost/{post_id}")
     //用户进行收藏操作
     public void userFavoritePost(@PathVariable int post_id, HttpServletRequest request) {
         postService.userFavoritePost(post_id, Cookies.getUsername(request));
+        postService.updateHot(2,post_id);
     }
 
     @PostMapping("/userCancelFavoritePost/{post_id}")
     //用户取消收藏
     public void userCancelFavoritePost(@PathVariable int post_id, HttpServletRequest request) {
         postService.userCancelFavoritePost(post_id, Cookies.getUsername(request));
+        postService.updateHot(-2,post_id);
     }
 
 
@@ -150,6 +164,7 @@ public class PostController {
         temp.put("marked", postService.ifFavorite(post.getPost_id(), username));
         temp.put("followed",userService.ifFollow(username,author));
         temp.put("count",String.valueOf(postService.findCountLikeById(post.getPost_id())));
+        temp.put("hot",String.valueOf(post.getHot()));
         return temp;
     }
 }

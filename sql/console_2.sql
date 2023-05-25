@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS posts
     title        VARCHAR(100)  not null,
     content      VARCHAR(1000) not null,
     posting_time TIMESTAMP     not null,
-    shared       BIGINT        not null
+    shared       BIGINT        not null,
+    hot          BIGINT        not null
 );
 
 CREATE TABLE IF NOT EXISTS Replies
@@ -27,6 +28,7 @@ CREATE TABLE IF NOT EXISTS Replies
     content       VARCHAR(1000) not null,
     replying_time TIMESTAMP     not null,
     anonymous     BOOLEAN       not null,
+    post_id       BIGINT        not null,
     parent_id     BIGINT
 );
 
@@ -39,8 +41,8 @@ CREATE TABLE IF NOT EXISTS Category
 CREATE TABLE IF NOT EXISTS City
 (
     city_id BIGINT primary key,
-    city    varchar(20) not null,
-    country varchar(20) not null,
+    city    varchar(50) not null,
+    country varchar(50) not null,
 
     CONSTRAINT country_city UNIQUE (city, country)
 
@@ -155,7 +157,7 @@ CREATE TABLE IF NOT EXISTS UserBlockUser
     primary key (user_blocker, user_be_blocked)
 );
 
-
+--userId赋值触发器
 SELECT setval('user_id_seq', (SELECT max(CAST(user_id AS INT)) FROM users) + 1);
 
 CREATE OR REPLACE FUNCTION users_trigger_function()
@@ -193,18 +195,13 @@ CREATE TRIGGER insert_posts_trigger
     FOR EACH ROW
 EXECUTE FUNCTION assign_post_id();
 
--- --reply_id赋值触发器
+--reply_id赋值触发器
 CREATE OR REPLACE FUNCTION reply_id() RETURNS TRIGGER AS $$
 DECLARE
     max_reply_id BIGINT;
 BEGIN
-    -- 获取已有行中reply_id的最大值
     SELECT MAX(reply_id) FROM replies into max_reply_id;
-
-    -- 将新行的reply_id设置为当前最大值加1
     NEW.reply_id = COALESCE(max_reply_id,0) + 1;
-
-    -- 返回新行以便完成插入
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -214,3 +211,4 @@ CREATE TRIGGER set_reply_id_trigger BEFORE INSERT ON Replies
     FOR EACH ROW
     WHEN (NEW.reply_id IS NULL OR NEW.reply_id = 0)
 EXECUTE FUNCTION reply_id();
+update posts set hot = hot +-1 where post_id = 5;

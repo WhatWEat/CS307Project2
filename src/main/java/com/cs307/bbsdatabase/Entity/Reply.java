@@ -15,8 +15,7 @@ import java.util.List;
 @TableName("Replies")
 public class Reply implements Serializable {
     private Integer reply_id;
-    @TableField(exist = false)
-    private Integer postID;
+    private Integer post_id;
     @Nullable
     private Integer parent_id;
 
@@ -42,9 +41,10 @@ public class Reply implements Serializable {
     @TableField(exist = false)
     private ArrayList<User> users;
 
-    public Reply(String content, boolean anonymous) {
+    public Reply(String content, boolean anonymous, Integer post_id) {
         this.content = content;
         this.anonymous = anonymous;
+        this.post_id = post_id;
     }
 
     @JsonCreator
@@ -65,16 +65,18 @@ public class Reply implements Serializable {
                  @Param("content") String content,
                  @Param("replying_time") Timestamp replying_time,
                  @Param("anonymous") Boolean anonymous,
-                 @Param("parent_id") Integer parent_id) {
+                 @Param("parent_id") Integer parent_id,
+                 @Param("post_id") Integer post_id) {
         this.reply_id = reply_id;
         this.parent_id = parent_id;
         this.replying_time = replying_time;
         this.content = content;
         this.anonymous = anonymous;
+        this.post_id = post_id;
     }
 
-    public Reply(Integer postID, String content, boolean anonymous) {
-        this.postID = postID;
+    public Reply(Integer post_id, String content, boolean anonymous) {
+        this.post_id = post_id;
         this.parent_id = null;
         this.content = content;
         this.anonymous = anonymous;
@@ -84,8 +86,8 @@ public class Reply implements Serializable {
         this.reply_id = reply_id;
     }
 
-    public void setPostID(Integer postID) {
-        this.postID = postID;
+    public void setPostID(Integer post_id) {
+        this.post_id = post_id;
     }
 
     public void setParent_id(Integer parent_id) {
@@ -124,8 +126,8 @@ public class Reply implements Serializable {
         return reply_id;
     }
 
-    public Integer getPostID() {
-        return postID;
+    public Integer getPost_id() {
+        return post_id;
     }
 
     public Integer getParent_id() {

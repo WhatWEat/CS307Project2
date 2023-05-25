@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.cs307.bbsdatabase.Service.PostService;
 import com.cs307.bbsdatabase.Service.ReplyService;
 import com.cs307.bbsdatabase.Service.UserService;
 import com.cs307.bbsdatabase.Util.Cookies;
@@ -25,6 +26,9 @@ public class ReplyController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PostService postService;
 //    private final int pageSize = 50;
 
     //    @GetMapping("/replies")
@@ -56,19 +60,23 @@ public class ReplyController {
         return list;
     }
 
-    //reply回复post请用这个
+
 
     @PostMapping("replyToPost/{post_id}/{content}/{anonymous}")
-
+    //reply回复post请用这个
     public boolean replyToPost(@PathVariable int post_id, @PathVariable String content, @PathVariable Boolean anonymous,
                                HttpServletRequest request) {
+        postService.updateHot(3,post_id);
         return replyService.replyToPost(post_id, content, anonymous, Cookies.getUsername(request));
     }
 
-    //reply回复reply请用这个
+
     @PostMapping("replyToReply/{parent_id}/{content}/{anonymous}")
+    //reply回复reply请用这个
     public boolean replyToReply(@PathVariable int parent_id, @PathVariable String content, @PathVariable Boolean anonymous,
                                 HttpServletRequest request) {
+        Integer post_id = getPostId(parent_id);
+        postService.updateHot(1,post_id);
         return replyService.replyToReply(parent_id, content, anonymous, Cookies.getUsername(request));
     }
 
@@ -87,20 +95,19 @@ public class ReplyController {
         replyService.UserDislikeReply(reply_id, Cookies.getUsername(request));
     }
 
-    private Reply setTopReply(Reply reply, String username) {
+    private void setTopReply(Reply reply, String username) {
         reply.setSon(replyService.findSubReply(reply.getReply_id()));
         setReply(reply, username);
         for (Reply son : reply.getSon()) {
             setSubReply(son, username);
         }
-        return reply;
     }
 
-    private Reply setReply(Reply reply, String username) {
+    private void setReply(Reply reply, String username) {
 //        out.put("content",reply.getContent());
-        if (reply.getParent_id() == null) {
-            reply.setPostID(replyService.findPostIDByReply(reply.getReply_id()));
-        }
+//        if (reply.getParent_id() == null) {
+//            reply.setPostID(replyService.findPostIDByReply(reply.getReply_id()));
+//        }
         //这里的if分支是为了匿名留的
 //        if (reply.isAnonymous()){
 //            out.put("anonymous", String.valueOf(reply.isAnonymous()));
@@ -112,13 +119,12 @@ public class ReplyController {
         reply.setCommentNum(replyService.findCountSubReply(reply.getReply_id()));
         reply.setLike(replyService.countLike(reply.getReply_id()));
 //        out.put("subReplies",son.toString());
-        return reply;
     }
-    private Reply setSubReply(Reply reply, String username) {
+    private void setSubReply(Reply reply, String username) {
 //        out.put("content",reply.getContent());
-        if (reply.getParent_id() == null) {
-            reply.setPostID(replyService.findPostIDByReply(reply.getReply_id()));
-        }
+//        if (reply.getParent_id() == null) {
+//            reply.setPostID(replyService.findPostIDByReply(reply.getReply_id()));
+//        }
         //这里的if分支是为了匿名留的
 //        if (reply.isAnonymous()){
 //            out.put("anonymous", String.valueOf(reply.isAnonymous()));
@@ -130,13 +136,12 @@ public class ReplyController {
         reply.setLike(replyService.countLike(reply.getReply_id()));
         reply.setToReply(replyService.findUserByReply(reply.getParent_id()));
 //        out.put("subReplies",son.toString());
-        return reply;
     }
 
-    private int getPostId(int reply_id){
+    private Integer getPostId(int reply_id){
         Reply reply = replyService.findReplyById(reply_id);
         while (reply.getParent_id()!=null){
-            reply =  replyService.findReplyById(reply.getParent_id());
+            reply = replyService.findReplyById(reply.getParent_id());
         }
         return replyService.findPostIDByReply(reply.getReply_id());
     }

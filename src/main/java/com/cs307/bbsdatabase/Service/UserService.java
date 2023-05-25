@@ -51,8 +51,16 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         userMapper.userFollowUser(follower,be_followed);
     }
 
+    public void userBlockUser(String blocker,String be_blocked){
+        userMapper.userBlockUser(blocker,be_blocked);
+    }
+
     public void userCancelFollow(String follower,String be_followed){
         userMapper.userCancelFollowUser(follower,be_followed);
+    }
+
+    public void userCancelBlock(String blocker,String be_blocked){
+        userMapper.userCancelBlock(blocker,be_blocked);
     }
 
     public List<User> findFollowList(String username, int page, int pageSize){

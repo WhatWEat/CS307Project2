@@ -16,15 +16,17 @@ public class ReplyService extends ServiceImpl<ReplyMapper, Reply> {
     @Autowired
     private ReplyMapper replyMapper;
 
+
+
     public boolean replyToPost(int post_id, String content, boolean anonymous,String username){
-        Reply reply = new Reply(content,anonymous);
+        Reply reply = new Reply(content,anonymous, post_id);
         int success = replyMapper.replyToPost(reply);
         replyMapper.postReply(post_id,reply.getReply_id());
         replyMapper.userReply(username, reply.getReply_id());
         return true;
     }
     public boolean replyToReply(int parent_id, String content, boolean anonymous,String username){
-        Reply reply = new Reply(content,anonymous);
+        Reply reply = new Reply(content,anonymous,replyMapper.findReplyById(parent_id).getPost_id());
         reply.setParent_id(parent_id);
         int success = replyMapper.replyToReply(reply);
         replyMapper.userReply(username,reply.getReply_id());
@@ -35,8 +37,8 @@ public class ReplyService extends ServiceImpl<ReplyMapper, Reply> {
         return replyMapper.findReplyByUser(username,pageSize,(page-1)*pageSize);
     }
 
-    public List<Reply> findReplyByParent(int reply_id){
-        return replyMapper.findReplyByParent(reply_id);
+    public List<Reply> findUserLikeReplyOfUser(String userA, String userB){
+        return replyMapper.findUserLikeReplyOfUser(userA, userB);
     }
 
     public List<Reply> findSubReply(int reply_id){

@@ -57,9 +57,13 @@ public interface UserMapper extends BaseMapper<User> {
     void userFollowUser(String follower,String be_followed);
 //    @Select("")
 
+    @Insert("insert into userblockuser (user_blocker, user_be_blocked) VALUES (#{blocker},#{be_blocked});")
+    void userBlockUser(String blocker, String be_blocked);
 
     @Delete("delete from userfollowuser where user_follower = #{follower} and user_be_followed = #{be_followed};")
     void userCancelFollowUser(String follower,String be_followed);
 
+    @Delete("delete from userblockuser where user_blocker = #{blocker} and user_be_blocked = #{be_blocked};")
+    void userCancelBlock(String blocker, String be_blocked);
 
 }

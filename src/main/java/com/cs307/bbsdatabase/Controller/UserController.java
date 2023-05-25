@@ -1,7 +1,10 @@
 package com.cs307.bbsdatabase.Controller;
 
 import com.cs307.bbsdatabase.Entity.Post;
+import com.cs307.bbsdatabase.Entity.Reply;
 import com.cs307.bbsdatabase.Entity.User;
+import com.cs307.bbsdatabase.Service.PostService;
+import com.cs307.bbsdatabase.Service.ReplyService;
 import com.cs307.bbsdatabase.Service.UserService;
 import com.cs307.bbsdatabase.Util.Cookies;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,12 @@ public class UserController {
     //请把你的任务在Service中实现，Controller中只需要调用Service中的方法即可
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private PostService postService;
+
+    @Autowired
+    private ReplyService replyService;
 
     @PostMapping("/reg/{phone}/{username}/{password}")
     //实现注册的方法,返回注册成功与否
@@ -80,15 +89,51 @@ public class UserController {
     }
 
     @PostMapping("/followUser/{be_followed}")
+    //关注用户
     public void userFollowUser(@PathVariable String be_followed,HttpServletRequest request){
         userService.userFollowUser(Cookies.getUsername(request),be_followed);
     }
 
     @PostMapping("cancelFollowUser/{be_followed}")
+    //取消关注
     public void userCancelFollowUser(@PathVariable String be_followed,HttpServletRequest request){
         userService.userCancelFollow(Cookies.getUsername(request),be_followed);
     }
 
+    @PostMapping("blockUser/{be_blocked}")
+    //屏蔽用户
+    //屏蔽某用户时，会取消对其进行的所有点赞、收藏操作，并减去相应的热度
+    public void userBlockUser(@PathVariable String be_blocked,HttpServletRequest request){
+        String username = Cookies.getUsername(request);
+        userService.userBlockUser(username,be_blocked);
+        //取消帖子点赞
+        List<Post> like = postService.findUserLikePostOfUser(username,be_blocked);
+        for (Post post : like){
+            int post_id = post.getPost_id();
+            postService.userDislikePost(post_id, username);
+            postService.updateHot(-1,post_id);
+        }
+        //取消回复点赞
+        List<Reply> replies = replyService.findUserLikeReplyOfUser(username,be_blocked);
+        for (Reply reply:replies){
+            int reply_id = reply.getReply_id();
+            replyService.UserDislikeReply(reply_id,username);
+        }
+        //取消帖子收藏
+        List<Post> favorite = postService.findUserFavoritePostOfUser(username,be_blocked);
+        for (Post post : favorite){
+            int post_id = post.getPost_id();
+            postService.userCancelFavoritePost(post_id, username);
+            postService.updateHot(-2,post_id);
+        }
+
+    }
+
+    @PostMapping("cancelBlockUser/{be_blocked}")
+    //取消屏蔽
+    public void userCancelBlockUser(@PathVariable String be_blocked,HttpServletRequest request){
+        userService.userCancelBlock(Cookies.getUsername(request),be_blocked);
+    }
 
     @GetMapping("findFollowList/{page}/{pageSize}")
 
