@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>创作中心</h1>
+    <h1>个人中心</h1>
     <el-tabs type="border-card" v-model="activeTab">
       <el-tab-pane label="我的回复" name="/create/my-reply"></el-tab-pane>
       <el-tab-pane label="我的帖子" name="/create/my-post"></el-tab-pane>
