@@ -41,7 +41,7 @@ public class ReplyController {
         List<Reply> list = replyService.findReplyByUser(username, page, pageSize);
         for (Reply member: list){
             setReply(member,username);
-            member.setPostID(getPostId(member.getReply_id()));
+//            member.setPostID(getPostId(member.getReply_id()));
         }
         return list;
     }
