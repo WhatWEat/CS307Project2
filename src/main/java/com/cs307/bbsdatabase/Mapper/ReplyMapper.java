@@ -94,7 +94,7 @@ public interface ReplyMapper extends BaseMapper<Reply> {
     List<Reply> findTopReplyByPost(int post_id);
 
     @Select("select post_id from postreply where reply_id = #{reply_id};")
-    int findPostIDByReply(int reply_id);
+    Integer findPostIDByReply(int reply_id);
 
     @Select("select * from replies where reply_id = #{reply_id};")
     @ConstructorArgs({
