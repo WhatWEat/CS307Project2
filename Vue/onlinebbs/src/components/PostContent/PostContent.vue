@@ -31,13 +31,10 @@
             <span>作者: {{ post.author }}</span>
             <span v-if="this.shared!=='0'">
               <el-button type="info" @click="goOriginPost"> 原贴地址 </el-button>
-              <el-popconfirm
-                  title="确定前往原贴吗？">
-
-              </el-popconfirm>
             </span>
             <span style="float: right">
-              <el-button type="danger">屏蔽</el-button>
+              <el-button type="danger" @click="blockUser" v-if="this.blocked==='false'">屏蔽</el-button>
+              <el-button type="danger" @click="cancelBlockUser" v-else>已屏蔽</el-button>
               <el-button type="warning" v-if="this.followed==='false'"
                          @click="followUser">关注</el-button>
               <el-button type="warning" v-else @click="cancelFollowUser">取消关注</el-button>
@@ -71,6 +68,7 @@ export default {
       like: 'false',
       marked: 'false',
       followed: 'false',
+      blocked: 'false',
       post: {},
       tags: [],
       loading: false
@@ -189,6 +187,30 @@ export default {
           duration: 1000
         });
       })
+    },
+    blockUser(){
+      let name = document.cookie.split('=')[1];
+      if(name === this.post.author){
+        this.$message({
+          message: '不能屏蔽自己',
+          type: 'warning',
+          offset: 280,
+          duration: 1000
+        });
+        return;
+      }
+      axios.post(`/user/blockUser/${this.post.author}`, null, {
+        withCredentials: true
+      }).then(res => {
+      });
+      this.blocked = 'true';
+    },
+    cancelBlockUser(){
+      axios.post(`/user/cancelBlockUser/${this.post.author}`, null, {
+        withCredentials: true
+      }).then(res => {
+      });
+      this.blocked = 'false';
     },
     goOriginPost() {
       this.$router.push(`/post-list/${this.post.shared}`);

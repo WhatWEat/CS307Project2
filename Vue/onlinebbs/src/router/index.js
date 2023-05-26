@@ -13,6 +13,9 @@ import myReply from "@/components/Create/myReply.vue";
 import PersonCreate from "@/components/PersonCreate.vue";
 import Subscribe from "@/components/Person/Subscribe.vue";
 import WritePost from "@/components/PostContent/WritePost.vue";
+import MainSearch from "@/components/Search/MainSearch.vue";
+import Block from "@/components/Person/Block.vue";
+import HotSearch from "@/components/Search/HotSearch.vue";
 
 Vue.use(VueRouter)
 export const router = new VueRouter({
@@ -20,7 +23,9 @@ export const router = new VueRouter({
         {path: '/', redirect: '/login'},
         {path: '/person', redirect: '/person/mark'},
         {path: '/create', redirect: '/create/my-reply'},
+        {path: '/search', component: MainSearch},
         {path: '/login', component: LoginReg},
+        {path: '/hot', component: HotSearch},
         {path: '/write', component: WritePost, meta: {requiresAuth: true}},
         {
           path: '/main', component: MainBBS, meta: {requiresAuth: true},
@@ -40,6 +45,9 @@ export const router = new VueRouter({
             }, {
               path: 'subscribe',
               component: Subscribe
+            }, {
+              path: 'block',
+              component: Block
             }]
         },
         {

@@ -5,6 +5,7 @@
       <el-tab-pane label="我的收藏" name="/person/mark"></el-tab-pane>
       <el-tab-pane label="我的点赞" name="/person/like"></el-tab-pane>
       <el-tab-pane label="我的关注" name="/person/subscribe"></el-tab-pane>
+      <el-tab-pane label="我的屏蔽" name="/person/block"></el-tab-pane>
       <transition name="fade" mode="out-in">
         <router-view></router-view>
       </transition>
