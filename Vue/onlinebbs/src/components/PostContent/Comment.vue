@@ -16,14 +16,17 @@
           ></div>
         </div>
         <div class="reply-btn-box" v-show="btnShow">
-          <el-button
-              class="reply-btn"
-              size="medium"
-              @click="sendComment"
-              type="primary"
-          >发表评论
+          <span style="margin-left: 20px;">
+            <el-checkbox v-model="anonymous">是否匿名</el-checkbox>
+                      <el-button
+                          class="reply-btn"
+                          size="medium"
+                          @click="sendComment"
+                          type="primary"
+                      >发表评论
           </el-button
           >
+          </span>
         </div>
       </div>
       <div
@@ -135,6 +138,7 @@ export default {
   props: ['postid'],
   data() {
     return {
+      anonymous: false,
       placeholder: "", // 回复者名称
       btnShow: false,
       index: "0",

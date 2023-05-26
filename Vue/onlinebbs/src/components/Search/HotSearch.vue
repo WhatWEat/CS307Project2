@@ -9,12 +9,16 @@
           <el-skeleton :rows="15" animated class="skeleton-with"/>
         </div>
         <div class="posts" v-else>
-          <el-card v-for="post in posts" :key="post.id" class="post-card">
-            <span style="margin-right: 50px;float: left;">
-              <el-button type="danger" icon="el-icon-finished" v-if="post.shared==='0'"
-                         size="small">原创</el-button>
-              <el-button type="primary" icon="el-icon-document-copy" v-else
-                         size="small">转载</el-button>
+          <el-card v-for="(post,index) in posts" :key="post.id" class="post-card">
+            <span style="margin-right: 50px;align-items: center;">
+              <el-button type="danger" icon="el-icon-s-flag" v-if="index === 0 "
+                         size="small">热热热</el-button>
+              <el-button type="warning" icon="el-icon-s-flag" v-else-if="index === 1 "
+                         size="small">第二名</el-button>
+              <el-button type="success" icon="el-icon-s-flag" v-else-if="index === 2 "
+                         size="small">第三名</el-button>
+              <el-button type="info" v-else
+                         size="small">NO.{{index+1}}</el-button>
             </span>
             <!--        帖子时间-->
             <span class="post-time"><i class="el-icon-magic-stick"></i>{{ post.time }}</span>
@@ -37,20 +41,13 @@
 
       </div>
     </el-main>
-    <el-footer>
-      <div class="write">
-        <el-button type="primary" icon="el-icon-edit" @click="goWrite">发发我的</el-button>
-        <el-button type="success" icon="el-icon-search" @click="goSearch">搜搜你的</el-button>
-      </div>
-    </el-footer>
   </el-container>
 </template>
 
 <script>
 import axios from "axios";
-
 export default {
-  name: 'PostList',
+  name: "HotSearch",
   data() {
     return {
       hasMorePosts: true,
@@ -66,7 +63,7 @@ export default {
   },
   methods: {
     getData() {
-      axios.get('/post/findAllPost/1/20', {
+      axios.get('/post/hotList/1/20', {
         withCredentials: true
       })
       .then((response) => {
@@ -83,7 +80,7 @@ export default {
     },
     loadMorePosts() {
       this.currentPage += 1;
-      axios.get('/post/findAllPost/' + this.currentPage + '/20', {
+      axios.get('/post/hotList/' + this.currentPage + '/20', {
         withCredentials: true
       })
       .then((response) => {
