@@ -126,7 +126,6 @@ public class UserController {
             postService.userCancelFavoritePost(post_id, username);
             postService.updateHot(-2,post_id);
         }
-
     }
 
     @PostMapping("cancelBlockUser/{be_blocked}")
@@ -136,12 +135,19 @@ public class UserController {
     }
 
     @GetMapping("findFollowList/{page}/{pageSize}")
-
     public List<Map<String, String>> findFollowList(@PathVariable int page,
                                                     @PathVariable int pageSize,HttpServletRequest request){
         String username = Cookies.getUsername(request);
         List<User> followed = userService.findFollowList(username,page,pageSize);
         return getMaps(followed,username);
+    }
+
+    @GetMapping("findBlockList/{page}/{pageSize}")
+    public List<Map<String, String>> findBlockList(@PathVariable int page,
+                                                    @PathVariable int pageSize,HttpServletRequest request){
+        String username = Cookies.getUsername(request);
+        List<User> blocked = userService.findBlockList(username,page,pageSize);
+        return getMaps(blocked,username);
     }
 
 

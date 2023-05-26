@@ -34,6 +34,14 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("""
             select u.user_id,u.registration_time,u.phone_number,u.username
+            from users u join userblockuser u2 on u.username = u2.user_be_blocked
+            where u2.user_blocker = #{username}
+            order by u.user_id
+            limit #{limit} offset #{offset};""")
+    List<User> findBolockList(String username, int limit, int offset);
+
+    @Select("""
+            select u.user_id,u.registration_time,u.phone_number,u.username
             from users u join userfollowuser u2 on u.username = u2.user_follower
             where u2.user_be_followed = #{username}
             order by u.user_id
@@ -46,6 +54,8 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("select count(*) from userfollowuser where user_be_followed = #{username};")
     int findCountFansList(String username);
+
+
 
     @Insert("INSERT INTO users (username,registration_time, phone_number,user_id,  password)\n" +
             "VALUES(#{username},#{registration_time},#{phone_number},#{user_id},#{password})")
@@ -65,5 +75,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Delete("delete from userblockuser where user_blocker = #{blocker} and user_be_blocked = #{be_blocked};")
     void userCancelBlock(String blocker, String be_blocked);
+
+
 
 }

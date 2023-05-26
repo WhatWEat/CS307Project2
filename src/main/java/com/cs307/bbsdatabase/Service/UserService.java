@@ -67,6 +67,10 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         return userMapper.findFollowList(username,pageSize,(page-1)*pageSize);
     }
 
+    public List<User> findBlockList(String username, int page, int pageSize){
+        return userMapper.findBolockList(username,pageSize,(page-1)*pageSize);
+    }
+
     public List<User> findFanList(String username, int page, int pageSize){
         return userMapper.findFanList(username,pageSize,(page-1)*pageSize);
     }
