@@ -65,7 +65,7 @@ public interface ReplyMapper extends BaseMapper<Reply> {
                 reply_id <> #{reply_id} and parent_id = #{reply_id}
               UNION
               SELECT
-                R.reply_id, R.content, R.anonymous, R.parent_id, R.replying_time
+                R.reply_id, R.content, R.anonymous, R.parent_id, R.replying_time, R.post_id
               FROM
                 Replies R
                 JOIN ReplyTree RT ON R.parent_id = RT.reply_id
