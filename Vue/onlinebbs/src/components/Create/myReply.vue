@@ -12,6 +12,15 @@
           :formatter="formatDate"
       ></el-table-column>
       <el-table-column
+          prop="anonymous"
+          label="匿名"
+          width="100"
+          align="center">
+          <div slot-scope="scope">
+            {{ scope.row.anonymous ? '匿名' : '实名' }}
+          </div>
+      </el-table-column>
+      <el-table-column
           prop="content"
           label="回复内容"
           width="300"
