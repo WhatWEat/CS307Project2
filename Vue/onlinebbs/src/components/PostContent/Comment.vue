@@ -36,11 +36,12 @@
       >
         <el-avatar class="header-img" :size="40" :src="item.avatar"></el-avatar>
         <div class="author-info">
-          <span class="author-name">{{ item.username }}</span>
+          <span class="author-name" v-if="item.anonymous===false">{{ item.username }}</span>
+          <span class="author-name" v-else>匿名</span>
           <span class="author-time">{{ item.replying_time | formatDate}}</span>
         </div>
         <div class="icon-btn">
-          <span @click="showReplyInput(i, item.username, item.id)">
+          <span @click="showReplyInput(i, -1 ,item.username, item.id)">
             <i class="iconfont el-icon-s-comment"></i>{{ item.commentNum }}
           </span>
         </div>
@@ -57,11 +58,12 @@
                 :src="reply.avatar"
             ></el-avatar>
             <div class="author-info">
-              <span class="author-name">{{ reply.username }}</span>
+              <span class="author-name" v-if="reply.anonymous===false">{{ reply.username }}</span>
+              <span class="author-name" v-else>匿名</span>
               <span class="author-time">{{ reply.replying_time | formatDate}}</span>
             </div>
             <div class="icon-btn">
-              <span @click="showReplyInput(i, reply.username, reply.id)"
+              <span @click="showReplyInput(i, j, reply.username, reply.id)"
               ><i class="iconfont el-icon-s-comment"></i
               ></span
               >
@@ -142,6 +144,7 @@ export default {
       anonymous: false,
       placeholder: "", // 回复者名称
       btnShow: false,
+      sonIndex: -1,
       index: "0",
       replyComment: "", // 评论输入内容
       username: "jaychou", // 登录的用户名
@@ -202,13 +205,15 @@ export default {
       replyInput.style.padding = "10px";
       replyInput.style.border = "none";
     },
-    showReplyInput(i, name, id) {
+    showReplyInput(i, j, name, id) {
+      console.log(i, j, name, id);
+      this.sonIndex = j;
       this.comments[this.index].inputShow = false;
       this.index = i;
       this.comments[i].inputShow = true;
       this.parentName = name;
       this.parentId = id;
-      this.placeholder = "回复 @" + name;
+      this.placeholder = "回复 @";
       //alert(i)
     },
     _inputShow(i) {
@@ -251,11 +256,17 @@ export default {
       } else {
         // 组装请求数据
         //
+        let toReply = item.reply_id;
+        if(this.sonIndex !== -1){
+          toReply = item.son[this.sonIndex].reply_id;
+        }
+        console.log(toReply);
         axios
-        .post(`reply/replyToReply/${item.reply_id}/${this.replyComment}/false`, null,{
+        .post(`reply/replyToReply/${toReply}/${this.replyComment}/${this.anonymous}`, null,{
           withCredentials:true
         })
         .then((response) => {
+            console.log(this.anonymous);
             this.$message.success("回复成功！");
         })
         .finally(() => {
