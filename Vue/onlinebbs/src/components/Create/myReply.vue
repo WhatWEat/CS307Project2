@@ -107,7 +107,7 @@ export default {
     },
     goPost(row, column, cell, event) {
       if(column.label !== '取消收藏'){
-        this.$router.push(`/post-list/${row.postID}`);
+        this.$router.push(`/post-list/${row.post_id}`);
       }
     }
   },
