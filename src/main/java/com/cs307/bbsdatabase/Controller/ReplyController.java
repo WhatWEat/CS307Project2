@@ -104,38 +104,23 @@ public class ReplyController {
     }
 
     private void setReply(Reply reply, String username) {
-//        out.put("content",reply.getContent());
-//        if (reply.getParent_id() == null) {
-//            reply.setPostID(replyService.findPostIDByReply(reply.getReply_id()));
-//        }
-        //这里的if分支是为了匿名留的
-//        if (reply.isAnonymous()){
-//            out.put("anonymous", String.valueOf(reply.isAnonymous()));
-//        }else {
         reply.setUsername(replyService.findUserByReply(reply.getReply_id()));
         reply.setIfFollowed(userService.ifFollow(username, replyService.findUserByReply(reply.getReply_id())).equals("true"));
 
-//        }
         reply.setCommentNum(replyService.findCountSubReply(reply.getReply_id()));
         reply.setLike(replyService.countLike(reply.getReply_id()));
-//        out.put("subReplies",son.toString());
     }
     private void setSubReply(Reply reply, String username) {
-//        out.put("content",reply.getContent());
-//        if (reply.getParent_id() == null) {
-//            reply.setPostID(replyService.findPostIDByReply(reply.getReply_id()));
-//        }
-        //这里的if分支是为了匿名留的
-//        if (reply.isAnonymous()){
-//            out.put("anonymous", String.valueOf(reply.isAnonymous()));
-//        }else {
         reply.setUsername(replyService.findUserByReply(reply.getReply_id()));
         reply.setIfFollowed(userService.ifFollow(username, replyService.findUserByReply(reply.getReply_id())).equals("true"));
 
-//        }
         reply.setLike(replyService.countLike(reply.getReply_id()));
-        reply.setToReply(replyService.findUserByReply(reply.getParent_id()));
-//        out.put("subReplies",son.toString());
+        Reply parent = replyService.findReplyById(reply.getParent_id());
+        if (!parent.isAnonymous()) {
+            reply.setToReply(replyService.findUserByReply(reply.getParent_id()));
+        }else {
+            reply.setToReply("匿名");
+        }
     }
 
     private Integer getPostId(int reply_id){
