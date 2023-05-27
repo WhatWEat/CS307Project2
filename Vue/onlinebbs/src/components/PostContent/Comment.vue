@@ -18,7 +18,7 @@
         <div class="reply-btn-box" v-show="btnShow">
           <span style="margin-left: 20px;">
             <el-checkbox v-model="anonymous">是否匿名</el-checkbox>
-                      <el-button
+            <el-button
                           class="reply-btn"
                           size="medium"
                           @click="sendComment"
@@ -67,7 +67,7 @@
               >
             </div>
             <div class="talk-box">
-              <p>
+              <p >
                 回复<span> @{{ reply.toReply }}: </span>
                 <span class="reply"> {{ reply.content }}</span>
               </p>
@@ -88,6 +88,7 @@
             ></div>
           </div>
           <div class="reply-btn-box">
+            <el-checkbox v-model="anonymous">是否匿名</el-checkbox>
             <el-button
                 class="reply-btn"
                 size="medium"
@@ -150,34 +151,6 @@ export default {
       parentId: 0, // 父id
       itemId: "6666", // 文章等等id
       comments: [
-        {
-          // username:'Lana Del Rey',
-          // id:19870621,
-          // avatar:'https://ae01.alicdn.com/kf/Hdd856ae4c81545d2b51fa0c209f7aa28Z.jpg',
-          // parentName:'', // 父评论名
-          // parentId:'', // 父评论id
-          // comment:'我发布一张新专辑Norman Fucking Rockwell,大家快来听啊',
-          // time:'2019年9月16日 18:43',
-          // commentNum:2, // 该评论的回复条数
-          // like:15, // 点赞
-          // likeFlag=true, // 点赞图标状态颜色变化
-          // inputShow:false, // 输入框隐藏
-          // reply:[
-          //     {
-          //         username:'Taylor Swift',
-          //         id:19891221,
-          //         avatar:'https://ae01.alicdn.com/kf/H94c78935ffa64e7e977544d19ecebf06L.jpg',
-          //         parentName:'Lana Del Rey',
-          //         parentId:19870621,
-          //         comment:'我很喜欢你的新专辑！！',
-          //         time:'2019年9月16日 18:43',
-          //         commentNum:1,
-          //         like:15,
-          //         likeFlag=true, // 点赞图标状态颜色变化
-          //         inputShow:false
-          //     }
-          //]
-        },
       ],
     };
   },
@@ -250,7 +223,7 @@ export default {
           message: "评论不能为空",
         });
       } else {
-        axios.post(`/reply/replyToPost/${this.postid}/${this.replyComment}/false`, null,
+        axios.post(`/reply/replyToPost/${this.postid}/${this.replyComment}/${this.anonymous}`, null,
             {
               withCredentials: true
             })
