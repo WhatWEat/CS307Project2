@@ -6,10 +6,8 @@ import com.cs307.bbsdatabase.Entity.User;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import com.cs307.bbsdatabase.Provider.UserSqlProvider;
+import org.apache.ibatis.annotations.*;
 
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
@@ -55,7 +53,10 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select count(*) from userfollowuser where user_be_followed = #{username};")
     int findCountFansList(String username);
 
-
+    @SelectProvider(type = UserSqlProvider.class, method = "selectUsersByCondition")
+    List<User> selectUsersByCondition(@Param("user_id") String user_id,
+                                      @Param("username") String username,
+                                      @Param("phone_number") String phone_number);
 
     @Insert("INSERT INTO users (username,registration_time, phone_number,user_id,  password)\n" +
             "VALUES(#{username},#{registration_time},#{phone_number},#{user_id},#{password})")
@@ -79,3 +80,4 @@ public interface UserMapper extends BaseMapper<User> {
 
 
 }
+

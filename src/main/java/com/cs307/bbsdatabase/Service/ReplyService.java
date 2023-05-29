@@ -37,6 +37,10 @@ public class ReplyService extends ServiceImpl<ReplyMapper, Reply> {
         return replyMapper.findReplyByUser(username,pageSize,(page-1)*pageSize);
     }
 
+    public List<Reply> searchReply(Integer reply_id, Integer post_id, String content ){
+        return replyMapper.searchReply(reply_id,post_id,content);
+    }
+
     public List<Reply> findUserLikeReplyOfUser(String userA, String userB){
         return replyMapper.findUserLikeReplyOfUser(userA, userB);
     }

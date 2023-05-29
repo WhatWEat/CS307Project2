@@ -1,5 +1,6 @@
 package com.cs307.bbsdatabase.Controller;
 
+import com.baomidou.mybatisplus.extension.api.R;
 import com.cs307.bbsdatabase.Entity.Post;
 import com.cs307.bbsdatabase.Entity.Reply;
 import com.cs307.bbsdatabase.Entity.User;
@@ -45,7 +46,7 @@ public class ReplyController {
         List<Reply> list = replyService.findReplyByUser(username, page, pageSize);
         for (Reply member: list){
             setReply(member,username);
-            member.setPostID(getPostId(member.getReply_id()));
+//            member.setPostID(getPostId(member.getReply_id()));
         }
         return list;
     }
@@ -54,6 +55,20 @@ public class ReplyController {
     public List<Reply> findTopReplyByPost(@PathVariable int post_id,HttpServletRequest request) {
         String username = Cookies.getUsername(request);
         List<Reply> list = replyService.findTopReplyByPost(post_id);
+        for (Reply member: list){
+            setTopReply(member,username);
+        }
+        return list;
+    }
+
+    @GetMapping("/searchReply/{reply_id}/{post_id}/{content}")
+    //查询回复，所有信息允许空，content允许模糊查询（like）
+    public List<Reply> searchReply (@RequestParam(required = false)Integer reply_id,
+                                   @RequestParam(required = false)Integer post_id,
+                                   @RequestParam(required = false)String content,
+                                   HttpServletRequest request){
+        String username = Cookies.getUsername(request);
+        List<Reply> list = replyService.searchReply(reply_id,post_id,content);
         for (Reply member: list){
             setTopReply(member,username);
         }

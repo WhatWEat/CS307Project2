@@ -91,6 +91,12 @@ public class UserService extends ServiceImpl<UserMapper, User> {
         }
     }
 
+    public List<User> getUsersByCondition(String user_id, String username, String password) {
+        return userMapper.selectUsersByCondition(user_id, username, password);
+    }
+
+
+
 
 
 

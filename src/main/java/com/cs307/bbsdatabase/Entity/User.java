@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.ibatis.jdbc.SQL;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Map;
 
 @TableName("Users")
 public class User implements Serializable {
@@ -111,4 +113,5 @@ public class User implements Serializable {
     public String getId() {
         return id;
     }
+
 }

@@ -133,6 +133,16 @@ public class UserController {
     public void userCancelBlockUser(@PathVariable String be_blocked,HttpServletRequest request){
         userService.userCancelBlock(Cookies.getUsername(request),be_blocked);
     }
+    @GetMapping("SearchUser/{user_id}/{username}/{phone_number}")
+    //查找用户，所有信息允许为空，username允许关键词查询（like）
+    public List<Map<String, String>> SearchUser(@RequestParam(required = false) String user_id,
+                                               @RequestParam(required = false) String username,
+                                               @RequestParam(required = false) String phone_number,
+                                               HttpServletRequest request) {
+        String user_name = Cookies.getUsername(request);
+        List<User> userList = userService.getUsersByCondition(user_id, username, phone_number);
+        return getMaps(userList,user_name);
+    }
 
     @GetMapping("findFollowList/{page}/{pageSize}")
     public List<Map<String, String>> findFollowList(@PathVariable int page,
