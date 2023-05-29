@@ -112,4 +112,8 @@ public class PostService extends ServiceImpl<PostMapper, Post> {
     public void updateHot(int changeHot, int post_id){
         postMapper.updateHot(changeHot,post_id);
     }
+
+    public List<Post> searchPost(Integer post_id, String title, String content){
+        return postMapper.searchPost(post_id,title,content);
+    }
 }

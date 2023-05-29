@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cs307.bbsdatabase.Provider.ReplySqlProvider;
 import org.apache.ibatis.annotations.*;
 
 @Mapper
@@ -126,6 +127,19 @@ public interface ReplyMapper extends BaseMapper<Reply> {
             @Arg(column = "post_id" , javaType = Integer.class)
     })
     Reply findReplyById(int reply_id);
+
+    @SelectProvider(type = ReplySqlProvider.class, method = "getReplies")
+    @ConstructorArgs({
+            @Arg(column = "reply_id", javaType = Integer.class),
+            @Arg(column = "content", javaType = String.class),
+            @Arg(column = "replying_time", javaType = Timestamp.class),
+            @Arg(column = "anonymous", javaType = Boolean.class),
+            @Arg(column = "parent_id", javaType = Integer.class),
+            @Arg(column = "post_id" , javaType = Integer.class)
+    })
+    List<Reply> searchReply(@Param("reply_id") Integer replyId,
+                           @Param("post_id") Integer post_id,
+                           @Param("content") String content);
 
     @Select("""
             WITH RECURSIVE ReplyTree AS (

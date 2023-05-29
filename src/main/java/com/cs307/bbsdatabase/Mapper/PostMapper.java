@@ -2,6 +2,7 @@ package com.cs307.bbsdatabase.Mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cs307.bbsdatabase.Entity.Post;
+import com.cs307.bbsdatabase.Provider.PostSqlProvider;
 import org.apache.ibatis.annotations.*;
 
 import java.sql.Timestamp;
@@ -170,6 +171,19 @@ public interface PostMapper extends BaseMapper<Post> {
 
     @Select("select user_name from userwritepost where post_id = #{post_id};")
     String findWriter(int post_id);
+
+    @SelectProvider(type = PostSqlProvider.class, method = "getPosts")
+    @ConstructorArgs({
+            @Arg(column = "post_id", javaType = int.class),
+            @Arg(column = "title", javaType = String.class),
+            @Arg(column = "content", javaType = String.class),
+            @Arg(column = "posting_time", javaType = Timestamp.class),
+            @Arg(column = "shared", javaType = int.class),
+            @Arg(column = "hot", javaType = int.class)
+    })
+    List<Post> searchPost(@Param("post_id") Integer postId,
+                        @Param("title") String title,
+                        @Param("content") String content);
 
     //我改了字段名，可能会有错误
     @Insert("insert into posts(title, content, posting_time, shared,hot) " +

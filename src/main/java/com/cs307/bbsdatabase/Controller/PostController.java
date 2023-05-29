@@ -25,6 +25,17 @@ public class PostController {
     @Autowired
     private UserService userService;
 
+    @GetMapping("/searchPost/{post_id}/{title}/{content}")
+    //查询帖子，所有信息均为非必需，title和content允许模糊查询(like)
+    public List<Map<String, String>> searchPost(@RequestParam(required = false)Integer post_id,
+                                                @RequestParam(required = false)String title,
+                                                @RequestParam(required = false)String content,
+                                                HttpServletRequest request){
+        String username = Cookies.getUsername(request);
+        List<Post> postList = postService.searchPost(post_id,title,content);
+        return getMaps(postList,username);
+    }
+
     @GetMapping("/findAllPost/{page}/{pageSize}")
     //返回第page页的帖子列表
     public List<Map<String, String>> findAllPost(@PathVariable int page,
@@ -139,6 +150,8 @@ public class PostController {
         postService.userCancelFavoritePost(post_id, Cookies.getUsername(request));
         postService.updateHot(-2,post_id);
     }
+
+
 
 
     private List<Map<String, String>> getMaps(List<Post> list, String username) {
