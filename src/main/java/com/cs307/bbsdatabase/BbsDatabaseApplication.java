@@ -24,5 +24,4 @@ public class BbsDatabaseApplication {
         SpringApplication.run(BbsDatabaseApplication.class, args);
 
     }
-
 }
