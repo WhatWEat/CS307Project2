@@ -123,9 +123,7 @@ public class PostController {
     public boolean createPost(@RequestBody Post post, HttpServletRequest request, @RequestBody String fileName){
         String username = Cookies.getUsername(request);
         if (fileName!= null){
-            String directory = "src/main/resources/static/Files/users/"+username+"/";
-            String finalFileName = getUniqueFileName(directory, fileName);
-            post.setFile(directory+finalFileName);
+            post.setFile("Files/"+username+"/"+fileName);
         }
         boolean success = postService.createPost(username, post);
         System.out.println(success);
