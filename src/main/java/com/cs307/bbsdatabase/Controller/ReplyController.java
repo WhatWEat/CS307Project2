@@ -75,8 +75,6 @@ public class ReplyController {
         return list;
     }
 
-
-
     @PostMapping("replyToPost/{post_id}/{content}/{anonymous}")
     //reply回复post请用这个
     public boolean replyToPost(@PathVariable int post_id, @PathVariable String content, @PathVariable Boolean anonymous,

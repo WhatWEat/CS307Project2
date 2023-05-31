@@ -2,11 +2,12 @@ package com.cs307.bbsdatabase.Mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cs307.bbsdatabase.Entity.Post;
-import com.cs307.bbsdatabase.Provider.PostSqlProvider;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.type.JdbcType;
+import org.apache.ibatis.annotations.Param;
+
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 @Mapper
@@ -172,18 +173,20 @@ public interface PostMapper extends BaseMapper<Post> {
     @Select("select user_name from userwritepost where post_id = #{post_id};")
     String findWriter(int post_id);
 
-    @SelectProvider(type = PostSqlProvider.class, method = "getPosts")
-    @ConstructorArgs({
-            @Arg(column = "post_id", javaType = int.class),
-            @Arg(column = "title", javaType = String.class),
-            @Arg(column = "content", javaType = String.class),
-            @Arg(column = "posting_time", javaType = Timestamp.class),
-            @Arg(column = "shared", javaType = int.class),
-            @Arg(column = "hot", javaType = int.class)
-    })
-    List<Post> searchPost(@Param("post_id") Integer postId,
-                        @Param("title") String title,
-                        @Param("content") String content);
+//    @SelectProvider(type = PostSqlProvider.class, method = "getPosts")
+//    @ConstructorArgs({
+//            @Arg(column = "post_id", javaType = int.class),
+//            @Arg(column = "title", javaType = String.class),
+//            @Arg(column = "content", javaType = String.class),
+//            @Arg(column = "posting_time", javaType = Timestamp.class),
+//            @Arg(column = "shared", javaType = int.class),
+//            @Arg(column = "hot", javaType = int.class)
+//    })
+//    List<Post> searchPost(Map<String, Object> search);
+
+
+
+
 
     //我改了字段名，可能会有错误
     @Insert("insert into posts(title, content, posting_time, shared,hot) " +
@@ -214,4 +217,79 @@ public interface PostMapper extends BaseMapper<Post> {
     @Update("update posts set hot = hot + #{changeHot} where post_id = #{post_id};")
     void updateHot(int changeHot, int post_id);
 
+//    @Select("""
+//            SELECT * FROM posts p
+//            JOIN PostCategory pc ON p.post_id = pc.post_id
+//            JOIN Category c ON pc.categoryid = c.categoryid
+//            <where>
+//            <if test='title != null and title.size()!=0'>
+//            AND title IN(
+//            <foreach item='title' index='index' collection='title' open='(' separator=' OR ' close=')'>
+//            p.title like CONCAT('%',#{title, jdbcType=ARRAY},'%')
+//            </foreach>
+//            )
+//            </if>
+//            <if test='content != null and content.size()!=0'>\\s
+//            AND content IN(
+//            <foreach item='content' index='index' collection='content' open='(' separator=' OR ' close=')'>
+//            p.content like CONCAT('%',#{content, jdbcType=ARRAY},'%')
+//            </foreach>
+//            )
+//            </if>
+//            <if test='category != null and category.size()!=0'>
+//            AND category IN(
+//            <foreach item='category' index='index' collection='category' open='(' separator=',' close=')'>
+//            <![CDATA[ CAST(#{category[index], jdbcType=ARRAY} AS VARCHAR) ]]>
+//            </foreach>
+//            )
+//            </if>
+//            </where>
+//
+//            """)
+//    @ConstructorArgs({
+//            @Arg(column = "post_id", javaType = int.class),
+//            @Arg(column = "title", javaType = String.class),
+//            @Arg(column = "content", javaType = String.class),
+//            @Arg(column = "posting_time", javaType = Timestamp.class),
+//            @Arg(column = "shared", javaType = int.class),
+//            @Arg(column = "hot", javaType = int.class)
+//    })
+//    List<Post> searchPost(@Param(value = "title",jdbcType = JdbcType.ARRAY) List<String> title,
+//                          @Param(value = "content",jdbcType = JdbcType.ARRAY) List<String> content,
+//                          @Param(value = "category",jdbcType = JdbcType.ARRAY) List<String> category);
+//
+
+    @Select("""
+        SELECT * FROM posts p
+        JOIN PostCategory pc ON p.post_id = pc.post_id
+        JOIN Category c ON pc.categoryid = c.categoryid
+        <where>
+        <if test='title != null and !title.isEmpty()'>
+        <foreach item='item' collection='title' open='AND (' separator=' OR ' close=')'>
+        p.title LIKE CONCAT('%', #{item}, '%')
+        </foreach>
+        </if>
+        <if test='content != null and !content.isEmpty()'>
+        <foreach item='item' collection='content' open='AND (' separator=' OR ' close=')'>
+        p.content LIKE CONCAT('%', #{item}, '%')
+        </foreach>
+        </if>
+        <if test='category != null and !category.isEmpty()'>
+        <foreach item='item' collection='category' open='AND (' separator=' OR ' close=')'>
+        c.categoryid = #{item}
+        </foreach>
+        </if>
+        </where>
+        """)
+    @ConstructorArgs({
+            @Arg(column = "post_id", javaType = int.class),
+            @Arg(column = "title", javaType = String.class),
+            @Arg(column = "content", javaType = String.class),
+            @Arg(column = "posting_time", javaType = Timestamp.class),
+            @Arg(column = "shared", javaType = int.class),
+            @Arg(column = "hot", javaType = int.class)
+    })
+    List<Post> searchPost(@Param("title") List<String> title,
+                          @Param("content") List<String> content,
+                          @Param("category") List<String> category);
 }

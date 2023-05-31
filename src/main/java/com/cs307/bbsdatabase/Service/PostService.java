@@ -7,7 +7,10 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @MapperScan("com.cs307.bbsdatabase")
@@ -113,7 +116,15 @@ public class PostService extends ServiceImpl<PostMapper, Post> {
         postMapper.updateHot(changeHot,post_id);
     }
 
-    public List<Post> searchPost(Integer post_id, String title, String content){
-        return postMapper.searchPost(post_id,title,content);
+    public List<Post> searchPost(List<String> category, List<String> title, List<String> content) {
+        category = new ArrayList<>();
+        title = new ArrayList<>();
+        title.add("1");
+        title.add("2");
+        content = new ArrayList<>();
+        content.add("a");
+
+        return postMapper.searchPost(category,title,content);
     }
+
 }
