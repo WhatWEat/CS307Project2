@@ -64,7 +64,7 @@ public interface PostMapper extends BaseMapper<Post> {
     void creatPost(int post_id, String username);
 
     @Select("""
-            SELECT p.post_id, p.title, p.content, p.posting_time, p.shared, p.hot, p.hot\s
+            SELECT p.post_id, p.title, p.content, p.posting_time, p.shared, p.hot, p.file
             FROM posts AS p
             LEFT JOIN UserWritePost AS uwp ON p.post_id = uwp.post_id
             WHERE uwp.user_name IS NULL OR uwp.user_name NOT IN (
@@ -192,7 +192,7 @@ public interface PostMapper extends BaseMapper<Post> {
 
 
     //我改了字段名，可能会有错误
-    @Insert("insert into posts(title, content, posting_time, shared,hot, file) " +
+    @Insert("insert into posts(title, content, posting_time, shared,hot) " +
             "values(#{title}, #{content}, #{posting_time}, 0,0, #{file})")
     @Options(useGeneratedKeys = true, keyProperty = "post_id", keyColumn = "post_id")
     int insertPost(Post post);
