@@ -1,6 +1,7 @@
 package com.cs307.bbsdatabase.Controller;
 
 import com.cs307.bbsdatabase.Entity.Post;
+import com.cs307.bbsdatabase.Entity.SearchInfo;
 import com.cs307.bbsdatabase.Service.CategoryService;
 import com.cs307.bbsdatabase.Service.PostService;
 import com.cs307.bbsdatabase.Service.UserService;
@@ -25,24 +26,24 @@ public class PostController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/searchPost/{category}/{title}/{content}")
+    @PostMapping("/searchPost")
     //查询帖子，所有信息均为非必需，title和content允许模糊查询(like)
-    public List<Map<String, String>> searchPost(@RequestParam(required = false)List<String> category,
-                                                @RequestParam(required = false)List<String> title,
-                                                @RequestParam(required = false)List<String> content,
+    public List<Map<String, String>> searchPost(@RequestBody ArrayList<SearchInfo> searchList,
                                                 HttpServletRequest request){
         String username = Cookies.getUsername(request);
-        if (category == null) {
-            category = new ArrayList<>();
-        }
-        if (title == null) {
-            title = new ArrayList<>();
-        }
-        if (content == null) {
-            content = new ArrayList<>();
-        }
-        List<Post> postList = postService.searchPost(category,title ,content);
-        return getMaps(postList,username);
+        System.out.println(searchList);
+//        if (category == null) {
+//            category = new ArrayList<>();
+//        }
+//        if (title == null) {
+//            title = new ArrayList<>();
+//        }
+//        if (content == null) {
+//            content = new ArrayList<>();
+//        }
+//        List<Post> postList = postService.searchPost(category,title ,content);
+//        return getMaps(postList,username);
+        return null;
     }
 
     @GetMapping("/findAllPost/{page}/{pageSize}")
