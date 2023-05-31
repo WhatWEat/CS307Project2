@@ -33,16 +33,29 @@
               <el-button type="info" @click="goOriginPost"> 原贴地址 </el-button>
             </span>
             <span style="float: right">
-              <el-button type="danger" @click="blockUser" v-if="this.blocked==='false'">屏蔽</el-button>
+              <el-button type="danger" @click="blockUser"
+                         v-if="this.blocked==='false'">屏蔽</el-button>
               <el-button type="danger" @click="cancelBlockUser" v-else>已屏蔽</el-button>
               <el-button type="warning" v-if="this.followed==='false'"
                          @click="followUser">关注</el-button>
               <el-button type="warning" v-else @click="cancelFollowUser">取消关注</el-button>
             </span>
-
           </div>
+
           <div style="white-space: pre-wrap;">
             <span>{{ post.content }}</span>
+            <div v-if="this.hasVideo || this.hasPicture"
+                 style="width: 100%; height: 200px; display: flex; justify-content: center; margin-bottom: 50px">
+              <!-- 展示图片 -->
+              <img v-if="this.hasPicture" :src="this.filepath" alt="Image"
+                   style="max-width: 300px; max-height: 200px"/>
+
+              <!-- 展示视频 -->
+              <video controls v-if="this.hasVideo" preload="auto" autoplay :src="this.filepath"
+                   style="max-width: 300px; max-height: 200px">
+
+              </video>
+            </div>
           </div>
         </el-card>
       </el-card>
@@ -64,6 +77,9 @@ export default {
   props: ['id'],
   data() {
     return {
+      hasPicture: false,
+      hasVideo: false,
+      filepath: '',
       shared: '0',
       like: 'false',
       marked: 'false',
@@ -188,9 +204,9 @@ export default {
         });
       })
     },
-    blockUser(){
+    blockUser() {
       let name = document.cookie.split('=')[1];
-      if(name === this.post.author){
+      if (name === this.post.author) {
         this.$message({
           message: '不能屏蔽自己',
           type: 'warning',
@@ -205,7 +221,7 @@ export default {
       });
       this.blocked = 'true';
     },
-    cancelBlockUser(){
+    cancelBlockUser() {
       axios.post(`/user/cancelBlockUser/${this.post.author}`, null, {
         withCredentials: true
       }).then(res => {
@@ -227,7 +243,7 @@ export default {
     // 继续路由导航
     next();
     console.log(to.path);
-    try{
+    try {
       this.id = to.path.split('/')[2];
     } catch (e) {
       console.log('postContent有点问题');
