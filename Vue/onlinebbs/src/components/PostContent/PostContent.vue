@@ -92,30 +92,17 @@ export default {
   },
   methods: {
     getPost() {
-
+      this.filepath = 'http://localhost:8088/test.png';
       this.hasPicture = true;
       axios.get(`/post/findByID/${this.id}`, {
         withCredentials: true
       }).then(
           res => {
-            this.filepath = res.data.file;
             this.post = res.data;
             this.shared = this.post.shared;
             this.like = this.post.like;
             this.marked = this.post.marked;
             this.followed = this.post.followed;
-            if(this.filepath!=='0') {
-              let filename = this.filepath.split('.');
-              this.filepath = 'http://localhost:8088/' + this.filepath;
-              let index = filename[filename.length-1];
-              if(index === 'png' || index === 'jpg' || index === 'jpeg' || index === 'gif') {
-                this.hasPicture = true;
-                this.hasVideo = false;
-              } else {
-                this.hasPicture = false;
-                this.hasVideo = true;
-              }
-            }
             console.log(this.post);
           }
       )
