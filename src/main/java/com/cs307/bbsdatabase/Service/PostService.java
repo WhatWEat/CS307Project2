@@ -7,6 +7,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -116,16 +117,9 @@ public class PostService extends ServiceImpl<PostMapper, Post> {
         postMapper.updateHot(changeHot,post_id);
     }
 
-    public List<Post> searchPost(List<String> category, List<String> title, List<String> content) {
-        category = new ArrayList<>();
-        title = new ArrayList<>();
-//        title.add("1");
-        title.add("2");
-        title.add("3");
-        content = new ArrayList<>();
-//        content.add("a");
-
-        return postMapper.searchPost(title,category,content);
+    public List<Post> searchPost(List<String> category, List<String> title,
+                                 List<String> content, Timestamp start, Timestamp end) {
+        return postMapper.searchPost(title,content,category,start,end);
     }
 
 }

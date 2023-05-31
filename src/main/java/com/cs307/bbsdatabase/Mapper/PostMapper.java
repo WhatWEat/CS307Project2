@@ -278,6 +278,7 @@ public interface PostMapper extends BaseMapper<Post> {
                         c.category = #{item}
                     </foreach>)
                 </if>
+                
         </where>
         </script>
         """)
@@ -291,7 +292,7 @@ public interface PostMapper extends BaseMapper<Post> {
     })
     List<Post> searchPost(@Param("titles") List<String> titles,
         @Param("content") List<String> content,
-        @Param("category") List<String> category);
-
-
+        @Param("category") List<String> category,
+        @Param("start") Timestamp start,
+        @Param("end") Timestamp end);
 }

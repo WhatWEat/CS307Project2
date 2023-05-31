@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,19 +32,26 @@ public class PostController {
     public List<Map<String, String>> searchPost(@RequestBody ArrayList<SearchInfo> searchList,
                                                 HttpServletRequest request){
         String username = Cookies.getUsername(request);
-        System.out.println(searchList);
-//        if (category == null) {
-//            category = new ArrayList<>();
-//        }
-//        if (title == null) {
-//            title = new ArrayList<>();
-//        }
-//        if (content == null) {
-//            content = new ArrayList<>();
-//        }
-//        List<Post> postList = postService.searchPost(category,title ,content);
-//        return getMaps(postList,username);
-        return null;
+        List<String> title = new ArrayList<>();
+        List<String> content = new ArrayList<>();
+        List<String> category = new ArrayList<>();
+        Timestamp start = null;
+        Timestamp end = null;
+        for (SearchInfo searchInfo : searchList){
+            String select = searchInfo.getSelect();
+            switch (select) {
+                case "1" -> title.add(searchInfo.getValue());
+                case "2" -> category.add(searchInfo.getValue());
+                case "3" -> content.add(searchInfo.getValue());
+                case "4" -> {
+                    start = searchInfo.getTimeValue().get(0);
+                    end = searchInfo.getTimeValue().get(1);
+                }
+            }
+        }
+        System.out.println("55");
+        List<Post> posts = postService.searchPost(category,title,content,start,end);
+        return getMaps(posts,username);
     }
 
     @GetMapping("/findAllPost/{page}/{pageSize}")
