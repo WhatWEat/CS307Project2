@@ -25,14 +25,23 @@ public class PostController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/searchPost/{post_id}/{title}/{content}")
+    @GetMapping("/searchPost/{category}/{title}/{content}")
     //查询帖子，所有信息均为非必需，title和content允许模糊查询(like)
-    public List<Map<String, String>> searchPost(@RequestParam(required = false)Integer post_id,
-                                                @RequestParam(required = false)String title,
-                                                @RequestParam(required = false)String content,
+    public List<Map<String, String>> searchPost(@RequestParam(required = false)List<String> category,
+                                                @RequestParam(required = false)List<String> title,
+                                                @RequestParam(required = false)List<String> content,
                                                 HttpServletRequest request){
         String username = Cookies.getUsername(request);
-        List<Post> postList = postService.searchPost(post_id,title,content);
+        if (category == null) {
+            category = new ArrayList<>();
+        }
+        if (title == null) {
+            title = new ArrayList<>();
+        }
+        if (content == null) {
+            content = new ArrayList<>();
+        }
+        List<Post> postList = postService.searchPost(category,title ,content);
         return getMaps(postList,username);
     }
 
