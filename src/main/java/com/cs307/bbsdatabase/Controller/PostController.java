@@ -127,7 +127,7 @@ public class PostController {
         String fileName = post.getFile();
         if (fileName!= null){
             post.setFile("Files/"+username+"/"+fileName);
-        }
+        }else post.setFile("0");
         boolean success = postService.createPost(username, post);
         System.out.println(success);
         return success;
