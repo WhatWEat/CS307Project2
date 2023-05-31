@@ -16,6 +16,9 @@ public class ReplyService extends ServiceImpl<ReplyMapper, Reply> {
     @Autowired
     private ReplyMapper replyMapper;
 
+    @Autowired
+    private UserService userService;
+
 
 
     public boolean replyToPost(int post_id, String content, boolean anonymous,String username){
@@ -83,4 +86,41 @@ public class ReplyService extends ServiceImpl<ReplyMapper, Reply> {
     public Reply findReplyById(int reply_id){
         return replyMapper.findReplyById(reply_id);
     }
+
+    public void setTopReply(Reply reply, String username) {
+        reply.setSon(findSubReply(reply.getReply_id()));
+        setReply(reply, username);
+        for (Reply son : reply.getSon()) {
+            setSubReply(son, username);
+        }
+    }
+
+    public void setReply(Reply reply, String username) {
+        reply.setUsername(findUserByReply(reply.getReply_id()));
+        reply.setIfFollowed(userService.ifFollow(username, findUserByReply(reply.getReply_id())).equals("true"));
+
+        reply.setCommentNum(findCountSubReply(reply.getReply_id()));
+        reply.setLike(countLike(reply.getReply_id()));
+    }
+    private void setSubReply(Reply reply, String username) {
+        reply.setUsername(findUserByReply(reply.getReply_id()));
+        reply.setIfFollowed(userService.ifFollow(username, findUserByReply(reply.getReply_id())).equals("true"));
+
+        reply.setLike(countLike(reply.getReply_id()));
+        Reply parent = findReplyById(reply.getParent_id());
+        if (!parent.isAnonymous()) {
+            reply.setToReply(findUserByReply(reply.getParent_id()));
+        }else {
+            reply.setToReply("匿名");
+        }
+    }
+
+    public Integer getPostId(int reply_id){
+        Reply reply = findReplyById(reply_id);
+        while (reply.getParent_id()!=null){
+            reply = findReplyById(reply.getParent_id());
+        }
+        return findPostIDByReply(reply.getReply_id());
+    }
+
 }

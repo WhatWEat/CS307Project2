@@ -59,7 +59,7 @@ public class PostController {
         }
         List<Post> posts = postService.searchPost(category,title,content,start,end);
         posts = posts.stream().distinct().toList();
-        return getMaps(posts,username);
+        return postService.getMaps(posts,username);
     }
 
     @GetMapping("/findAllPost/{page}/{pageSize}")
@@ -68,7 +68,7 @@ public class PostController {
                                                  @PathVariable int pageSize, HttpServletRequest request) {
         String username = Cookies.getUsername(request);
         List<Post> list = postService.findAllPost(page, pageSize,username);
-        return getMaps(list, username);
+        return postService.getMaps(list, username);
     }
     @GetMapping("/hotList/{page}/{pageSize}")
     //热榜
@@ -76,7 +76,7 @@ public class PostController {
                                                  @PathVariable int pageSize, HttpServletRequest request) {
         String username = Cookies.getUsername(request);
         List<Post> list = postService.hotList(page, pageSize);
-        return getMaps(list, username);
+        return postService.getMaps(list, username);
     }
 
     @GetMapping("/findPostByWrite/{page}/{pageSize}")
@@ -85,7 +85,7 @@ public class PostController {
                                                      @PathVariable int pageSize, HttpServletRequest request) {
         String username = Cookies.getUsername(request);
         List<Post> list = postService.findPostByWrite(username, page, pageSize);
-        return getMaps(list, username);
+        return postService.getMaps(list, username);
     }
 
     @GetMapping("/findPostByLike/{page}/{pageSize}")
@@ -94,7 +94,7 @@ public class PostController {
                                                     @PathVariable int pageSize, HttpServletRequest request) {
         String username = Cookies.getUsername(request);
         List<Post> list = postService.findPostByLike(username, page, pageSize);
-        return getMaps(list, username);
+        return postService.getMaps(list, username);
     }
 
     @GetMapping("/findPostByFavorite/{page}/{pageSize}")
@@ -103,7 +103,7 @@ public class PostController {
                                                         @PathVariable int pageSize, HttpServletRequest request) {
         String username = Cookies.getUsername(request);
         List<Post> list = postService.findPostByFavorite(username, page, pageSize);
-        return getMaps(list, username);
+        return postService.getMaps(list, username);
     }
 
     @GetMapping("/findPostByShare/{page}/{pageSize}")
@@ -112,13 +112,18 @@ public class PostController {
                                                     @PathVariable int pageSize, HttpServletRequest request) {
         String username = Cookies.getUsername(request) ;
         List<Post> list = postService.findPostByShare(username, page, pageSize);
-        return getMaps(list,username);
+        return postService.getMaps(list,username);
     }
 
     @PostMapping("/create")
     //发帖子,shared已设置为0
-    public boolean createPost(@RequestBody Post post, HttpServletRequest request) {
-        boolean success = postService.createPost(Cookies.getUsername(request), post);
+    public boolean createPost(@RequestBody Post post, HttpServletRequest request,@RequestBody MultipartFile file){
+        String username = Cookies.getUsername(request);
+        if (file!= null){
+            String directory = postService.uploadPic(file,username);
+            post.setFile(directory);
+        }
+        boolean success = postService.createPost(username, post);
         System.out.println(success);
         return success;
     }
@@ -127,7 +132,7 @@ public class PostController {
     //返回帖子id为id的帖子
     public Map<String, String> findPostById(@PathVariable Integer post_id, HttpServletRequest request) {
         Post post = postService.findPostById(post_id);
-        return getMap(post, Cookies.getUsername(request));
+        return postService.getMap(post, Cookies.getUsername(request));
     }
 
     @GetMapping("/getTags/{post_id}")
@@ -180,47 +185,8 @@ public class PostController {
 
 
 
-    private List<Map<String, String>> getMaps(List<Post> list, String username) {
-        List<Map<String, String>> out = new ArrayList<>();
-        for (Post post : list) {
-            Map<String, String> temp = getMap(post, username);
-            out.add(temp);
-        }
-        return out;
-    }
 
-    private Map<String, String> getMap(Post post, String username) {
-        Map<String, String> temp = new HashMap<>();
-        System.out.println(post);
-        temp.put("title", post.getTitle());
-        temp.put("id", String.valueOf(post.getPost_id()));
-        temp.put("content", post.getContent());
-        temp.put("time", post.getPosting_time().toString().substring(0, 19));
-        temp.put("shared", String.valueOf(post.getShared()));
-        String author = postService.findWriter(post.getPost_id());
-        temp.put("author", author);
-        temp.put("like", postService.ifLIke(post.getPost_id(), username));
-        temp.put("marked", postService.ifFavorite(post.getPost_id(), username));
-        temp.put("followed",userService.ifFollow(username,author));
-        temp.put("count",String.valueOf(postService.findCountLikeById(post.getPost_id())));
-        temp.put("hot",String.valueOf(post.getHot()));
-        if (post.getFile()!=null){
-            temp.put("file", post.getFile());
-        }
-        return temp;
-    }
-    @PostMapping("/Files/users/{userId}")
-    public void uploadPic(HttpServletRequest request, HttpServletResponse response, @RequestBody MultipartFile file, @PathVariable long userId){
-//        System.err.println("here");
-//        System.err.println("uploadPic"+(file == null));
-//        System.err.println(CookieManager.findCurrentUser(request));
-//        System.err.println("Id"+userId);
-        try {
-            if(file != null)
-                FileManager.saveFile(file, userId);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+
+
 
 }
