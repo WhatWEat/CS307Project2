@@ -1,6 +1,5 @@
 package com.cs307.bbsdatabase.Config;
 
-import com.cs307.bbsdatabase.InterCeptor.LoginInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
