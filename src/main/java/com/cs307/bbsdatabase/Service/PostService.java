@@ -122,7 +122,7 @@ public class PostService extends ServiceImpl<PostMapper, Post> {
         title.add("1");
         title.add("2");
         content = new ArrayList<>();
-        content.add("a");
+
 
         return postMapper.searchPost(category,title,content);
     }
