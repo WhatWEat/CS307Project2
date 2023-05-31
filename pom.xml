@@ -51,6 +51,13 @@
       <artifactId>postgresql</artifactId>
       <version>42.6.0</version>
     </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.11.0</version>
+    </dependency>
+    
     <!-- 数据连接池 druid -->
     <dependency>
     <groupId>com.alibaba</groupId>

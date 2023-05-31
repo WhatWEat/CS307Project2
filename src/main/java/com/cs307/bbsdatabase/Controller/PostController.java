@@ -6,10 +6,14 @@ import com.cs307.bbsdatabase.Service.CategoryService;
 import com.cs307.bbsdatabase.Service.PostService;
 import com.cs307.bbsdatabase.Service.UserService;
 import com.cs307.bbsdatabase.Util.Cookies;
+import com.cs307.bbsdatabase.Util.FileManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +42,9 @@ public class PostController {
         Timestamp start = null;
         Timestamp end = null;
         for (SearchInfo searchInfo : searchList){
+            if (!searchInfo.getSelect().equals("4") && searchInfo.getValue().equals("")){
+                continue;
+            }
             String select = searchInfo.getSelect();
             switch (select) {
                 case "1" -> title.add(searchInfo.getValue());
@@ -46,6 +53,8 @@ public class PostController {
                 case "4" -> {
                     start = searchInfo.getTimeValue().get(0);
                     end = searchInfo.getTimeValue().get(1);
+                }
+                default -> {
                 }
             }
         }
@@ -136,7 +145,7 @@ public class PostController {
     //分享帖子
     public void userSharePost(@PathVariable int post_id, HttpServletRequest request) {
         Post beShared = postService.findPostById(post_id);
-        Post newPost = new Post(beShared.getTitle(), beShared.getContent(), beShared.getCategories(), beShared.getPost_id());
+        Post newPost = new Post(beShared.getTitle(), beShared.getContent(), beShared.getCategories(), beShared.getPost_id(), beShared.getTitle());
         postService.userSharePost(newPost, Cookies.getUsername(request));
         postService.updateHot(2,post_id);
     }
@@ -196,6 +205,23 @@ public class PostController {
         temp.put("followed",userService.ifFollow(username,author));
         temp.put("count",String.valueOf(postService.findCountLikeById(post.getPost_id())));
         temp.put("hot",String.valueOf(post.getHot()));
+        if (post.getFile()!=null){
+            temp.put("file", post.getFile());
+        }
         return temp;
     }
+    @PostMapping("/Files/users/{userId}")
+    public void uploadPic(HttpServletRequest request, HttpServletResponse response, @RequestBody MultipartFile file, @PathVariable long userId){
+//        System.err.println("here");
+//        System.err.println("uploadPic"+(file == null));
+//        System.err.println(CookieManager.findCurrentUser(request));
+//        System.err.println("Id"+userId);
+        try {
+            if(file != null)
+                FileManager.saveFile(file, userId);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

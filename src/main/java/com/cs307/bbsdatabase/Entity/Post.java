@@ -21,6 +21,7 @@ import java.util.ArrayList;
 public class Post {
     private Integer post_id;
 
+    private String file;
     private String title;
     private String content;
     private final Timestamp posting_time;
@@ -45,24 +46,26 @@ public class Post {
     }
 
 
-    public Post(String title, String content, ArrayList<String> categories, int shared) {
+    public Post(String title, String content, ArrayList<String> categories, int shared, String file) {
         this.title = title;
         this.content = content;
         this.categories = categories;
         this.posting_time = new Timestamp(System.currentTimeMillis());
         this.shared = shared;
+        this.file = file;
     }
 
 
     public Post(@Param("post_id") int post_id, @Param("title") String title,
                 @Param("content") String content, @Param("posting_time") Timestamp posting_time,
-                @Param("shared") int shared, @Param("hot") int hot) {
+                @Param("shared") int shared, @Param("hot") int hot, @Param("file") String file) {
         this.post_id = post_id;
         this.title = title;
         this.content = content;
         this.posting_time = posting_time;
         this.shared = shared;
         this.hot = hot;
+        this.file = file;
     }
 
     @Override
@@ -149,6 +152,14 @@ public class Post {
             return false;
         }
         return Objects.equals(post_id, post.post_id);
+    }
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
     }
 
     @Override
