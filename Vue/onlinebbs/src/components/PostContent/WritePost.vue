@@ -18,7 +18,7 @@
           <el-upload
               class="upload-demo"
               ref="upload"
-              action='`http://localhost:8088/post/files/${this.username}/${this.fileName}`'
+              action='`http://localhost:8088/post/uploadPic/${this.username}`'
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               :auto-upload="false"

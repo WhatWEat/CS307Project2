@@ -183,7 +183,7 @@ public class PostController {
         postService.userCancelFavoritePost(post_id, Cookies.getUsername(request));
         postService.updateHot(-2,post_id);
     }
-    @PostMapping("uploadPic/#{username}")
+    @PostMapping("/uploadPic/{username}")
     public void uploadPic(@RequestBody MultipartFile file,@PathVariable String username ){
         try {
             if(file != null)
@@ -191,7 +191,6 @@ public class PostController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
 
