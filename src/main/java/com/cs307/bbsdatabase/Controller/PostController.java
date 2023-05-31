@@ -120,8 +120,9 @@ public class PostController {
 
     @PostMapping("/create")
     //发帖子,shared已设置为0
-    public boolean createPost(@RequestBody Post post, HttpServletRequest request, @RequestBody String fileName){
+    public boolean createPost(@RequestBody Post post, HttpServletRequest request){
         String username = Cookies.getUsername(request);
+        String fileName = post.getFile();
         if (fileName!= null){
             post.setFile("Files/"+username+"/"+fileName);
         }
@@ -147,7 +148,7 @@ public class PostController {
         return list;
     }
 
-    @PostMapping("sharePost/{post_id}")
+    @PostMapping("/sharePost/{post_id}")
     //分享帖子
     public void userSharePost(@PathVariable int post_id, HttpServletRequest request) {
         Post beShared = postService.findPostById(post_id);
@@ -183,7 +184,7 @@ public class PostController {
         postService.userCancelFavoritePost(post_id, Cookies.getUsername(request));
         postService.updateHot(-2,post_id);
     }
-    @PostMapping("uploadPic/#{username}")
+    @PostMapping("/uploadPic/{username}")
     public void uploadPic(@RequestBody MultipartFile file,@PathVariable String username ){
         try {
             if(file != null)
@@ -191,13 +192,5 @@ public class PostController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
-
-
-
-
-
-
-
 }
