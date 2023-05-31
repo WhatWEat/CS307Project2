@@ -92,6 +92,8 @@ export default {
   },
   methods: {
     getPost() {
+      this.filepath = 'http://localhost:8088/test.png';
+      this.hasPicture = true;
       axios.get(`/post/findByID/${this.id}`, {
         withCredentials: true
       }).then(
