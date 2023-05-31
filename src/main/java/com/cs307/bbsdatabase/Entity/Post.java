@@ -2,6 +2,7 @@ package com.cs307.bbsdatabase.Entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import java.util.Objects;
 import org.apache.ibatis.annotations.Param;
 
 import java.sql.Timestamp;
@@ -137,5 +138,21 @@ public class Post {
 
     public void setUser_id(Integer user_id) {
         User_id = user_id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Post post)) {
+            return false;
+        }
+        return Objects.equals(post_id, post.post_id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(post_id);
     }
 }
