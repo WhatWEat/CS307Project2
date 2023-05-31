@@ -17,7 +17,7 @@ public class FileManager {
     }
     public static String saveFile(MultipartFile file, long currentId) throws IOException {
         // 创建目录
-        String directory = "src/main/resources/static/Files/users/"+currentId+"/";
+        String directory = "src/main/resources/static/Files/"+currentId+"/";
         String fileName = file.getOriginalFilename();
         File dir = new File(directory);
         if (!dir.exists()) {

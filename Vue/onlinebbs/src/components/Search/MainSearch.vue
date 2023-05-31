@@ -8,7 +8,7 @@
             <el-select v-model="input.select" placeholder="请选择" style="width: 200px">
               <el-option label="标题" value="1"></el-option>
               <el-option label="标签" value="2"></el-option>
-              <el-option label="作者" value="3"></el-option>
+              <el-option label="内容" value="3"></el-option>
               <el-option label="时间" value="4"></el-option>
             </el-select>
             <el-input v-model="input.value" class="input-with-select" v-if="input.select!=='4'"></el-input>

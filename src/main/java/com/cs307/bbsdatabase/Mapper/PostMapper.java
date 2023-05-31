@@ -64,7 +64,7 @@ public interface PostMapper extends BaseMapper<Post> {
     void creatPost(int post_id, String username);
 
     @Select("""
-            SELECT p.post_id, p.title, p.content, p.posting_time, p.shared, p.hot, p.hot\s
+            SELECT p.post_id, p.title, p.content, p.posting_time, p.shared, p.hot, p.file\s
             FROM posts AS p
             LEFT JOIN UserWritePost AS uwp ON p.post_id = uwp.post_id
             WHERE uwp.user_name IS NULL OR uwp.user_name NOT IN (
