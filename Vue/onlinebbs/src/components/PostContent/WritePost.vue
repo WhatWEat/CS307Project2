@@ -18,9 +18,7 @@
           <el-upload
               class="upload-demo"
               ref="upload"
-              action="/post/files"
-              :headers="{
-              'Cookie': `session_id=${this.username};`}"
+              action='`http://localhost:8088/post/files/${this.username}/${this.fileName}`'
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               :auto-upload="false"
@@ -75,6 +73,8 @@ export default {
         }, {
           withCredentials: true
         }).then(res => {
+          this.$refs.upload.submit();
+          console.log('发了');
           if (res.data === true) {
             this.$message({
               message: '发帖成功',
@@ -100,10 +100,11 @@ export default {
       console.log(file, fileList);
     },
     handlePreview(file) {
-      console.log(file);
+      console.log(file);console.log('preview');
     },
     beforeUpload(file){
       this.fileName = file.name;
+      console.log(this.fileName);
     },
     goBack() {
       console.log(this.tags);
