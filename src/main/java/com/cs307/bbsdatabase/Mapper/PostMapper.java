@@ -265,6 +265,7 @@ public interface PostMapper extends BaseMapper<Post> {
                     <foreach collection='titles' item='item' index='index' separator=' AND '>
                         p.title LIKE CONCAT('%', #{item}, '%')
                     </foreach>)
+                </if>
                 <if test='content != null and !content.isEmpty()'>
                     AND (
                     <foreach collection='content' item='item' index='index' separator=' OR '>
