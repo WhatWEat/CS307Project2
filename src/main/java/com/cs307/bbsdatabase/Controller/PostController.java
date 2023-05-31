@@ -28,7 +28,6 @@ public class PostController {
     private UserService userService;
 
     @PostMapping("/searchPost")
-    //查询帖子，所有信息均为非必需，title和content允许模糊查询(like)
     public List<Map<String, String>> searchPost(@RequestBody ArrayList<SearchInfo> searchList,
                                                 HttpServletRequest request){
         String username = Cookies.getUsername(request);
