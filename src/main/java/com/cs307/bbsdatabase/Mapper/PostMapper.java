@@ -255,33 +255,38 @@ public interface PostMapper extends BaseMapper<Post> {
 //                          @Param(value = "category",jdbcType = JdbcType.ARRAY) List<String> category);
 //
     @Select("""
-        <script>
-        SELECT * FROM posts p
-        JOIN PostCategory pc ON p.post_id = pc.post_id
-        JOIN Category c ON pc.categoryid = c.categoryid
-        <where>
-                <if test='titles != null and !titles.isEmpty()'>
-                    AND (
-                    <foreach collection='titles' item='item' index='index' separator=' AND '>
-                        p.title LIKE CONCAT('%', #{item}, '%')
-                    </foreach>)
-                </if>
-                <if test='content != null and !content.isEmpty()'>
-                    AND (
-                    <foreach collection='content' item='item' index='index' separator=' OR '>
-                        p.content LIKE CONCAT('%', #{item}, '%')
-                    </foreach>)
-                </if>
-                <if test='category != null and !category.isEmpty()'>
-                    AND (
-                    <foreach collection='category' item='item' index='index' separator=' OR '>
-                        c.category = #{item}
-                    </foreach>)
-                </if>
-                
-        </where>
-        </script>
-        """)
+            <script>
+            SELECT * FROM posts p
+            JOIN PostCategory pc ON p.post_id = pc.post_id
+            JOIN Category c ON pc.categoryid = c.categoryid
+            <where>
+                    <if test='titles != null and !titles.isEmpty()'>
+                        AND (
+                        <foreach collection='titles' item='item' index='index' separator=' AND '>
+                            p.title LIKE CONCAT('%', #{item}, '%')
+                        </foreach>)
+                    </if>
+                    <if test='content != null and !content.isEmpty()'>
+                        AND (
+                        <foreach collection='content' item='item' index='index' separator=' OR '>
+                            p.content LIKE CONCAT('%', #{item}, '%')
+                        </foreach>)
+                    </if>
+                    <if test='category != null and !category.isEmpty()'>
+                        AND (
+                        <foreach collection='category' item='item' index='index' separator=' OR '>
+                            c.category = #{item}
+                        </foreach>)
+                    </if>
+                    <if test='start != null'>
+                        AND p.posting_time &gt;= #{start}
+                    </if>
+                    <if test='end != null'>
+                        AND p.posting_time &lt;= #{end}
+                    </if>
+            </where>
+            </script>
+            """)
     @ConstructorArgs({
         @Arg(column = "post_id", javaType = int.class),
         @Arg(column = "title", javaType = String.class),
