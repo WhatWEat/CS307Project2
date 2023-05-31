@@ -49,8 +49,8 @@ public class PostController {
                 }
             }
         }
-        System.out.println("55");
         List<Post> posts = postService.searchPost(category,title,content,start,end);
+        posts = posts.stream().distinct().toList();
         return getMaps(posts,username);
     }
 
