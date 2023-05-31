@@ -37,7 +37,7 @@ public class FileManager {
         return directory+finalFileName;
     }
 
-    private static String getUniqueFileName(String directory, String fileName) {
+    public static String getUniqueFileName(String directory, String fileName) {
         String baseName = FilenameUtils.getBaseName(fileName);
         String extension = FilenameUtils.getExtension(fileName);
         String uniqueFileName = fileName;

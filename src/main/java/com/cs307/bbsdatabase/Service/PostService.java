@@ -127,16 +127,6 @@ public class PostService extends ServiceImpl<PostMapper, Post> {
                                  List<String> content, Timestamp start, Timestamp end) {
         return postMapper.searchPost(title,content,category,start,end);
     }
-    public String uploadPic(MultipartFile file, String  username ){
-        String directory = "";
-        try {
-            if(file != null)
-                directory = FileManager.saveFile(file, username);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return directory;
-    }
 
     public List<Map<String, String>> getMaps(List<Post> list, String username) {
         List<Map<String, String>> out = new ArrayList<>();
@@ -164,7 +154,7 @@ public class PostService extends ServiceImpl<PostMapper, Post> {
         temp.put("hot",String.valueOf(post.getHot()));
         if (post.getFile()!=null){
             temp.put("file", post.getFile());
-        }
+        }else temp.put("file","0");
         return temp;
     }
 

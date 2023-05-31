@@ -13,12 +13,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.cs307.bbsdatabase.Util.FileManager.getUniqueFileName;
 
 @RestController
 @RequestMapping("/post")
@@ -117,11 +120,12 @@ public class PostController {
 
     @PostMapping("/create")
     //发帖子,shared已设置为0
-    public boolean createPost(@RequestBody Post post, HttpServletRequest request,@RequestBody MultipartFile file){
+    public boolean createPost(@RequestBody Post post, HttpServletRequest request, @RequestBody String fileName){
         String username = Cookies.getUsername(request);
-        if (file!= null){
-            String directory = postService.uploadPic(file,username);
-            post.setFile(directory);
+        if (fileName!= null){
+            String directory = "src/main/resources/static/Files/users/"+username+"/";
+            String finalFileName = getUniqueFileName(directory, fileName);
+            post.setFile(directory+finalFileName);
         }
         boolean success = postService.createPost(username, post);
         System.out.println(success);
@@ -181,7 +185,16 @@ public class PostController {
         postService.userCancelFavoritePost(post_id, Cookies.getUsername(request));
         postService.updateHot(-2,post_id);
     }
+    @PostMapping("uploadPic/#{username}")
+    public void uploadPic(@RequestBody MultipartFile file,@PathVariable String username ){
+        try {
+            if(file != null)
+                FileManager.saveFile(file, username);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
+    }
 
 
 
