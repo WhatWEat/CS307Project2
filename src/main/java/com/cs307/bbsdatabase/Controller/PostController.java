@@ -121,6 +121,11 @@ public class PostController {
     @PostMapping("/create")
     //发帖子,shared已设置为0
     public boolean createPost(@RequestBody Post post, HttpServletRequest request){
+        System.out.println(post);
+        System.out.println("Post1");
+        System.out.println("Post2");
+        System.out.println("Post3");
+        System.out.println("Post4444");
         String username = Cookies.getUsername(request);
         String fileName = post.getFile();
         if (fileName!= null){

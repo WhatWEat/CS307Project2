@@ -39,10 +39,11 @@ public class Post {
         this.posting_time = new Timestamp(System.currentTimeMillis());
     }
 
-    public Post(String title, String content) {
+    public Post(String title, String content, String file) {
         this.title = title;
         this.content = content;
         this.posting_time = new Timestamp(System.currentTimeMillis());
+        this.file = file;
     }
 
 
@@ -55,7 +56,14 @@ public class Post {
         this.file = file;
     }
 
-
+    public Post(String title, String content, ArrayList<String> categories, String file) {
+        this.title = title;
+        this.content = content;
+        this.categories = categories;
+        this.posting_time = new Timestamp(System.currentTimeMillis());
+        this.shared = 0;
+        this.file = file;
+    }
     public Post(@Param("post_id") int post_id, @Param("title") String title,
                 @Param("content") String content, @Param("posting_time") Timestamp posting_time,
                 @Param("shared") int shared, @Param("hot") int hot, @Param("file") String file) {
@@ -76,6 +84,7 @@ public class Post {
                 ", content='" + content + '\'' +
                 ", posting_time=" + posting_time +
                 ", shared=" + shared +
+                ", file=" + file +
                 '}';
     }
 
