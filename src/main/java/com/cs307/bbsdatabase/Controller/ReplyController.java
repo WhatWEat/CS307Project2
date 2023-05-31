@@ -45,7 +45,7 @@ public class ReplyController {
         System.out.println();
         List<Reply> list = replyService.findReplyByUser(username, page, pageSize);
         for (Reply member: list){
-            setReply(member,username);
+            replyService.setReply(member,username);
 //            member.setPostID(getPostId(member.getReply_id()));
         }
         return list;
@@ -56,7 +56,7 @@ public class ReplyController {
         String username = Cookies.getUsername(request);
         List<Reply> list = replyService.findTopReplyByPost(post_id);
         for (Reply member: list){
-            setTopReply(member,username);
+            replyService.setTopReply(member,username);
         }
         return list;
     }
@@ -70,7 +70,7 @@ public class ReplyController {
         String username = Cookies.getUsername(request);
         List<Reply> list = replyService.searchReply(reply_id,post_id,content);
         for (Reply member: list){
-            setTopReply(member,username);
+            replyService.setTopReply(member,username);
         }
         return list;
     }
@@ -88,7 +88,7 @@ public class ReplyController {
     //reply回复reply请用这个
     public boolean replyToReply(@PathVariable int parent_id, @PathVariable String content, @PathVariable Boolean anonymous,
                                 HttpServletRequest request) {
-        Integer post_id = getPostId(parent_id);
+        Integer post_id = replyService.getPostId(parent_id);
         postService.updateHot(1,post_id);
         return replyService.replyToReply(parent_id, content, anonymous, Cookies.getUsername(request));
     }
@@ -108,39 +108,5 @@ public class ReplyController {
         replyService.UserDislikeReply(reply_id, Cookies.getUsername(request));
     }
 
-    private void setTopReply(Reply reply, String username) {
-        reply.setSon(replyService.findSubReply(reply.getReply_id()));
-        setReply(reply, username);
-        for (Reply son : reply.getSon()) {
-            setSubReply(son, username);
-        }
-    }
 
-    private void setReply(Reply reply, String username) {
-        reply.setUsername(replyService.findUserByReply(reply.getReply_id()));
-        reply.setIfFollowed(userService.ifFollow(username, replyService.findUserByReply(reply.getReply_id())).equals("true"));
-
-        reply.setCommentNum(replyService.findCountSubReply(reply.getReply_id()));
-        reply.setLike(replyService.countLike(reply.getReply_id()));
-    }
-    private void setSubReply(Reply reply, String username) {
-        reply.setUsername(replyService.findUserByReply(reply.getReply_id()));
-        reply.setIfFollowed(userService.ifFollow(username, replyService.findUserByReply(reply.getReply_id())).equals("true"));
-
-        reply.setLike(replyService.countLike(reply.getReply_id()));
-        Reply parent = replyService.findReplyById(reply.getParent_id());
-        if (!parent.isAnonymous()) {
-            reply.setToReply(replyService.findUserByReply(reply.getParent_id()));
-        }else {
-            reply.setToReply("匿名");
-        }
-    }
-
-    private Integer getPostId(int reply_id){
-        Reply reply = replyService.findReplyById(reply_id);
-        while (reply.getParent_id()!=null){
-            reply = replyService.findReplyById(reply.getParent_id());
-        }
-        return replyService.findPostIDByReply(reply.getReply_id());
-    }
 }
