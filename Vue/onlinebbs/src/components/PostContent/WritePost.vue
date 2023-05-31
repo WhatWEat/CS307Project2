@@ -18,7 +18,7 @@
           <el-upload
               class="upload-demo"
               ref="upload"
-              action='`http://localhost:8088/post/uploadPic/${this.username}`'
+              :action="uploadAction"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
               :auto-upload="false"
@@ -65,6 +65,8 @@ export default {
           duration: 600,
         });
       } else {
+        this.$refs.upload.submit();
+        console.log('是这个'+this.fileName);
         axios.post(`post/create`, {
           title: this.title,
           content: this.content,
@@ -73,7 +75,6 @@ export default {
         }, {
           withCredentials: true
         }).then(res => {
-          this.$refs.upload.submit();
           console.log('发了');
           if (res.data === true) {
             this.$message({
@@ -110,6 +111,11 @@ export default {
       console.log(this.tags);
       this.$router.push('/main');
     },
+  },
+  computed:{
+    uploadAction(){
+      return `http://localhost:8088/post/uploadPic/${this.username}`;
+    }
   },
   mounted() {
     this.username = document.cookie.split('=')[1];
