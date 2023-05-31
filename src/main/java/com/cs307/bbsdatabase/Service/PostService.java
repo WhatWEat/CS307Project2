@@ -119,12 +119,13 @@ public class PostService extends ServiceImpl<PostMapper, Post> {
     public List<Post> searchPost(List<String> category, List<String> title, List<String> content) {
         category = new ArrayList<>();
         title = new ArrayList<>();
-        title.add("1");
+//        title.add("1");
         title.add("2");
+        title.add("3");
         content = new ArrayList<>();
-        content.add("a");
+//        content.add("a");
 
-        return postMapper.searchPost(category,title,content);
+        return postMapper.searchPost(title,category,content);
     }
 
 }

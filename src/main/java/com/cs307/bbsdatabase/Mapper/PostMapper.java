@@ -260,26 +260,24 @@ public interface PostMapper extends BaseMapper<Post> {
         JOIN PostCategory pc ON p.post_id = pc.post_id
         JOIN Category c ON pc.categoryid = c.categoryid
         <where>
-            <if test='title != null and !title.isEmpty()'>
-                AND (
-                <foreach collection='title' item='item' index='index' separator=' OR '>
-                    p.title LIKE CONCAT('%', #{item}, '%')
-                </foreach>)
-            </if>
-            
-            <if test='content != null and !content.isEmpty()'>
-                AND (
-                <foreach collection='content' item='item' index='index' separator=' OR '>
-                p.content LIKE CONCAT('%', #{item}, '%')
-                </foreach>)
-            </if>
-            
-            <if test='category != null and !category.isEmpty()'>
-                AND (
-                <foreach collection='category' item='item' index='index' separator=' OR '>
-                c.category = #{item}
-                </foreach>)
-            </if>
+                <if test='titles != null and !titles.isEmpty()'>
+                    AND (
+                    <foreach collection='titles' item='item' index='index' separator=' AND '>
+                        p.title LIKE CONCAT('%', #{item}, '%')
+                    </foreach>)
+                </if>
+                <if test='content != null and !content.isEmpty()'>
+                    AND (
+                    <foreach collection='content' item='item' index='index' separator=' OR '>
+                        p.content LIKE CONCAT('%', #{item}, '%')
+                    </foreach>)
+                </if>
+                <if test='category != null and !category.isEmpty()'>
+                    AND (
+                    <foreach collection='category' item='item' index='index' separator=' OR '>
+                        c.category = #{item}
+                    </foreach>)
+                </if>
         </where>
         </script>
         """)
@@ -291,7 +289,7 @@ public interface PostMapper extends BaseMapper<Post> {
         @Arg(column = "shared", javaType = int.class),
         @Arg(column = "hot", javaType = int.class)
     })
-    List<Post> searchPost(@Param("title") List<String> title,
+    List<Post> searchPost(@Param("titles") List<String> titles,
         @Param("content") List<String> content,
         @Param("category") List<String> category);
 
