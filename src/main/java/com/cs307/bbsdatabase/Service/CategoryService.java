@@ -24,6 +24,9 @@ public class CategoryService extends ServiceImpl<CategoryMapper, Category> {
 
     public void addCategory(List<String> categories, int post_id) {
         categories = categories.stream().distinct().collect(Collectors.toList());
+        if (categories.isEmpty()){
+            categories.add("原创");
+        }
         for (String category : categories) {
             Integer id = categoryMapper.findCat(category);
             System.out.println();

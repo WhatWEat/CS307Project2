@@ -3,10 +3,13 @@ package com.cs307.bbsdatabase.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cs307.bbsdatabase.Entity.Post;
 import com.cs307.bbsdatabase.Mapper.PostMapper;
+import com.cs307.bbsdatabase.Util.FileManager;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +21,9 @@ import java.util.Map;
 public class PostService extends ServiceImpl<PostMapper, Post> {
     @Autowired
     private PostMapper postMapper;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private CategoryService categoryService;
@@ -120,6 +126,46 @@ public class PostService extends ServiceImpl<PostMapper, Post> {
     public List<Post> searchPost(List<String> category, List<String> title,
                                  List<String> content, Timestamp start, Timestamp end) {
         return postMapper.searchPost(title,content,category,start,end);
+    }
+    public String uploadPic(MultipartFile file, String  username ){
+        String directory = "";
+        try {
+            if(file != null)
+                directory = FileManager.saveFile(file, username);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return directory;
+    }
+
+    public List<Map<String, String>> getMaps(List<Post> list, String username) {
+        List<Map<String, String>> out = new ArrayList<>();
+        for (Post post : list) {
+            Map<String, String> temp = getMap(post, username);
+            out.add(temp);
+        }
+        return out;
+    }
+
+    public Map<String, String> getMap(Post post, String username) {
+        Map<String, String> temp = new HashMap<>();
+        System.out.println(post);
+        temp.put("title", post.getTitle());
+        temp.put("id", String.valueOf(post.getPost_id()));
+        temp.put("content", post.getContent());
+        temp.put("time", post.getPosting_time().toString().substring(0, 19));
+        temp.put("shared", String.valueOf(post.getShared()));
+        String author = findWriter(post.getPost_id());
+        temp.put("author", author);
+        temp.put("like", ifLIke(post.getPost_id(), username));
+        temp.put("marked", ifFavorite(post.getPost_id(), username));
+        temp.put("followed",userService.ifFollow(username,author));
+        temp.put("count",String.valueOf(findCountLikeById(post.getPost_id())));
+        temp.put("hot",String.valueOf(post.getHot()));
+        if (post.getFile()!=null){
+            temp.put("file", post.getFile());
+        }
+        return temp;
     }
 
 }
