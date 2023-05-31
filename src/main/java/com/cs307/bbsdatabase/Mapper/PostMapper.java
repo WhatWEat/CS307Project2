@@ -192,8 +192,8 @@ public interface PostMapper extends BaseMapper<Post> {
 
 
     //我改了字段名，可能会有错误
-    @Insert("insert into posts(title, content, posting_time, shared,hot) " +
-            "values(#{title}, #{content}, #{posting_time}, 0,0)")
+    @Insert("insert into posts(title, content, posting_time, shared,hot,file) " +
+            "values(#{title}, #{content}, #{posting_time}, 0,0,#{file})")
     @Options(useGeneratedKeys = true, keyProperty = "post_id", keyColumn = "post_id")
     int insertPost(Post post);
 
