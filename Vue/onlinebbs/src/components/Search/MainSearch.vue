@@ -31,8 +31,8 @@
         </el-col>
       </el-row>
     </el-main>
-    <el-footer>
-      <el-row type="flex" justify="center">
+    <el-footer >
+      <el-row type="flex" justify="center" style="margin-bottom: 30px">
         <el-col :span="8">
           <el-button type="primary" icon="el-icon-plus" @click="addInput"></el-button>
         </el-col>
@@ -40,7 +40,7 @@
           <el-button type="success" icon="el-icon-search" @click="search">搜搜你的</el-button>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row style="display: flex; flex-direction: column; align-items: center;">
         <SearchResult :result="searchResult" v-if="loading===false">
         </SearchResult>
         <div class="loading" v-if="loading">

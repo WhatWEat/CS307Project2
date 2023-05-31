@@ -17,13 +17,17 @@
         <el-form-item label="附件">
           <el-upload
               class="upload-demo"
-              action="https://jsonplaceholder.typicode.com/posts/"
+              ref="upload"
+              action="/post/files"
+              :headers="{
+              'Cookie': `session_id=${this.username};`}"
               :on-preview="handlePreview"
               :on-remove="handleRemove"
-              :file-list="fileList"
+              :auto-upload="false"
+              :before-upload="beforeUpload"
               list-type="picture">
-            <el-button size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+            <div slot="tip" class="el-upload__tip">上传文件，且不超过30MB</div>
           </el-upload>
         </el-form-item>
         <el-form-item>
@@ -49,6 +53,8 @@ export default {
       title: '',
       content: '',
       tags: ['原创'],
+      username: '',
+      fileName: '',
     }
   },
   methods: {
@@ -65,6 +71,7 @@ export default {
           title: this.title,
           content: this.content,
           categories: this.tags,
+          file: this.fileName,
         }, {
           withCredentials: true
         }).then(res => {
@@ -95,10 +102,16 @@ export default {
     handlePreview(file) {
       console.log(file);
     },
+    beforeUpload(file){
+      this.fileName = file.name;
+    },
     goBack() {
       console.log(this.tags);
       this.$router.push('/main');
     },
+  },
+  mounted() {
+    this.username = document.cookie.split('=')[1];
   }
 }
 </script>
