@@ -19,8 +19,10 @@ CREATE TABLE IF NOT EXISTS posts
     content      VARCHAR(1000) not null,
     posting_time TIMESTAMP     not null,
     shared       BIGINT        not null,
-    hot          BIGINT        not null
+    hot          BIGINT        not null,
+    file         varchar(200)
 );
+
 
 CREATE TABLE IF NOT EXISTS Replies
 (
@@ -69,6 +71,7 @@ CREATE TABLE IF NOT EXISTS PostCity
 
     primary key (post_id, city_id)
 );
+
 
 CREATE TABLE IF NOT EXISTS PostCategory
 (
@@ -211,4 +214,16 @@ CREATE TRIGGER set_reply_id_trigger BEFORE INSERT ON Replies
     FOR EACH ROW
     WHEN (NEW.reply_id IS NULL OR NEW.reply_id = 0)
 EXECUTE FUNCTION reply_id();
-update posts set hot = hot +-1 where post_id = 5;
+
+
+create index index_post on posts (title,content,hot);
+
+create index index_reply on replies(post_id, parent_id);
+
+create index index_userWritePost on userwritepost(post_id);
+
+create index index_userLikePost on userlikepost(post_id);
+
+create index index_userFavoritePost on userlikepost(post_id);
+
+create index index_userFollowUser on userfollowuser(user_be_followed);
