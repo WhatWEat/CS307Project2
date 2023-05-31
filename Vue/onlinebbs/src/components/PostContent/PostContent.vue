@@ -44,18 +44,18 @@
 
           <div style="white-space: pre-wrap;">
             <span>{{ post.content }}</span>
-            <div v-if="this.hasVideo || this.hasPicture"
+            <div v-if="this.hasPicture || this.hasVideo"
                  style="width: 100%; height: 200px; display: flex; justify-content: center; margin-bottom: 50px">
               <!-- 展示图片 -->
               <img v-if="this.hasPicture" :src="this.filepath" alt="Image"
-                   style="max-width: 300px; max-height: 200px"/>
-
+                   style="max-width: 300px; max-height: 200px">
+              </img>
               <!-- 展示视频 -->
               <video controls v-if="this.hasVideo" preload="auto" autoplay :src="this.filepath"
                    style="max-width: 300px; max-height: 200px">
-
               </video>
             </div>
+<!--            <p v-else>11</p>-->
           </div>
         </el-card>
       </el-card>
@@ -92,8 +92,6 @@ export default {
   },
   methods: {
     getPost() {
-
-      this.hasPicture = true;
       axios.get(`/post/findByID/${this.id}`, {
         withCredentials: true
       }).then(
@@ -105,6 +103,7 @@ export default {
             this.marked = this.post.marked;
             this.followed = this.post.followed;
             if(this.filepath.includes('/') && this.filepath !== '' && this.filepath!=='0') {
+              console.log('试试'+this.filepath);
               let filename = this.filepath.split('.');
               this.filepath = 'http://localhost:8088/' + this.filepath;
               let index = filename[filename.length-1];
@@ -249,6 +248,8 @@ export default {
     }
   },
   mounted() {
+    this.hasVideo = false;
+    this.hasPicture = false;
     this.getPost();
     this.getTags();
   },
