@@ -104,7 +104,7 @@ export default {
             this.like = this.post.like;
             this.marked = this.post.marked;
             this.followed = this.post.followed;
-            if(this.filepath !== '' && this.filepath!=='0') {
+            if(this.filepath.includes('/') && this.filepath !== '' && this.filepath!=='0') {
               let filename = this.filepath.split('.');
               this.filepath = 'http://localhost:8088/' + this.filepath;
               let index = filename[filename.length-1];

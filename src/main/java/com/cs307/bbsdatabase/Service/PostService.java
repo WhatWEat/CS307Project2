@@ -6,6 +6,7 @@ import com.cs307.bbsdatabase.Mapper.PostMapper;
 import com.cs307.bbsdatabase.Util.FileManager;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
