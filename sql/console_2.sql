@@ -216,14 +216,7 @@ CREATE TRIGGER set_reply_id_trigger BEFORE INSERT ON Replies
 EXECUTE FUNCTION reply_id();
 
 
-create index index_post on posts (title,content,hot);
+create index index_post on posts (title);
 
-create index index_reply on replies(post_id, parent_id);
+create index index_category on Category(category);
 
-create index index_userWritePost on userwritepost(post_id);
-
-create index index_userLikePost on userlikepost(post_id);
-
-create index index_userFavoritePost on userlikepost(post_id);
-
-create index index_userFollowUser on userfollowuser(user_be_followed);
