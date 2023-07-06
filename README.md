@@ -11,9 +11,9 @@ springboot通过mybatis plus对数据库进行处理
 在springboot的**Controller**层接受请求，**Service**层处理请求，在**Mapper**处进行数据持久化
 ### 效果展示
 #### 登录页面
-![](https://github.com/WhatWEat/CS307Project2/blob/main/img/%E7%99%BB%E5%BD%95.png)
+![](img/登录.png)
 #### 帖子列表
-![](https://github.com/WhatWEat/CS307Project2/blob/main/img/%E5%B8%96%E5%AD%90.png)
+![](img/帖子.png)
 #### 帖子内容
 支持插入图片和视频
 ![](img/帖子内容.png)
