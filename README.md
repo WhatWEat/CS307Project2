@@ -19,5 +19,4 @@ springboot通过mybatis plus对数据库进行处理
 ![](https://github.com/WhatWEat/CS307Project2/blob/main/img/%E5%B8%96%E5%AD%90.png)
 #### 多参数搜索
 参数之间与关系，支持添加多种参数
-![](https://github.com/WhatWEat/CS307Project2/blob/main/img/%E5%B8%96%E5%AD%90.png)
-![](https://github.com/WhatWEat/CS307Project2/blob/main/img/%E5%B8%96%E5%AD%90.png)
+![](img/多参数所搜.png)
