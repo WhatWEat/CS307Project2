@@ -1,5 +1,7 @@
 # SUSTECH CS307Project2
 主要任务是实现一个论坛
+Project具体要求见该[文件](https://github.com/WhatWEat/CS307Project2/blob/main/project2_intro.pdf)
+项目报告见[这](https://github.com/WhatWEat/CS307Project2/blob/main/project2%E6%8A%A5%E5%91%8A.pdf)
 ## 使用方法
 使用springboot和vue
 首先mvn install来安装springboot相关依赖
